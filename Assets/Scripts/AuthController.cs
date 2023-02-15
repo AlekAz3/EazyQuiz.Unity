@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class AuthController : MonoBehaviour
 {
@@ -14,6 +16,8 @@ public class AuthController : MonoBehaviour
 
     [SerializeField] private GameObject LoginLabel;
     [SerializeField] private GameObject RegisterLabel;
+
+    [SerializeField] private GameObject userProfile;
 
     [SerializeField] private TMP_InputField UsernameLoginInput;
     [SerializeField] private TMP_InputField PasswordLoginInput;
@@ -47,7 +51,10 @@ public class AuthController : MonoBehaviour
     public async void Login()
     {
         var user = await _apiProvider.Authtenticate(UsernameLoginInput.text, PasswordLoginInput.text);
-        Debug.Log(JsonConvert.SerializeObject(user)); 
+        userProfile.GetComponent<UserController>().User = user;
+        Debug.Log(JsonConvert.SerializeObject(user));
+        SceneManager.LoadScene("MainMenu");
+
     }
 
     public async void Registrate()
@@ -56,7 +63,9 @@ public class AuthController : MonoBehaviour
             PasswordRegisteInput.text, 
             UsernameRegisteInput.text, 
             Convert.ToInt32(AgeRegisteInput.text), 
-            GenderRegisteInput.itemText.text, 
-            CountryRegisteInput.itemText.text);
+            GenderRegisteInput.captionText.text,
+            CountryRegisteInput.captionText.text
+        );
+        Switch();
     }
 }
