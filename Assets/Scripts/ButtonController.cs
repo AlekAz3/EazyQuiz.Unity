@@ -19,19 +19,19 @@ public class ButtonController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _apiProvider = new ApiProvider();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(user);
+        //Debug.Log(user);
     }
 
     public async void EnterButtonClick()
     {
-        var a = await _apiProvider.Authtenticate(UsernameInput.text, PasswordInput.text);
-        user = a;
+        _apiProvider = new ApiProvider();
+        user = await _apiProvider.Authtenticate(UsernameInput.text, PasswordInput.text);
     }
 
 }

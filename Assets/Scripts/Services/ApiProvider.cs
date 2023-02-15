@@ -6,53 +6,64 @@ using System;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
 using EazyQuiz.Cryptography;
+using System.Net.Http;
+using System.Net.Mime;
+using System.Text;
+using UnityEditor.PackageManager;
+using Unity.VisualScripting;
+using Newtonsoft.Json;
 
 namespace EazyQuiz.Unity
 {
-    public class ApiProvider 
+    public class ApiProvider
     {
         private static readonly string BaseAdress = "https://localhost:7273";
+        private readonly HttpClient _client;
 
         public ApiProvider()
         {
+            _client = new HttpClient();
 
         }
 
         public async Task<UserResponse> Authtenticate(string username, string password)
         {
-            var uwr1 = UnityWebRequest.Get($"{BaseAdress}/api/Auth/GetUserSalt?userName{username}");
-
-            uwr1.SendWebRequest();
-
-            while (!uwr1.isDone)
-            {
-                await Task.Yield();
-            }
-
-            string userSalt = string.Empty;
-
-            if (uwr1.result is UnityWebRequest.Result.Success)
-            {
-                userSalt = uwr1.downloadHandler.text;
-            }
+            string userSalt = await GetUserSalt(username);
+            Debug.Log($"Get Salt and password \n {userSalt}");
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
+            Debug.Log($"Get Salt and password {passwordHash} \n {userSalt}");
 
-            var json = JsonUtility.ToJson(new UserAuth(username, new UserPassword(passwordHash, userSalt)));
+            string json = JsonConvert.SerializeObject(new UserAuth(username, new UserPassword(passwordHash, userSalt)));
 
-            var uwr2 = UnityWebRequest.Post($"{BaseAdress}/api/Auth/GetUserSalt?userName{username}", json);
-            while (!uwr2.isDone)
+            Debug.Log($"Serialize {json}");
+
+            var request = new HttpRequestMessage
             {
-                await Task.Yield();
-            }
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAdress}/api/Auth/GetUserByPassword"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json),
+            };
 
-            if (uwr2.result is UnityWebRequest.Result.Success)
+            var response = await _client.SendAsync(request);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Debug.Log(responseBody);
+            return JsonConvert.DeserializeObject<UserResponse>(responseBody);
+        }
+
+        private async Task<string> GetUserSalt(string username)
+        {
+            var request = new HttpRequestMessage
             {
-                var user = JsonUtility.FromJson<UserResponse>(uwr2.downloadHandler.text);
-                return user;
-            }
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/Auth/GetUserSalt?userName={username}"),
+            };
+            var response = await _client.SendAsync(request);
 
-            return new UserResponse(0, "", 0, "", 0, "", "");
+            var responseBody = await response.Content.ReadAsStringAsync();
+            
+            return responseBody;
         }
     }
 }
