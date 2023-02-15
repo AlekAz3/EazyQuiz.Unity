@@ -65,5 +65,37 @@ namespace EazyQuiz.Unity
             
             return responseBody;
         }
+
+
+        /// <summary>
+        /// Регистрация нового игрока
+        /// </summary>
+        /// <param name="password">Пароль</param>
+        /// <param name="username">Ник</param>
+        /// <param name="age">Возраст</param>
+        /// <param name="gender">Пол</param>
+        /// <param name="country">Страна</param>
+        internal async Task Registrate(string password, string username, int age, string gender, string country)
+        {
+            var user = new UserRegister()
+            {
+                Username = username,
+                Age = age,
+                Gender = gender,
+                Country = country,
+                Password = PasswordHash.Hash(password)
+            };
+
+            string json = JsonConvert.SerializeObject(user);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAdress}/api/Auth/RegisterNewPlayer"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json),
+            };
+
+            await _client.SendAsync(request);
+        }
     }
 }
