@@ -97,5 +97,35 @@ namespace EazyQuiz.Unity
 
             await _client.SendAsync(request);
         }
+
+        /// <summary>
+        /// Проверка на существующей ник 
+        /// </summary>
+        /// <param name="userName">Ник</param>
+        /// <returns>true - если ник НЕ уникален</returns>
+        /// <exception cref="ArgumentNullException">Нулл</exception>
+        public async Task<bool> CheckUsername(string userName)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/Auth/CheckUniqueUsername?userName={userName}"),
+            };
+
+            var response = await _client.SendAsync(request);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            if (responseBody == null)
+            {
+                throw new ArgumentNullException(paramName: nameof(userName));
+            }
+
+            if (responseBody == "true")
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
