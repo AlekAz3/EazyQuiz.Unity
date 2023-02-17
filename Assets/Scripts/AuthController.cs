@@ -3,12 +3,9 @@ using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class AuthController : MonoBehaviour
 {
@@ -63,11 +60,17 @@ public class AuthController : MonoBehaviour
             return;
         }
 
+        if (!password.IsMoreEightSymbols())
+        {
+            error.Activate("Меньше 8ми символов пароль");
+            return;
+        }
+
         var user = await _apiProvider.Authtenticate(username, password);
 
         if (user.Id == 0)
         {
-            error.Activate("Неверный логин/пароль");
+            error.Activate("Пользователь не найден\n\nНеверный логин/пароль");
             return;
         }
 
@@ -107,13 +110,13 @@ public class AuthController : MonoBehaviour
 
         if (!password.IsNoBannedSymbols())
         {
-            error.Activate("В пароле спецсимволы запрещены\n В качестве пароля можно использовать только буквы английского алфавита и цифры");
+            error.Activate("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
             return;
         }
 
         if (!(password.IsContaintsUpperCaseLetter() && password.IsContaintsLowerCaseLetter() && password.IsContaintsNumeric()))
         {
-            error.Activate("Пароль слишком слабый \n В пароле должны присутствовать большие маленький буквы и цифры");
+            error.Activate("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
             return;
         }
 

@@ -9,9 +9,8 @@ using EazyQuiz.Cryptography;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
-using UnityEditor.PackageManager;
-using Unity.VisualScripting;
 using Newtonsoft.Json;
+using EazyQuiz.Extensions;
 
 namespace EazyQuiz.Unity
 {
@@ -30,6 +29,11 @@ namespace EazyQuiz.Unity
         {
             string userSalt = await GetUserSalt(username);
             Debug.Log($"Get Salt and password \n {userSalt}");
+
+            if (userSalt.IsNullOrEmpty())
+            {
+                return new UserResponse(0, "", 0, "", 0, "", "");
+            }
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
             Debug.Log($"Get Salt and password {passwordHash} \n {userSalt}");
