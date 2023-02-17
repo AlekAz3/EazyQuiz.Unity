@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using EazyQuiz.Models.DTO;
 using System;
-using UnityEngine.Networking;
 using System.Threading.Tasks;
 using EazyQuiz.Cryptography;
 using System.Net.Http;
@@ -11,6 +8,7 @@ using System.Net.Mime;
 using System.Text;
 using Newtonsoft.Json;
 using EazyQuiz.Extensions;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 namespace EazyQuiz.Unity
 {
@@ -22,7 +20,6 @@ namespace EazyQuiz.Unity
         public ApiProvider()
         {
             _client = new HttpClient();
-
         }
 
         public async Task<UserResponse> Authtenticate(string username, string password)
@@ -130,6 +127,47 @@ namespace EazyQuiz.Unity
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Получить вопрос и ответы с сервера
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<QuestionResponse> GetQuestion(string token)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/Questions/GetQuestion")
+            };
+            request.Headers.Add("Bearer", token);
+
+            var response = await _client.SendAsync(request);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<QuestionResponse>(responseBody);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task SendUserAnswer(UserAnswer answer, string token)
+        {
+            string json = JsonConvert.SerializeObject(answer);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAdress}/api/Questions/SendUserAnswer"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            request.Headers.Add("Bearer", token);
+            await _client.SendAsync(request);
         }
     }
 }
