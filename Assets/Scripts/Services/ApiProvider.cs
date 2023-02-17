@@ -9,9 +9,8 @@ using EazyQuiz.Cryptography;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
-using UnityEditor.PackageManager;
-using Unity.VisualScripting;
 using Newtonsoft.Json;
+using EazyQuiz.Extensions;
 
 namespace EazyQuiz.Unity
 {
@@ -30,6 +29,11 @@ namespace EazyQuiz.Unity
         {
             string userSalt = await GetUserSalt(username);
             Debug.Log($"Get Salt and password \n {userSalt}");
+
+            if (userSalt.IsNullOrEmpty())
+            {
+                return new UserResponse(0, "", 0, "", 0, "", "");
+            }
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
             Debug.Log($"Get Salt and password {passwordHash} \n {userSalt}");
@@ -64,6 +68,68 @@ namespace EazyQuiz.Unity
             var responseBody = await response.Content.ReadAsStringAsync();
             
             return responseBody;
+        }
+
+
+        /// <summary>
+        /// Регистрация нового игрока
+        /// </summary>
+        /// <param name="password">Пароль</param>
+        /// <param name="username">Ник</param>
+        /// <param name="age">Возраст</param>
+        /// <param name="gender">Пол</param>
+        /// <param name="country">Страна</param>
+        internal async Task Registrate(string password, string username, int age, string gender, string country)
+        {
+            var user = new UserRegister()
+            {
+                Username = username,
+                Age = age,
+                Gender = gender,
+                Country = country,
+                Password = PasswordHash.Hash(password)
+            };
+
+            string json = JsonConvert.SerializeObject(user);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAdress}/api/Auth/RegisterNewPlayer"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json),
+            };
+
+            await _client.SendAsync(request);
+        }
+
+        /// <summary>
+        /// Проверка на существующей ник 
+        /// </summary>
+        /// <param name="userName">Ник</param>
+        /// <returns>true - если ник НЕ уникален</returns>
+        /// <exception cref="ArgumentNullException">Нулл</exception>
+        public async Task<bool> CheckUsername(string userName)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/Auth/CheckUniqueUsername?userName={userName}"),
+            };
+
+            var response = await _client.SendAsync(request);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            if (responseBody == null)
+            {
+                throw new ArgumentNullException(paramName: nameof(userName));
+            }
+
+            if (responseBody == "true")
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
