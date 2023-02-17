@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainmenuController : MonoBehaviour
@@ -18,5 +19,10 @@ public class MainmenuController : MonoBehaviour
         User = GameObject.Find("User").GetComponent<UserController>().User;
         UsernameLabel.text = User.UserName;
         PointsLabel.text = $"Очки: {User.Points}";
+    }
+
+    public void StartGameButtonClick()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }
