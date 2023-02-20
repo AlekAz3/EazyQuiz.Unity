@@ -9,6 +9,8 @@ using System.Text;
 using Newtonsoft.Json;
 using EazyQuiz.Extensions;
 using Unity.VisualScripting.Antlr3.Runtime;
+using System.Net.Http.Headers;
+using UnityEditor.PackageManager;
 
 namespace EazyQuiz.Unity
 {
@@ -139,7 +141,7 @@ namespace EazyQuiz.Unity
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/Questions/GetQuestion")
+                RequestUri = new Uri($"{BaseAdress}/api/Questions/GetQuestion"),
             };
             request.Headers.Add("Bearer", token);
 
@@ -151,14 +153,15 @@ namespace EazyQuiz.Unity
         }
 
         /// <summary>
-        /// 
+        /// Отправить ответ игрока на сервер 
         /// </summary>
-        /// <param name="answer"></param>
-        /// <param name="token"></param>
+        /// <param name="answer">ответ в виде <see cref="UserAnswer"/></param>
+        /// <param name="token">JWT токен</param>
         /// <returns></returns>
         public async Task SendUserAnswer(UserAnswer answer, string token)
         {
             string json = JsonConvert.SerializeObject(answer);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var request = new HttpRequestMessage
             {
@@ -166,7 +169,7 @@ namespace EazyQuiz.Unity
                 RequestUri = new Uri($"{BaseAdress}/api/Questions/SendUserAnswer"),
                 Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
             };
-            request.Headers.Add("Bearer", token);
+
             await _client.SendAsync(request);
         }
     }
