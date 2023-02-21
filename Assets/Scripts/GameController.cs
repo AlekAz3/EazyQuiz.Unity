@@ -44,7 +44,8 @@ public class GameController : MonoBehaviour
         {
             Debug.Log("Correct");
         }
-        Debug.Log("Wrong");
+        else
+            Debug.Log("Wrong");
 
         var ua = new UserAnswer() { IdUser = User.Id, IdAnswer = userAnswer, IdQuestion = question.IdQuestion };
         await _apiProvider.SendUserAnswer(ua, User.Token);

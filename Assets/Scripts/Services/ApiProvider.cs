@@ -143,7 +143,9 @@ namespace EazyQuiz.Unity
                 Method = HttpMethod.Get,
                 RequestUri = new Uri($"{BaseAdress}/api/Questions/GetQuestion"),
             };
-            request.Headers.Add("Bearer", token);
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
 
             var response = await _client.SendAsync(request);
 
@@ -161,14 +163,15 @@ namespace EazyQuiz.Unity
         public async Task SendUserAnswer(UserAnswer answer, string token)
         {
             string json = JsonConvert.SerializeObject(answer);
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"{BaseAdress}/api/Questions/SendUserAnswer"),
+                RequestUri = new Uri($"{BaseAdress}/api/Questions/PostUserAnswer"),
                 Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
             };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
 
             await _client.SendAsync(request);
         }
