@@ -27,11 +27,17 @@ public class AuthController : MonoBehaviour
     [SerializeField] private TMP_InputField AgeRegisteInput;
     [SerializeField] private TMP_Dropdown GenderRegisteInput;
     [SerializeField] private TMP_Dropdown CountryRegisteInput;
-    [Inject] private ErrorScreenService _errorService;
+     private ErrorScreen _error;
 
     [Inject] private UserService _userService;
     [Inject] private ApiProvider _apiProvider;
-  
+
+    private void Awake()
+    {
+        _error = ErrorGO.GetComponent<ErrorScreen>();
+    }
+
+
     public void Switch()
     {
         LoginGO.SetActive(!LoginGO.activeSelf);
@@ -48,13 +54,13 @@ public class AuthController : MonoBehaviour
 
         if (username.IsNullOrEmpty() || password.IsNullOrEmpty())
         {
-            _errorService.Activate("Есть пустые поля");
+            _error.Activate("Есть пустые поля");
             return;
         }
 
         if (!password.IsMoreEightSymbols())
         {
-            _errorService.Activate("Меньше 8ми символов пароль");
+            _error.Activate("Меньше 8ми символов пароль");
             return;
         }
 
@@ -62,7 +68,7 @@ public class AuthController : MonoBehaviour
 
         if (_userService.UserInfo.Id == 0)
         {
-            _errorService.Activate("Пользователь не найден\n\nНеверный логин/пароль");
+            _error.Activate("Пользователь не найден\n\nНеверный логин/пароль");
             return;
         }
 
@@ -82,43 +88,43 @@ public class AuthController : MonoBehaviour
 
         if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty() || age.IsNullOrEmpty())
         {
-            _errorService.Activate("Есть пустые поля");
+            _error.Activate("Есть пустые поля");
             return;
         }
 
         if (!password.IsMoreEightSymbols())
         {
-            _errorService.Activate("В пароле меньше 8ми символов");
+            _error.Activate("В пароле меньше 8ми символов");
             return;
         }
 
         if (!password.IsEqual(repeatpassword))
         {
-            _errorService.Activate("Пароли не совпадают");
+            _error.Activate("Пароли не совпадают");
             return;
         }
 
         if (!password.IsNoBannedSymbols())
         {
-            _errorService.Activate("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
+            _error.Activate("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
             return;
         }
 
         if (!(password.IsContaintsUpperCaseLetter() && password.IsContaintsLowerCaseLetter() && password.IsContaintsNumeric()))
         {
-            _errorService.Activate("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
+            _error.Activate("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
             return;
         }
 
         if (Convert.ToInt32(age) <= 0)
         {
-            _errorService.Activate("Неверный возраст");
+            _error.Activate("Неверный возраст");
             return;
         }
 
         if ( await _apiProvider.CheckUsername(username))
         {
-            _errorService.Activate("Такой ник уже существует");
+            _error.Activate("Такой ник уже существует");
             return;
         }
 
