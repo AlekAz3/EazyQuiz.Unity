@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Zenject;
 
 public class GameController : MonoBehaviour
 {
@@ -19,14 +20,13 @@ public class GameController : MonoBehaviour
     private QuestionResponse question;
 
     private int IdCorrectAnswer;
-    private UserResponse User;
+    [Inject] private UserService _userService;
     private ApiProvider _apiProvider;
 
     private void Awake()
     {
         _apiProvider = new ApiProvider();
-        User = GameObject.Find("User").GetComponent<UserController>().User;
-        question = Task.Run(() => { return _apiProvider.GetQuestion(User.Token); }).Result;
+        question = Task.Run(() => { return _apiProvider.GetQuestion(_userService.UserInfo.Token); }).Result;
         QuestiolLabel.text = question.TextQuestion;
         IdCorrectAnswer = question.IdCorrectAnswer;
         var answers = new List<Answer>() { new Answer(question.IdCorrectAnswer, question.TextCorrectAnswer), new Answer(question.IdFirstAnswer, question.TextFirstAnswer), new Answer(question.IdSecondAnswer, question.TextSecondAnswer), new Answer(question.IdThirdAnswer, question.TextThirdAnswer) };
@@ -47,8 +47,8 @@ public class GameController : MonoBehaviour
         else
             Debug.Log("Wrong");
 
-        var ua = new UserAnswer() { IdUser = User.Id, IdAnswer = userAnswer, IdQuestion = question.IdQuestion };
-        await _apiProvider.SendUserAnswer(ua, User.Token);
+        var ua = new UserAnswer() { IdUser = _userService.UserInfo.Id, IdAnswer = userAnswer, IdQuestion = question.IdQuestion };
+        await _apiProvider.SendUserAnswer(ua, _userService.UserInfo.Token);
     }
 
     public void ExitButtonClick()

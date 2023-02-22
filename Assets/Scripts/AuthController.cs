@@ -4,8 +4,10 @@ using EazyQuiz.Unity;
 using Newtonsoft.Json;
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
 public class AuthController : MonoBehaviour
 {
@@ -16,8 +18,6 @@ public class AuthController : MonoBehaviour
     [SerializeField] private GameObject LoginLabel;
     [SerializeField] private GameObject RegisterLabel;
 
-    [SerializeField] private GameObject userProfile;
-
     [SerializeField] private TMP_InputField UsernameLoginInput;
     [SerializeField] private TMP_InputField PasswordLoginInput;
 
@@ -27,19 +27,11 @@ public class AuthController : MonoBehaviour
     [SerializeField] private TMP_InputField AgeRegisteInput;
     [SerializeField] private TMP_Dropdown GenderRegisteInput;
     [SerializeField] private TMP_Dropdown CountryRegisteInput;
-    private ErrorController error;
+    [Inject] private ErrorScreenService _errorService;
 
-    private UserResponse user;
-
-    private ApiProvider _apiProvider;
-
-    private void Start()
-    {
-        _apiProvider = new ApiProvider();
-        error = ErrorGO.GetComponent<ErrorController>();
-    }
-
-
+    [Inject] private UserService _userService;
+    [Inject] private ApiProvider _apiProvider;
+  
     public void Switch()
     {
         LoginGO.SetActive(!LoginGO.activeSelf);
@@ -56,26 +48,24 @@ public class AuthController : MonoBehaviour
 
         if (username.IsNullOrEmpty() || password.IsNullOrEmpty())
         {
-            error.Activate("Есть пустые поля");
+            _errorService.Activate("Есть пустые поля");
             return;
         }
 
         if (!password.IsMoreEightSymbols())
         {
-            error.Activate("Меньше 8ми символов пароль");
+            _errorService.Activate("Меньше 8ми символов пароль");
             return;
         }
 
-        var user = await _apiProvider.Authtenticate(username, password);
+        await _userService.Authtenticate(username, password);
 
-        if (user.Id == 0)
+        if (_userService.UserInfo.Id == 0)
         {
-            error.Activate("Пользователь не найден\n\nНеверный логин/пароль");
+            _errorService.Activate("Пользователь не найден\n\nНеверный логин/пароль");
             return;
         }
 
-        userProfile.GetComponent<UserController>().User = user;
-        Debug.Log(JsonConvert.SerializeObject(user));
         SceneManager.LoadScene("MainMenu");
 
     }
@@ -92,43 +82,43 @@ public class AuthController : MonoBehaviour
 
         if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty() || age.IsNullOrEmpty())
         {
-            error.Activate("Есть пустые поля");
+            _errorService.Activate("Есть пустые поля");
             return;
         }
 
         if (!password.IsMoreEightSymbols())
         {
-            error.Activate("В пароле меньше 8ми символов");
+            _errorService.Activate("В пароле меньше 8ми символов");
             return;
         }
 
         if (!password.IsEqual(repeatpassword))
         {
-            error.Activate("Пароли не совпадают");
+            _errorService.Activate("Пароли не совпадают");
             return;
         }
 
         if (!password.IsNoBannedSymbols())
         {
-            error.Activate("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
+            _errorService.Activate("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
             return;
         }
 
         if (!(password.IsContaintsUpperCaseLetter() && password.IsContaintsLowerCaseLetter() && password.IsContaintsNumeric()))
         {
-            error.Activate("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
+            _errorService.Activate("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
             return;
         }
 
         if (Convert.ToInt32(age) <= 0)
         {
-            error.Activate("Неверный возраст");
+            _errorService.Activate("Неверный возраст");
             return;
         }
 
         if ( await _apiProvider.CheckUsername(username))
         {
-            error.Activate("Такой ник уже существует");
+            _errorService.Activate("Такой ник уже существует");
             return;
         }
 
