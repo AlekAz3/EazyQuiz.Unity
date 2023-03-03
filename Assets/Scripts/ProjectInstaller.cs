@@ -1,6 +1,5 @@
-using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity;
-using UnityEngine;
+using System.Collections.Generic;
 using Zenject;
 
 public class ProjectInstaller : MonoInstaller
@@ -11,6 +10,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<ApiProvider>().AsTransient().NonLazy();
         Container.Bind<UserService>().AsSingle().NonLazy();
 
+        Container.Bind<GameOverScreen>().AsSingle();
         Container.Bind<AuthController>().AsSingle();
         Container.Bind<GameController>().AsSingle();
         Container.Bind<MainmenuController>().AsSingle();

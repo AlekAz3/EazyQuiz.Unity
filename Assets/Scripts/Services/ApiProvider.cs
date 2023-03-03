@@ -8,9 +8,7 @@ using System.Net.Mime;
 using System.Text;
 using Newtonsoft.Json;
 using EazyQuiz.Extensions;
-using Unity.VisualScripting.Antlr3.Runtime;
-using System.Net.Http.Headers;
-using UnityEditor.PackageManager;
+using Zenject;
 
 namespace EazyQuiz.Unity
 {
@@ -24,14 +22,20 @@ namespace EazyQuiz.Unity
             _client = new HttpClient();
         }
 
+
         public async Task<UserResponse> Authtenticate(string username, string password)
         {
+
             string userSalt = await GetUserSalt(username);
             Debug.Log($"Get Salt and password \n {userSalt}");
 
             if (userSalt.IsNullOrEmpty())
             {
                 return new UserResponse(0, "", 0, "", 0, "", "");
+            }
+            else if (userSalt == "Error Server")
+            {
+                return new UserResponse(-1, "", 0, "", 0, "", "");
             }
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
@@ -50,9 +54,14 @@ namespace EazyQuiz.Unity
 
             var response = await _client.SendAsync(request);
 
+            if (response.IsSuccessStatusCode)
+            {
             var responseBody = await response.Content.ReadAsStringAsync();
             Debug.Log(responseBody);
             return JsonConvert.DeserializeObject<UserResponse>(responseBody);
+            }
+                return new UserResponse(-1, "", 0, "", 0, "", "");
+
         }
 
         private async Task<string> GetUserSalt(string username)
@@ -64,9 +73,16 @@ namespace EazyQuiz.Unity
             };
             var response = await _client.SendAsync(request);
 
-            var responseBody = await response.Content.ReadAsStringAsync();
-            
-            return responseBody;
+            if (response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                return responseBody;
+            }
+            else
+            {
+                return "Error Server";
+            }
+
         }
 
 
@@ -145,7 +161,6 @@ namespace EazyQuiz.Unity
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
-
 
             var response = await _client.SendAsync(request);
 

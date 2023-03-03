@@ -71,6 +71,11 @@ public class AuthController : MonoBehaviour
             _error.Activate("Пользователь не найден\n\nНеверный логин/пароль");
             return;
         }
+        if (_userService.UserInfo.Id == -1)
+        {
+            _error.Activate("Сервер недоступен");
+            return;
+        }
 
         SceneManager.LoadScene("MainMenu");
 

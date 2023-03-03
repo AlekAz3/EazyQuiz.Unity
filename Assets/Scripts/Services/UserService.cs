@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace EazyQuiz.Unity
 {
-    internal class UserService
+    public class UserService
     {
-        private readonly ApiProvider _apiProvider;
+        private ApiProvider _apiProvider;
 
         public UserResponse UserInfo { get; private set; }
 
@@ -19,6 +19,11 @@ namespace EazyQuiz.Unity
         public async Task Authtenticate(string login, string password)
         {
             UserInfo = await _apiProvider.Authtenticate(login, password);
+        }
+
+        internal Task SendUserAnswer(int userAnswer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

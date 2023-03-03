@@ -1,6 +1,7 @@
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,19 +14,19 @@ using Zenject;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private List<Button> Buttons;
-    [SerializeField] private GameObject GameOver;
 
     [SerializeField] private TMP_Text QuestiolLabel;
 
     private QuestionResponse question;
 
     private int IdCorrectAnswer;
+
     [Inject] private UserService _userService;
-    private ApiProvider _apiProvider;
+    [Inject] private ApiProvider _apiProvider;
+    [Inject] private GameOverScreen _gameOverScreen;
 
     private void Awake()
     {
-        _apiProvider = new ApiProvider();
         question = Task.Run(() => { return _apiProvider.GetQuestion(_userService.UserInfo.Token); }).Result;
         QuestiolLabel.text = question.TextQuestion;
         IdCorrectAnswer = question.IdCorrectAnswer;
@@ -39,16 +40,18 @@ public class GameController : MonoBehaviour
 
     public async Task CheckUserAnswer(int userAnswer)
     {
-        GameOver.SetActive(true);
         if (userAnswer == IdCorrectAnswer)
         {
+            await _gameOverScreen.Show(true);
             Debug.Log("Correct");
         }
         else
+        {
+            await _gameOverScreen.Show(false);
             Debug.Log("Wrong");
+        }
 
-        var ua = new UserAnswer() { IdUser = _userService.UserInfo.Id, IdAnswer = userAnswer, IdQuestion = question.IdQuestion };
-        await _apiProvider.SendUserAnswer(ua, _userService.UserInfo.Token);
+        await _userService.SendUserAnswer(userAnswer);
     }
 
     public void ExitButtonClick()

@@ -939,8 +939,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: EazyQuiz.Unity.ErrorScreenService, Assembly-CSharp
+      - m_Target: {fileID: 620368048}
+        m_TargetAssemblyTypeName: ErrorScreen, Assembly-CSharp
         m_MethodName: Hide
         m_Mode: 1
         m_Arguments:
