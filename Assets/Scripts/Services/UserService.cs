@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Zenject;
 
 namespace EazyQuiz.Unity
 {
@@ -11,9 +12,9 @@ namespace EazyQuiz.Unity
 
         public UserResponse UserInfo { get; private set; }
 
-        public UserService(ApiProvider apiProvider)
+        public UserService()
         {
-            _apiProvider = apiProvider;
+            _apiProvider = new ApiProvider();
         }
 
         public async Task Authtenticate(string login, string password)
@@ -21,9 +22,21 @@ namespace EazyQuiz.Unity
             UserInfo = await _apiProvider.Authtenticate(login, password);
         }
 
-        internal Task SendUserAnswer(int userAnswer)
+        internal async Task SendUserAnswer(int userAnswerId, int questionId)
         {
-            throw new NotImplementedException();
+            var a = new UserAnswer()
+            {
+                IdUser = UserInfo.Id,
+                IdQuestion = questionId,
+                IdAnswer = userAnswerId
+            };
+
+            await _apiProvider.SendUserAnswer(a, UserInfo.Token);
+        }
+
+        internal void AddPoint()
+        {
+            UserInfo.Points++;
         }
     }
 }

@@ -14,7 +14,7 @@ using Zenject;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private List<Button> Buttons;
-
+    [SerializeField] private GameObject gameovers;
     [SerializeField] private TMP_Text QuestiolLabel;
 
     private QuestionResponse question;
@@ -23,10 +23,11 @@ public class GameController : MonoBehaviour
 
     [Inject] private UserService _userService;
     [Inject] private ApiProvider _apiProvider;
-    [Inject] private GameOverScreen _gameOverScreen;
+    private GameOverScreen _gameOverScreen;
 
     private void Awake()
     {
+        _gameOverScreen = gameovers.GetComponent<GameOverScreen>();
         question = Task.Run(() => { return _apiProvider.GetQuestion(_userService.UserInfo.Token); }).Result;
         QuestiolLabel.text = question.TextQuestion;
         IdCorrectAnswer = question.IdCorrectAnswer;
@@ -42,16 +43,17 @@ public class GameController : MonoBehaviour
     {
         if (userAnswer == IdCorrectAnswer)
         {
-            await _gameOverScreen.Show(true);
+            _gameOverScreen.Show(true);
+            _userService.AddPoint();
             Debug.Log("Correct");
         }
         else
         {
-            await _gameOverScreen.Show(false);
+            _gameOverScreen.Show(false);
             Debug.Log("Wrong");
         }
 
-        await _userService.SendUserAnswer(userAnswer);
+        await _userService.SendUserAnswer(userAnswer, question.IdQuestion);
     }
 
     public void ExitButtonClick()

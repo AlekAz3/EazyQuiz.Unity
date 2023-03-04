@@ -1,17 +1,30 @@
+using EazyQuiz.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using Zenject;
 
 public class GameOverScreen : MonoBehaviour
 {
     [SerializeField]private GameObject screen;
 
-    public Task Show(bool isTrueAnswer)
+    [SerializeField] private TMP_Text text;
+
+    public void Show(bool isTrueAnswer)
     {
-        Instantiate(screen);
-        return Task.CompletedTask;
+        screen.SetActive(true);
+        if (isTrueAnswer)
+        {
+            text.text = "Ответ верный";
+        }
+        else
+        {
+            text.text = "Ответ не верный верный";
+        }
     }
 }

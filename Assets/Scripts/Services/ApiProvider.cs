@@ -14,8 +14,9 @@ namespace EazyQuiz.Unity
 {
     public class ApiProvider
     {
-        private static readonly string BaseAdress = "https://localhost:7273";
+        private static readonly string BaseAdress = "http://192.168.1.90:85";
         private readonly HttpClient _client;
+
 
         public ApiProvider()
         {
