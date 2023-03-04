@@ -1,17 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ErrorController : MonoBehaviour
+public class ErrorScreen : MonoBehaviour
 {
-
     [SerializeField] private GameObject ErrorLabel;
     [SerializeField] private TMP_Text ErrorText;
-    [SerializeField] private Button Button;
 
-    public void OkButtonClick()
+    public void Hide()
     {
         ErrorLabel.SetActive(false);
     }
@@ -21,5 +17,5 @@ public class ErrorController : MonoBehaviour
         ErrorLabel.SetActive(true);
         ErrorText.text = error;
     }
-
 }
+

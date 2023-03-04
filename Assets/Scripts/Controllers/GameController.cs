@@ -1,6 +1,7 @@
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,25 +9,26 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Zenject;
 
 public class GameController : MonoBehaviour
 {
     [SerializeField] private List<Button> Buttons;
-    [SerializeField] private GameObject GameOver;
-
+    [SerializeField] private GameObject gameovers;
     [SerializeField] private TMP_Text QuestiolLabel;
 
     private QuestionResponse question;
 
     private int IdCorrectAnswer;
-    private UserResponse User;
-    private ApiProvider _apiProvider;
+
+    [Inject] private UserService _userService;
+    [Inject] private ApiProvider _apiProvider;
+    private GameOverScreen _gameOverScreen;
 
     private void Awake()
     {
-        _apiProvider = new ApiProvider();
-        User = GameObject.Find("User").GetComponent<UserController>().User;
-        question = Task.Run(() => { return _apiProvider.GetQuestion(User.Token); }).Result;
+        _gameOverScreen = gameovers.GetComponent<GameOverScreen>();
+        question = Task.Run(() => { return _apiProvider.GetQuestion(_userService.UserInfo.Token); }).Result;
         QuestiolLabel.text = question.TextQuestion;
         IdCorrectAnswer = question.IdCorrectAnswer;
         var answers = new List<Answer>() { new Answer(question.IdCorrectAnswer, question.TextCorrectAnswer), new Answer(question.IdFirstAnswer, question.TextFirstAnswer), new Answer(question.IdSecondAnswer, question.TextSecondAnswer), new Answer(question.IdThirdAnswer, question.TextThirdAnswer) };
@@ -39,16 +41,19 @@ public class GameController : MonoBehaviour
 
     public async Task CheckUserAnswer(int userAnswer)
     {
-        GameOver.SetActive(true);
         if (userAnswer == IdCorrectAnswer)
         {
+            _gameOverScreen.Show(true);
+            _userService.AddPoint();
             Debug.Log("Correct");
         }
         else
+        {
+            _gameOverScreen.Show(false);
             Debug.Log("Wrong");
+        }
 
-        var ua = new UserAnswer() { IdUser = User.Id, IdAnswer = userAnswer, IdQuestion = question.IdQuestion };
-        await _apiProvider.SendUserAnswer(ua, User.Token);
+        await _userService.SendUserAnswer(userAnswer, question.IdQuestion);
     }
 
     public void ExitButtonClick()

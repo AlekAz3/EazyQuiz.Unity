@@ -1,4 +1,5 @@
 using EazyQuiz.Models.DTO;
+using EazyQuiz.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -6,19 +7,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Zenject;
 
 public class MainmenuController : MonoBehaviour
 {
-    private UserResponse User;
+    [Inject] private readonly UserService _userService;
 
     [SerializeField] private TMP_Text UsernameLabel;
     [SerializeField] private TMP_Text PointsLabel;
 
     private void Awake()
     {
-        User = GameObject.Find("User").GetComponent<UserController>().User;
-        UsernameLabel.text = User.UserName;
-        PointsLabel.text = $"Очки: {User.Points}";
+        UsernameLabel.text = _userService.UserInfo.UserName;
+        PointsLabel.text = $"Очки: {_userService.UserInfo.Points}";
     }
 
     public void StartGameButtonClick()
