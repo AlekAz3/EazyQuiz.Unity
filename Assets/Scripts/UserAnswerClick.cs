@@ -1,8 +1,4 @@
 using EazyQuiz.Models.DTO;
-using EazyQuiz.Unity;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 

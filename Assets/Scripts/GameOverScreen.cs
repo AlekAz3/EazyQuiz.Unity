@@ -1,13 +1,5 @@
-using EazyQuiz.Unity;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-using Zenject;
 
 public class GameOverScreen : MonoBehaviour
 {
@@ -20,11 +12,16 @@ public class GameOverScreen : MonoBehaviour
         screen.SetActive(true);
         if (isTrueAnswer)
         {
-            text.text = "Ответ верный";
+            text.text = "Ответ верный!";
         }
         else
         {
-            text.text = "Ответ не верный верный";
+            text.text = "Ответ не верный!";
         }
+    }
+
+    public void Hide()
+    {
+        screen.SetActive(false);
     }
 }

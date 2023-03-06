@@ -1,8 +1,6 @@
 ﻿using EazyQuiz.Models.DTO;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Zenject;
 
 namespace EazyQuiz.Unity
 {
