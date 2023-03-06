@@ -1,3 +1,4 @@
+using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,17 +10,17 @@ public class UserAnswerClick : MonoBehaviour
 {
     [SerializeField] private TMP_Text ButtonText;
 
-    private int IdAnswer;
+    private Answer _answer;
 
     public void WriteAnswer(Answer answer)
     {
-        ButtonText.text = answer.Text;
-        IdAnswer = answer.Id;
+        _answer = answer;
+        ButtonText.text = answer.AnswerText;
     }
 
     public async void SendAnswer()
     {
         var a = GameObject.Find("BackGround").GetComponent<GameController>();
-        await a.CheckUserAnswer(IdAnswer);
+        await a.CheckUserAnswer(_answer);
     }
 }

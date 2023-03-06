@@ -14,7 +14,7 @@ namespace EazyQuiz.Unity
 {
     public class ApiProvider
     {
-        private static readonly string BaseAdress = "http://192.168.1.90:85";
+        private static readonly string BaseAdress = "http://localhost:5274";
         private readonly HttpClient _client;
 
 
@@ -22,7 +22,6 @@ namespace EazyQuiz.Unity
         {
             _client = new HttpClient();
         }
-
 
         public async Task<UserResponse> Authtenticate(string username, string password)
         {
@@ -32,11 +31,7 @@ namespace EazyQuiz.Unity
 
             if (userSalt.IsNullOrEmpty())
             {
-                return new UserResponse(0, "", 0, "", 0, "", "");
-            }
-            else if (userSalt == "Error Server")
-            {
-                return new UserResponse(-1, "", 0, "", 0, "", "");
+                return null;
             }
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
@@ -57,12 +52,11 @@ namespace EazyQuiz.Unity
 
             if (response.IsSuccessStatusCode)
             {
-            var responseBody = await response.Content.ReadAsStringAsync();
-            Debug.Log(responseBody);
-            return JsonConvert.DeserializeObject<UserResponse>(responseBody);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                Debug.Log(responseBody);
+                return JsonConvert.DeserializeObject<UserResponse>(responseBody);
             }
-                return new UserResponse(-1, "", 0, "", 0, "", "");
-
+            return null;
         }
 
         private async Task<string> GetUserSalt(string username)
@@ -81,7 +75,7 @@ namespace EazyQuiz.Unity
             }
             else
             {
-                return "Error Server";
+                return "";
             }
 
         }
@@ -153,7 +147,7 @@ namespace EazyQuiz.Unity
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<QuestionResponse> GetQuestion(string token)
+        public async Task<QuestionWithAnswers> GetQuestion(string token)
         {
             var request = new HttpRequestMessage
             {
@@ -167,7 +161,7 @@ namespace EazyQuiz.Unity
 
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<QuestionResponse>(responseBody);
+            return JsonConvert.DeserializeObject<QuestionWithAnswers>(responseBody);
         }
 
         /// <summary>
