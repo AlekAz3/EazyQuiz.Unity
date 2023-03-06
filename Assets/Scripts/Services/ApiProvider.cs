@@ -9,6 +9,7 @@ using System.Text;
 using Newtonsoft.Json;
 using EazyQuiz.Extensions;
 using Zenject;
+using System.Collections.Generic;
 
 namespace EazyQuiz.Unity
 {
@@ -162,6 +163,29 @@ namespace EazyQuiz.Unity
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<QuestionWithAnswers>(responseBody);
+        }
+
+
+        /// <summary>
+        /// Получить вопрос и ответы с сервера
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<List<QuestionWithAnswers>> GetQuestions(string token)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/Questions/GetQuestions"),
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            var response = await _client.SendAsync(request);
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<List<QuestionWithAnswers>>(responseBody);
         }
 
         /// <summary>

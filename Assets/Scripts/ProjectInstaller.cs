@@ -1,6 +1,4 @@
 using EazyQuiz.Unity;
-using System.Collections.Generic;
-using UnityEngine;
 using Zenject;
 
 public class ProjectInstaller : MonoInstaller

@@ -1,9 +1,8 @@
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -17,19 +16,61 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject gameovers;
     [SerializeField] private TMP_Text QuestiolLabel;
 
-    private QuestionWithAnswers question;
+
+    /// <summary>
+    /// Пол вопросов
+    /// </summary>
+    private List<QuestionWithAnswers> questions = new List<QuestionWithAnswers>();
+
+    /// <summary>
+    /// Порядок вопроса 
+    /// </summary>
+    private int order = 0;
 
     [Inject] private UserService _userService;
     [Inject] private ApiProvider _apiProvider;
     private GameOverScreen _gameOverScreen;
 
-    private void Awake()
+    private async void Awake()
     {
         _gameOverScreen = gameovers.GetComponent<GameOverScreen>();
-        question = Task.Run(() => { return _apiProvider.GetQuestion(_userService.UserInfo.Token); }).Result;
-        QuestiolLabel.text = question.Text;
+        await NewQuestion();
+    }
 
-        var answers = question.Answers
+    /// <summary>
+    /// Следующий вопрос
+    /// </summary>
+    private async Task NewQuestion()
+    {
+        if (questions.Count() - order < 5)
+        {
+            await GetQuestions();
+        }
+        SetQuestion();
+    }
+
+    /// <summary>
+    /// Дополнение вопросов с сервера 
+    /// </summary>
+    public async Task GetQuestions()
+    {
+        if (order > 25)
+        {
+            order = 0;
+            questions.Clear();
+        }
+        var ques = await _apiProvider.GetQuestions(_userService.UserInfo.Token);
+
+        questions.AddRange(ques);
+    }
+
+    /// <summary>
+    /// Запись текста вопросов и ответов в интерфейс
+    /// </summary>
+    public void SetQuestion()
+    {
+        QuestiolLabel.text = questions[order].Text;
+        var answers = questions[order].Answers
             .ToList()
             .Shuffle();
 
@@ -39,6 +80,9 @@ public class GameController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Проверка ответа игрока
+    /// </summary>
     public async Task CheckUserAnswer(Answer answer)
     {
         if (answer.IsCorrect)
@@ -52,9 +96,22 @@ public class GameController : MonoBehaviour
             Debug.Log("Wrong");
         }
 
-        await _userService.SendUserAnswer(answer, question.QuestionId);
+        await _userService.SendUserAnswer(answer, questions[order].QuestionId);
     }
 
+    /// <summary>
+    /// Следующий вопрос
+    /// </summary>
+    public async void NextQuestion()
+    {
+        order++;
+        await NewQuestion();
+        _gameOverScreen.Hide();
+    }
+
+    /// <summary>
+    /// Выход в главное меню
+    /// </summary>
     public void ExitButtonClick()
     {
         SceneManager.LoadScene("MainMenu");
