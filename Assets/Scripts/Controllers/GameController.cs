@@ -1,7 +1,7 @@
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity;
-
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,9 +17,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject gameovers;
     [SerializeField] private TMP_Text QuestiolLabel;
 
-    private QuestionResponse question;
-
-    private int IdCorrectAnswer;
+    private QuestionWithAnswers question;
 
     [Inject] private UserService _userService;
     [Inject] private ApiProvider _apiProvider;
@@ -29,22 +27,23 @@ public class GameController : MonoBehaviour
     {
         _gameOverScreen = gameovers.GetComponent<GameOverScreen>();
         question = Task.Run(() => { return _apiProvider.GetQuestion(_userService.UserInfo.Token); }).Result;
-        QuestiolLabel.text = question.TextQuestion;
-        IdCorrectAnswer = question.IdCorrectAnswer;
-        var answers = new List<Answer>() { new Answer(question.IdCorrectAnswer, question.TextCorrectAnswer), new Answer(question.IdFirstAnswer, question.TextFirstAnswer), new Answer(question.IdSecondAnswer, question.TextSecondAnswer), new Answer(question.IdThirdAnswer, question.TextThirdAnswer) };
-        answers.Shuffle();
+        QuestiolLabel.text = question.Text;
+
+        var answers = question.Answers
+            .ToList()
+            .Shuffle();
+
         for (int i = 0; i < 4; i++)
         {
             Buttons[i].GetComponent<UserAnswerClick>().WriteAnswer(answers[i]);
         }
     }
 
-    public async Task CheckUserAnswer(int userAnswer)
+    public async Task CheckUserAnswer(Answer answer)
     {
-        if (userAnswer == IdCorrectAnswer)
+        if (answer.IsCorrect)
         {
             _gameOverScreen.Show(true);
-            _userService.AddPoint();
             Debug.Log("Correct");
         }
         else
@@ -53,7 +52,7 @@ public class GameController : MonoBehaviour
             Debug.Log("Wrong");
         }
 
-        await _userService.SendUserAnswer(userAnswer, question.IdQuestion);
+        await _userService.SendUserAnswer(answer, question.QuestionId);
     }
 
     public void ExitButtonClick()

@@ -14,6 +14,7 @@ public class AuthController : MonoBehaviour
     [SerializeField] private GameObject LoginGO;
     [SerializeField] private GameObject RegisterGO;
     [SerializeField] private GameObject ErrorGO;
+    [SerializeField] private GameObject LoadingGO;
 
     [SerializeField] private GameObject LoginLabel;
     [SerializeField] private GameObject RegisterLabel;
@@ -27,14 +28,16 @@ public class AuthController : MonoBehaviour
     [SerializeField] private TMP_InputField AgeRegisteInput;
     [SerializeField] private TMP_Dropdown GenderRegisteInput;
     [SerializeField] private TMP_Dropdown CountryRegisteInput;
-     private ErrorScreen _error;
 
     [Inject] private UserService _userService;
     [Inject] private ApiProvider _apiProvider;
+     private LoadingScreen _loadingScreen;
+     private ErrorScreen _error;
 
     private void Awake()
     {
         _error = ErrorGO.GetComponent<ErrorScreen>();
+        _loadingScreen = LoadingGO.GetComponent<LoadingScreen>();
     }
 
 
@@ -51,7 +54,7 @@ public class AuthController : MonoBehaviour
     {
         string username = UsernameLoginInput.text;
         string password = PasswordLoginInput.text;
-
+        _loadingScreen.Show();
         if (username.IsNullOrEmpty() || password.IsNullOrEmpty())
         {
             _error.Activate("Есть пустые поля");
@@ -66,14 +69,9 @@ public class AuthController : MonoBehaviour
 
         await _userService.Authtenticate(username, password);
 
-        if (_userService.UserInfo.Id == 0)
+        if (_userService.UserInfo == null)
         {
-            _error.Activate("Пользователь не найден\n\nНеверный логин/пароль");
-            return;
-        }
-        if (_userService.UserInfo.Id == -1)
-        {
-            _error.Activate("Сервер недоступен");
+            _error.Activate("Пользователь не найден");
             return;
         }
 
@@ -89,7 +87,6 @@ public class AuthController : MonoBehaviour
         string age = AgeRegisteInput.text;
         string gender = GenderRegisteInput.captionText.text;
         string country = CountryRegisteInput.captionText.text;
-
 
         if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty() || age.IsNullOrEmpty())
         {
@@ -132,6 +129,8 @@ public class AuthController : MonoBehaviour
             _error.Activate("Такой ник уже существует");
             return;
         }
+
+
 
         await _apiProvider.Registrate(
             password, 

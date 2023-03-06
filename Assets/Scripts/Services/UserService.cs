@@ -22,19 +22,24 @@ namespace EazyQuiz.Unity
             UserInfo = await _apiProvider.Authtenticate(login, password);
         }
 
-        internal async Task SendUserAnswer(int userAnswerId, int questionId)
+        internal async Task SendUserAnswer(Answer answer, Guid questionId)
         {
-            var a = new UserAnswer()
+            var userAnswer = new UserAnswer()
             {
-                IdUser = UserInfo.Id,
-                IdQuestion = questionId,
-                IdAnswer = userAnswerId
+                UserId = UserInfo.Id,
+                QuestionId = questionId,
+                AnswerId = answer.AnswerId
             };
 
-            await _apiProvider.SendUserAnswer(a, UserInfo.Token);
+            if (answer.IsCorrect)
+            {
+                AddPoint();
+            }
+
+            await _apiProvider.SendUserAnswer(userAnswer, UserInfo.Token);
         }
 
-        internal void AddPoint()
+        private void AddPoint()
         {
             UserInfo.Points++;
         }
