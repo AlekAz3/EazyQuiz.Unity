@@ -36,6 +36,10 @@ public class AuthController : MonoBehaviour
 
     private void Awake()
     {
+#if UNITY_ANDROID && !UNITY_EDITOR
+    Screen.fullScreen = false; //Should be unnecessary unless you changed it
+    AndroidUtility.ShowStatusBar(Color.black);
+#endif
         _error = ErrorGO.GetComponent<ErrorScreen>();
         _loadingScreen = LoadingGO.GetComponent<LoadingScreen>();
     }

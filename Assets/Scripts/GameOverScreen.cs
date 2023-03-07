@@ -7,17 +7,10 @@ public class GameOverScreen : MonoBehaviour
 
     [SerializeField] private TMP_Text text;
 
-    public void Show(bool isTrueAnswer)
+    public void Show(string inpitText)
     {
         screen.SetActive(true);
-        if (isTrueAnswer)
-        {
-            text.text = "Ответ верный!";
-        }
-        else
-        {
-            text.text = "Ответ не верный!";
-        }
+        text.text = inpitText;
     }
 
     public void Hide()
