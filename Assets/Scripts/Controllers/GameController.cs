@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private List<Button> Buttons;
     [SerializeField] private GameObject gameovers;
+    [SerializeField] private GameObject timer;
     [SerializeField] private TMP_Text QuestiolLabel;
 
 
@@ -30,10 +31,12 @@ public class GameController : MonoBehaviour
     [Inject] private UserService _userService;
     [Inject] private ApiProvider _apiProvider;
     private GameOverScreen _gameOverScreen;
+    private Timer _timer;
 
     private async void Awake()
     {
         _gameOverScreen = gameovers.GetComponent<GameOverScreen>();
+        _timer = timer.GetComponent<Timer>();
         await NewQuestion();
     }
 
@@ -47,6 +50,7 @@ public class GameController : MonoBehaviour
             await GetQuestions();
         }
         SetQuestion();
+        _timer.StartTimer(5);
     }
 
     /// <summary>
@@ -80,20 +84,22 @@ public class GameController : MonoBehaviour
         }
     }
 
+
+
+
     /// <summary>
     /// Проверка ответа игрока
     /// </summary>
     public async Task CheckUserAnswer(Answer answer)
     {
+        _timer.StopAllCoroutines();
         if (answer.IsCorrect)
         {
-            _gameOverScreen.Show(true);
-            Debug.Log("Correct");
+            _gameOverScreen.Show("Ответ верный");
         }
         else
         {
-            _gameOverScreen.Show(false);
-            Debug.Log("Wrong");
+            _gameOverScreen.Show("Ответ верный");
         }
 
         await _userService.SendUserAnswer(answer, questions[order].QuestionId);
