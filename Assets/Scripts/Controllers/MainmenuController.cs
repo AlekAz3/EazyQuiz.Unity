@@ -30,4 +30,10 @@ public class MainmenuController : MonoBehaviour
         _loadingScreen.Show();
         SceneManager.LoadScene("GameScene");
     }
+
+    public void ViewHistoryButtonClick()
+    {
+        _loadingScreen.Show();
+        SceneManager.LoadScene("HistoryScene");
+    }
 }
