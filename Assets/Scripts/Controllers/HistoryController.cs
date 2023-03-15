@@ -4,11 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 using Zenject;
 
 public class HistoryController : MonoBehaviour
 {
     [SerializeField] public GameObject prefab;
+    [SerializeField] public Scrollbar scrollbar;
     [Inject] private readonly UserService user;
     [Inject] private readonly ApiProvider apiProvider;
     public RectTransform content;
@@ -17,6 +19,7 @@ public class HistoryController : MonoBehaviour
     private async void Awake()
     {
         await AddHistoryCard();
+        scrollbar.value = 0;
     }
 
     public async Task AddHistoryCard()
