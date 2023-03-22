@@ -1,9 +1,11 @@
 using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
@@ -15,11 +17,12 @@ public class HistoryController : MonoBehaviour
     [Inject] private readonly ApiProvider apiProvider;
     public RectTransform content;
     private int page = 0;
+    private int count = 0;
+    private bool flag = true;
 
     private async void Awake()
     {
         await AddHistoryCard();
-        scrollbar.value = 0;
     }
 
     public async Task AddHistoryCard()
@@ -29,6 +32,8 @@ public class HistoryController : MonoBehaviour
             new AnswersGetHistoryCommand() { PageNumber = page, PageSize = 10 },
             user.UserInfo.Token
             );
+        Debug.Log(a.Count);
+        count = (int)a.Count;
          GenerateGameObjects(a.Items);
     }
 
@@ -40,5 +45,39 @@ public class HistoryController : MonoBehaviour
             instants.transform.SetParent(content, false);
             instants.GetComponent<SetUserAnswer>().ItemView(item);
         }
+    }
+
+    public async void ValueCheck(Vector2 vector)
+    {
+        if (vector.y >= 0.3)
+        {
+            flag = true;
+        }
+
+        if (vector.y<0.2 && flag)
+        {
+            if (AddPage())
+            {
+                flag = false;
+                await AddHistoryCard();
+                Debug.Log("AddPage");
+
+            }
+        }
+    }
+
+    public bool AddPage()
+    {
+        if (Math.Ceiling(count / 10d) > page)
+        {
+            page++;
+            return true;
+        }
+        return false;
+    }
+
+    public void ExitToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

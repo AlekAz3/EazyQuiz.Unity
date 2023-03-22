@@ -99,7 +99,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            _gameOverScreen.Show("Ответ верный");
+            _gameOverScreen.Show("Ответ не верный");
         }
 
         await _userService.SendUserAnswer(answer, questions[order].QuestionId);
