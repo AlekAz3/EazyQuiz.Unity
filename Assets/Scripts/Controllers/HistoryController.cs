@@ -24,6 +24,10 @@ public class HistoryController : MonoBehaviour
     {
         await AddHistoryCard();
     }
+    private void Start()
+    {
+        scrollbar.value = 1;
+    }
 
     public async Task AddHistoryCard()
     {
