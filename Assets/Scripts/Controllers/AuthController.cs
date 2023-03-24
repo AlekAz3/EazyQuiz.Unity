@@ -133,13 +133,23 @@ public class AuthController : MonoBehaviour
             return;
         }
 
-        if ( await _apiProvider.CheckUsername(username))
+        _loadingScreen.Show();
+
+        try
         {
-            _error.Activate("Такой ник уже существует");
+            if (await _apiProvider.CheckUsername(username))
+            {
+                _loadingScreen.Hide();
+                _error.Activate("Такой ник уже существует");
+                return;
+            }
+        }
+        catch (Exception)
+        {
+            _loadingScreen.Hide();
+            _error.Activate("Сервер не доступен\nПовторите попытку позже");
             return;
         }
-
-
 
         await _apiProvider.Registrate(
             password, 
@@ -148,6 +158,7 @@ public class AuthController : MonoBehaviour
             gender,
             country
         );
+        _loadingScreen.Hide();
         Switch();
     }
 }

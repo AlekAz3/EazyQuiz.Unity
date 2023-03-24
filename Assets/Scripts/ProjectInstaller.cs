@@ -8,6 +8,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<ApiProvider>().AsTransient().NonLazy();
         Container.Bind<UserService>().AsSingle().NonLazy();
 
+        Container.Bind<QuestionsService>().AsTransient().NonLazy();
         Container.Bind<GameOverScreen>().AsSingle();
 
         Container.Bind<AuthController>().AsSingle();

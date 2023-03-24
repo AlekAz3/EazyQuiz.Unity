@@ -17,19 +17,12 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject timer;
     [SerializeField] private TMP_Text QuestiolLabel;
 
+    private QuestionWithAnswers question;
 
-    /// <summary>
-    /// Пол вопросов
-    /// </summary>
-    private List<QuestionWithAnswers> questions = new List<QuestionWithAnswers>();
-
-    /// <summary>
-    /// Порядок вопроса 
-    /// </summary>
-    private int order = 0;
-
+    [Inject] private QuestionsService _questionsService;
     [Inject] private UserService _userService;
-    [Inject] private ApiProvider _apiProvider;
+
+
     private GameOverScreen _gameOverScreen;
     private Timer _timer;
 
@@ -45,27 +38,9 @@ public class GameController : MonoBehaviour
     /// </summary>
     private async Task NewQuestion()
     {
-        if (questions.Count() - order < 5)
-        {
-            await GetQuestions();
-        }
+        question = await _questionsService.NextQuestion();
         SetQuestion();
         _timer.StartTimer(5);
-    }
-
-    /// <summary>
-    /// Дополнение вопросов с сервера 
-    /// </summary>
-    public async Task GetQuestions()
-    {
-        if (order > 25)
-        {
-            order = 0;
-            questions.Clear();
-        }
-        var ques = await _apiProvider.GetQuestions(_userService.UserInfo.Token);
-
-        questions.AddRange(ques);
     }
 
     /// <summary>
@@ -73,8 +48,8 @@ public class GameController : MonoBehaviour
     /// </summary>
     public void SetQuestion()
     {
-        QuestiolLabel.text = questions[order].Text;
-        var answers = questions[order].Answers
+        QuestiolLabel.text = question.Text;
+        var answers = question.Answers
             .ToList()
             .Shuffle();
 
@@ -83,9 +58,6 @@ public class GameController : MonoBehaviour
             Buttons[i].GetComponent<UserAnswerClick>().WriteAnswer(answers[i]);
         }
     }
-
-
-
 
     /// <summary>
     /// Проверка ответа игрока
@@ -102,7 +74,7 @@ public class GameController : MonoBehaviour
             _gameOverScreen.Show("Ответ не верный");
         }
 
-        await _userService.SendUserAnswer(answer, questions[order].QuestionId);
+        await _userService.SendUserAnswer(answer, question.QuestionId);
     }
 
     /// <summary>
@@ -110,7 +82,6 @@ public class GameController : MonoBehaviour
     /// </summary>
     public async void NextQuestion()
     {
-        order++;
         await NewQuestion();
         _gameOverScreen.Hide();
     }

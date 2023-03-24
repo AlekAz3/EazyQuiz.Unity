@@ -19,7 +19,6 @@ public class HistoryController : MonoBehaviour
     private int page = 0;
     private int count = 0;
     private bool flag = true;
-
     private async void Awake()
     {
         await AddHistoryCard();
