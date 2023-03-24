@@ -49,7 +49,7 @@ public class HistoryController : MonoBehaviour
 
     public async void ValueCheck(Vector2 vector)
     {
-        if (vector.y >= 0.3)
+        if (vector.y > 0.2)
         {
             flag = true;
         }

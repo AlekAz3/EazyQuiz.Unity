@@ -8,4 +8,9 @@ public class LoadingScreen : MonoBehaviour
     {
         screen.SetActive(true);
     }
+
+    public void Hide()
+    {
+        screen.SetActive(false);
+    }
 }

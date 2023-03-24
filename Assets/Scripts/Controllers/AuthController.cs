@@ -55,20 +55,31 @@ public class AuthController : MonoBehaviour
         _loadingScreen.Show();
         if (username.IsNullOrEmpty() || password.IsNullOrEmpty())
         {
+            _loadingScreen.Hide();
             _error.Activate("Есть пустые поля");
             return;
         }
 
         if (!password.IsMoreEightSymbols())
         {
+            _loadingScreen.Hide();
             _error.Activate("Меньше 8ми символов пароль");
             return;
         }
-
-        await _userService.Authtenticate(username, password);
-
-        if (_userService.UserInfo == null)
+        try
         {
+            await _userService.Authtenticate(username, password);
+        }
+        catch (Exception)
+        {
+            _loadingScreen.Hide();
+            _error.Activate("Сервер не доступен\nПовторите попытку позже");
+            return;
+        }
+
+        if (_userService.UserInfo.Id == Guid.Empty)    
+        {
+            _loadingScreen.Hide();
             _error.Activate("Пользователь не найден");
             return;
         }

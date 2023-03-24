@@ -17,7 +17,7 @@ namespace EazyQuiz.Unity
 {
     public class ApiProvider
     {
-        private static readonly string BaseAdress = "http://10.61.140.42:5274";
+        private static readonly string BaseAdress = "http://localhost:5274";
         private readonly HttpClient _client;
 
 
@@ -31,9 +31,9 @@ namespace EazyQuiz.Unity
             string userSalt = await GetUserSalt(username);
             Debug.Log($"Get Salt and password \n {userSalt}");
 
-            if (userSalt.IsNullOrEmpty())
+            if (userSalt == "")
             {
-                return null;
+                return new UserResponse() { Id = Guid.Empty };
             }
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
@@ -57,12 +57,18 @@ namespace EazyQuiz.Unity
             {
                 Debug.Log("NotFound");
             }
-            return null;
+            return new UserResponse() { Id = Guid.Empty }; ;
         }
 
         private async Task<string> GetUserSalt(string username)
         {
             var response = await _client.GetAsync($"{BaseAdress}/api/Auth/{username}");
+            
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return "";
+            }
+
             var responseBody = await response.Content.ReadAsStringAsync();
             return responseBody;
 
@@ -109,7 +115,7 @@ namespace EazyQuiz.Unity
         {
             var response = await _client.GetAsync($"{BaseAdress}/api/Auth/{userName}");
 
-            return !(response.StatusCode == HttpStatusCode.NotFound);
+            return response.StatusCode == HttpStatusCode.OK;
         }
 
         /// <summary>
