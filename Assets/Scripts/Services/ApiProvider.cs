@@ -10,12 +10,14 @@ using Newtonsoft.Json;
 using EazyQuiz.Extensions;
 using Zenject;
 using System.Collections.Generic;
+using System.Net;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 namespace EazyQuiz.Unity
 {
     public class ApiProvider
     {
-        private static readonly string BaseAdress = "http://10.61.140.42:5274";
+        private static readonly string BaseAdress = "http://localhost:5274";
         private readonly HttpClient _client;
 
 
@@ -26,30 +28,24 @@ namespace EazyQuiz.Unity
 
         public async Task<UserResponse> Authtenticate(string username, string password)
         {
-
             string userSalt = await GetUserSalt(username);
             Debug.Log($"Get Salt and password \n {userSalt}");
 
-            if (userSalt.IsNullOrEmpty())
+            if (userSalt == "")
             {
-                return null;
+                return new UserResponse() { Id = Guid.Empty };
             }
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
             Debug.Log($"Get Salt and password {passwordHash} \n {userSalt}");
 
-            string json = JsonConvert.SerializeObject(new UserAuth(username, new UserPassword(passwordHash, userSalt)));
-
-            Debug.Log($"Serialize {json}");
-
-            var request = new HttpRequestMessage
+            var user = new UserAuth()
             {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri($"{BaseAdress}/api/Auth/GetUserByPassword"),
-                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json),
+                Username = username,
+                PasswordHash = passwordHash
             };
 
-            var response = await _client.SendAsync(request);
+            var response = await _client.GetAsync($"{BaseAdress}/api/Auth?Username={user.Username}&PasswordHash={user.PasswordHash}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -57,30 +53,26 @@ namespace EazyQuiz.Unity
                 Debug.Log(responseBody);
                 return JsonConvert.DeserializeObject<UserResponse>(responseBody);
             }
-            return null;
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                Debug.Log("NotFound");
+            }
+            return new UserResponse() { Id = Guid.Empty }; ;
         }
 
         private async Task<string> GetUserSalt(string username)
         {
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/Auth/GetUserSalt?userName={username}"),
-            };
-            var response = await _client.SendAsync(request);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseBody = await response.Content.ReadAsStringAsync();
-                return responseBody;
-            }
-            else
+            var response = await _client.GetAsync($"{BaseAdress}/api/Auth/{username}");
+            
+            if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 return "";
             }
 
-        }
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return responseBody;
 
+        }
 
         /// <summary>
         /// Регистрация нового игрока
@@ -106,7 +98,7 @@ namespace EazyQuiz.Unity
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"{BaseAdress}/api/Auth/RegisterNewPlayer"),
+                RequestUri = new Uri($"{BaseAdress}/api/Auth"),
                 Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json),
             };
 
@@ -121,26 +113,9 @@ namespace EazyQuiz.Unity
         /// <exception cref="ArgumentNullException">Нулл</exception>
         public async Task<bool> CheckUsername(string userName)
         {
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/Auth/CheckUniqueUsername?userName={userName}"),
-            };
+            var response = await _client.GetAsync($"{BaseAdress}/api/Auth/{userName}");
 
-            var response = await _client.SendAsync(request);
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-
-            if (responseBody == null)
-            {
-                throw new ArgumentNullException(paramName: nameof(userName));
-            }
-
-            if (responseBody == "true")
-            {
-                return true;
-            }
-            return false;
+            return response.StatusCode == HttpStatusCode.OK;
         }
 
         /// <summary>
@@ -208,6 +183,22 @@ namespace EazyQuiz.Unity
 
 
             await _client.SendAsync(request);
+        }
+
+        public async Task<InputCountDTO<UserAnswerHistory>> GetHistory(Guid userId, AnswersGetHistoryCommand command, string token)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/History?userId={userId}&PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            var response = await _client.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<InputCountDTO<UserAnswerHistory>>(responseBody);
         }
     }
 }

@@ -11,6 +11,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<GameOverScreen>().AsSingle();
 
         Container.Bind<AuthController>().AsSingle();
+        Container.Bind<HistoryController>().AsSingle();
         Container.Bind<GameController>().AsSingle();
         Container.Bind<MainmenuController>().AsSingle();
     }

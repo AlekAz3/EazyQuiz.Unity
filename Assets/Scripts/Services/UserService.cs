@@ -18,6 +18,7 @@ namespace EazyQuiz.Unity
         public async Task Authtenticate(string login, string password)
         {
             UserInfo = await _apiProvider.Authtenticate(login, password);
+
         }
 
         internal async Task SendUserAnswer(Answer answer, Guid questionId)
