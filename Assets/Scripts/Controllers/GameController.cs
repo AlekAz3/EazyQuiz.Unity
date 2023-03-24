@@ -64,7 +64,7 @@ public class GameController : MonoBehaviour
     /// </summary>
     public async Task CheckUserAnswer(Answer answer)
     {
-        _timer.StopAllCoroutines();
+        _timer.StopTimer();
         if (answer.IsCorrect)
         {
             _gameOverScreen.Show("Ответ верный");
