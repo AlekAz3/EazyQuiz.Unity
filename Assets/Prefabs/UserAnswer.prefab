@@ -93,7 +93,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 26.5
+  m_fontSize: 26.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -416,7 +416,7 @@ GameObject:
   - component: {fileID: 5988325025001534667}
   - component: {fileID: 5988325025001534665}
   - component: {fileID: 5988325025001534666}
-  - component: {fileID: 5300833575196358256}
+  - component: {fileID: 1777455207852465943}
   m_Layer: 5
   m_Name: UserAnswer
   m_TagString: Untagged
@@ -487,7 +487,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5300833575196358256
+--- !u!114 &1777455207852465943
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -496,7 +496,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5988325025001534676}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a57955fed280046429d4ea9ddd94fe17, type: 3}
+  m_Script: {fileID: 11500000, guid: 4788cb72933f9ba4fa7f30eb60392537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Answer: {fileID: 5988325022979700634}

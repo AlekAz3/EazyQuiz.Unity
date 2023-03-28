@@ -10,8 +10,6 @@ public class AuthController : MonoBehaviour
 {
     [SerializeField] private GameObject LoginGO;
     [SerializeField] private GameObject RegisterGO;
-    [SerializeField] private GameObject ErrorGO;
-    [SerializeField] private GameObject LoadingGO;
 
     [SerializeField] private GameObject LoginLabel;
     [SerializeField] private GameObject RegisterLabel;
@@ -26,18 +24,17 @@ public class AuthController : MonoBehaviour
     [SerializeField] private TMP_Dropdown GenderRegisteInput;
     [SerializeField] private TMP_Dropdown CountryRegisteInput;
 
-     [Inject] private UserService _userService;
-     [Inject] private ApiProvider _apiProvider;
-     private LoadingScreen _loadingScreen;
-     private ErrorScreen _error;
+    [SerializeField] private LoadingScreen _loadingScreen;
+    [SerializeField] private ErrorScreen _error;
+
+    
+    [Inject] private UserService _userService;
+    [Inject] private ApiProvider _apiProvider;
 
     private void Awake()
     {
         Screen.fullScreen = false;
-        _error = ErrorGO.GetComponent<ErrorScreen>();
-        _loadingScreen = LoadingGO.GetComponent<LoadingScreen>();
     }
-
 
     public void Switch()
     {

@@ -133,6 +133,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8850353638455895295, guid: 2f28ca7f4ba411a45821dcf4de08a343, type: 3}
   m_PrefabInstance: {fileID: 561029712}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &57434094 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8850353638455895288, guid: 2f28ca7f4ba411a45821dcf4de08a343, type: 3}
+  m_PrefabInstance: {fileID: 561029712}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57434092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4878b45ec4e759418e25005b7d9298d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &117343797
 GameObject:
   m_ObjectHideFlags: 0
@@ -2182,7 +2193,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 620368043}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbcdc6e579af89e498bda247755214d4, type: 3}
+  m_Script: {fileID: 11500000, guid: 92ba7c608f6faa445abd730d76d22c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ErrorLabel: {fileID: 620368043}
@@ -5451,8 +5462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers:
-  - {fileID: 166540146166010361, guid: defff217fe0982a4c8864ed7409b0d51, type: 3}
+  _monoInstallers: []
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -6891,6 +6901,8 @@ MonoBehaviour:
   AgeRegisteInput: {fileID: 940926508}
   GenderRegisteInput: {fileID: 1015316622}
   CountryRegisteInput: {fileID: 1980156011}
+  _loadingScreen: {fileID: 57434094}
+  _error: {fileID: 620368048}
 --- !u!1 &1731871164
 GameObject:
   m_ObjectHideFlags: 0

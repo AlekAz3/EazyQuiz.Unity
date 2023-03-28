@@ -13,23 +13,18 @@ using Zenject;
 public class GameController : MonoBehaviour
 {
     [SerializeField] private List<Button> Buttons;
-    [SerializeField] private GameObject gameovers;
-    [SerializeField] private GameObject timer;
     [SerializeField] private TMP_Text QuestiolLabel;
 
-    private QuestionWithAnswers question;
+    [SerializeField] private GameOverScreen _gameOverScreen;
+    [SerializeField] private Timer _timer;
 
     [Inject] private QuestionsService _questionsService;
     [Inject] private UserService _userService;
 
-
-    private GameOverScreen _gameOverScreen;
-    private Timer _timer;
+    private QuestionWithAnswers question;
 
     private async void Awake()
     {
-        _gameOverScreen = gameovers.GetComponent<GameOverScreen>();
-        _timer = timer.GetComponent<Timer>();
         await NewQuestion();
     }
 

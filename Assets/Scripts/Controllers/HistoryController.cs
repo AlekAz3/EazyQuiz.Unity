@@ -15,17 +15,16 @@ public class HistoryController : MonoBehaviour
     [SerializeField] public Scrollbar scrollbar;
     [Inject] private readonly UserService user;
     [Inject] private readonly ApiProvider apiProvider;
+
     public RectTransform content;
+
     private int page = 0;
     private int count = 0;
     private bool flag = true;
+
     private async void Awake()
     {
         await AddHistoryCard();
-    }
-    private void Start()
-    {
-        scrollbar.value = 1;
     }
 
     public async Task AddHistoryCard()

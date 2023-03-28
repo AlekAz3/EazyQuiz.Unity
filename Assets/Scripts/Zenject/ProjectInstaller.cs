@@ -5,15 +5,15 @@ public class ProjectInstaller : MonoInstaller
 { 
     public override void InstallBindings()
     {
-        Container.Bind<ApiProvider>().AsTransient().NonLazy();
-        Container.Bind<UserService>().AsSingle().NonLazy();
+        Container.Bind<ApiProvider>().AsCached().NonLazy();
+        Container.Bind<UserService>().AsCached().NonLazy();
 
         Container.Bind<QuestionsService>().AsTransient().NonLazy();
-        Container.Bind<GameOverScreen>().AsSingle();
+        Container.Bind<GameOverScreen>().AsCached();
 
-        Container.Bind<AuthController>().AsSingle();
-        Container.Bind<HistoryController>().AsSingle();
-        Container.Bind<GameController>().AsSingle();
-        Container.Bind<MainmenuController>().AsSingle();
+        Container.Bind<AuthController>().AsCached();
+        Container.Bind<HistoryController>().AsCached();
+        Container.Bind<GameController>().AsCached();
+        Container.Bind<MainmenuController>().AsCached();
     }
 }

@@ -7,17 +7,15 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using Newtonsoft.Json;
-using EazyQuiz.Extensions;
-using Zenject;
 using System.Collections.Generic;
 using System.Net;
-using Unity.VisualScripting.Antlr3.Runtime;
 
 namespace EazyQuiz.Unity
 {
     public class ApiProvider
     {
-        private static readonly string BaseAdress = "http://localhost:5274";
+        private static readonly string BaseAdress = "http://10.61.140.42:5274";
+
         private readonly HttpClient _client;
 
 
