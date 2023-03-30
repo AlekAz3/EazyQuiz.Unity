@@ -212,9 +212,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ee0997bc60e27419d1aa2605dc7455, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _loadingScreen: {fileID: 571679696}
   UsernameLabel: {fileID: 1474208815}
   PointsLabel: {fileID: 1622423840}
-  LoadingGO: {fileID: 571679696}
 --- !u!1 &360044742
 GameObject:
   m_ObjectHideFlags: 0
@@ -590,11 +590,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8850353638455895295, guid: 2f28ca7f4ba411a45821dcf4de08a343, type: 3}
   m_PrefabInstance: {fileID: 571679694}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &571679696 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8850353638455895294, guid: 2f28ca7f4ba411a45821dcf4de08a343, type: 3}
+--- !u!114 &571679696 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8850353638455895288, guid: 2f28ca7f4ba411a45821dcf4de08a343, type: 3}
   m_PrefabInstance: {fileID: 571679694}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4878b45ec4e759418e25005b7d9298d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &573838645
 GameObject:
   m_ObjectHideFlags: 0

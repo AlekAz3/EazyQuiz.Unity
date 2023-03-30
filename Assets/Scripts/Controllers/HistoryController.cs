@@ -1,87 +1,137 @@
 using EazyQuiz.Models.DTO;
-using EazyQuiz.Unity;
+using EazyQuiz.Unity.Elements.History;
+using EazyQuiz.Unity.Services;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
-public class HistoryController : MonoBehaviour
+namespace EazyQuiz.Unity.Controllers
 {
-    [SerializeField] public GameObject prefab;
-    [SerializeField] public Scrollbar scrollbar;
-    [Inject] private readonly UserService user;
-    [Inject] private readonly ApiProvider apiProvider;
-    public RectTransform content;
-    private int page = 0;
-    private int count = 0;
-    private bool flag = true;
+    /// <summary>
+    /// Контроллер панели просмотра истории ответов
+    /// </summary>
+    public class HistoryController : MonoBehaviour
+    {
+        /// <summary>
+        /// Префаб карточки ответа
+        /// </summary>
+        [SerializeField] public GameObject prefab;
 
-    private async void Awake()
-    {
-        await AddHistoryCard();
-    }
-    private void Start()
-    {
-        scrollbar.value = 1;
-    }
+        /// <summary>
+        /// Скроллбар
+        /// </summary>
+        [SerializeField] public Scrollbar scrollbar;
 
-    public async Task AddHistoryCard()
-    {
-        var a = await apiProvider.GetHistory(
-            user.UserInfo.Id,
-            new AnswersGetHistoryCommand() { PageNumber = page, PageSize = 10 },
-            user.UserInfo.Token
-            );
-        Debug.Log(a.Count);
-        count = (int)a.Count;
-         GenerateGameObjects(a.Items);
-    }
+        /// <summary>
+        /// Сервис пользователя
+        /// </summary>
+        [Inject] private readonly UserService user;
 
-    private void GenerateGameObjects(IEnumerable<UserAnswerHistory> answerHistory)
-    {
-        foreach (var item in answerHistory)
+        /// <summary>
+        /// Сервис общения с сервером
+        /// </summary>
+        [Inject] private readonly ApiProvider apiProvider;
+
+        /// <inheritdoc cref="SwitchSceneService"/>
+        [Inject] private readonly SwitchSceneService _scene;
+
+        public RectTransform content;
+
+        /// <summary>
+        /// Текущая "Страница"
+        /// </summary>
+        private int page = 0;
+
+        /// <summary>
+        /// Всего элементов
+        /// </summary>
+        private int count = 0;
+
+        /// <summary>
+        /// Флаг
+        /// </summary>
+        private bool flag = true;
+
+        private async void Awake()
         {
-            var instants = Instantiate(prefab);
-            instants.transform.SetParent(content, false);
-            instants.GetComponent<SetUserAnswer>().ItemView(item);
+            await AddHistoryCard();
         }
-    }
 
-    public async void ValueCheck(Vector2 vector)
-    {
-        if (vector.y > 0.2)
+        /// <summary>
+        /// Добавить карточку ответа на вопрос
+        /// </summary>
+        private async Task AddHistoryCard()
         {
-            flag = true;
+            var historyAnswers = await apiProvider.GetHistory(
+                user.UserInfo.Id,
+                new AnswersGetHistoryCommand() { PageNumber = page, PageSize = 10 },
+                user.UserInfo.Token
+                );
+            Debug.Log(historyAnswers.Count);
+            count = (int)historyAnswers.Count;
+            GenerateGameObjects(historyAnswers.Items);
         }
 
-        if (vector.y<0.2 && flag)
+        /// <summary>
+        /// Сгенерировать карточки ответа на вопрос
+        /// </summary>
+        /// <param name="answerHistory"></param>
+        private void GenerateGameObjects(IEnumerable<UserAnswerHistory> answerHistory)
         {
-            if (AddPage())
+            foreach (var item in answerHistory)
             {
-                flag = false;
-                await AddHistoryCard();
-                Debug.Log("AddPage");
-
+                var instants = Instantiate(prefab);
+                instants.transform.SetParent(content, false);
+                instants.GetComponent<SetUserAnswer>().ItemView(item);
             }
         }
-    }
 
-    public bool AddPage()
-    {
-        if (Math.Ceiling(count / 10d) > page)
+        /// <summary>
+        /// Проверка значение скроллбара для автоподгрузки истории
+        /// </summary>
+        /// <param name="vector"></param>
+        public async void ValueCheck(Vector2 vector)
         {
-            page++;
-            return true;
-        }
-        return false;
-    }
+            if (vector.y > 0.2)
+            {
+                flag = true;
+            }
 
-    public void ExitToMenu()
-    {
-        SceneManager.LoadScene("MainMenu");
+            if (vector.y < 0.2 && flag)
+            {
+                if (AddPage())
+                {
+                    flag = false;
+                    await AddHistoryCard();
+                    Debug.Log("AddPage");
+
+                }
+            }
+        }
+
+        /// <summary>
+        /// Переводит на следующую страницу
+        /// </summary>
+        /// <returns></returns>
+        private bool AddPage()
+        {
+            if (Math.Ceiling(count / 10d) > page)
+            {
+                page++;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Выход в главное меню
+        /// </summary>
+        public void ExitToMenu()
+        {
+            _scene.ShowMainMenuScene();
+        }
     }
 }

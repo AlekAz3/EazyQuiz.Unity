@@ -1,125 +1,124 @@
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
-using EazyQuiz.Unity;
+using EazyQuiz.Unity.Elements.Game;
+using EazyQuiz.Unity.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
-public class GameController : MonoBehaviour
+namespace EazyQuiz.Unity.Controllers
 {
-    [SerializeField] private List<Button> Buttons;
-    [SerializeField] private GameObject gameovers;
-    [SerializeField] private GameObject timer;
-    [SerializeField] private TMP_Text QuestiolLabel;
-
-
     /// <summary>
-    /// Пол вопросов
+    /// Контроллер ответов на вопросы
     /// </summary>
-    private List<QuestionWithAnswers> questions = new List<QuestionWithAnswers>();
-
-    /// <summary>
-    /// Порядок вопроса 
-    /// </summary>
-    private int order = 0;
-
-    [Inject] private UserService _userService;
-    [Inject] private ApiProvider _apiProvider;
-    private GameOverScreen _gameOverScreen;
-    private Timer _timer;
-
-    private async void Awake()
+    public class GameController : MonoBehaviour
     {
-        _gameOverScreen = gameovers.GetComponent<GameOverScreen>();
-        _timer = timer.GetComponent<Timer>();
-        await NewQuestion();
-    }
+        /// <summary>
+        /// Коллекция кнопок для ответа
+        /// </summary>
+        [SerializeField] private List<Button> Buttons;
 
-    /// <summary>
-    /// Следующий вопрос
-    /// </summary>
-    private async Task NewQuestion()
-    {
-        if (questions.Count() - order < 5)
+        /// <summary>
+        /// Текст вопроса
+        /// </summary>
+        [SerializeField] private TMP_Text QuestiolLabel;
+
+        /// <summary>
+        /// Экран завершения ответа на вопрос
+        /// </summary>
+        [SerializeField] private GameOverScreen _gameOverScreen;
+
+        /// <summary>
+        /// Таймер
+        /// </summary>
+        [SerializeField] private Timer _timer;
+
+        /// <summary>
+        /// Сервис вопросов
+        /// </summary>
+        [Inject] private QuestionsService _questionsService;
+
+        /// <summary>
+        /// Сервис пользователя
+        /// </summary>
+        [Inject] private readonly UserService _userService;
+
+        /// <inheritdoc cref="SwitchSceneService"/>
+        [Inject] private readonly SwitchSceneService _scene;
+
+        /// <summary>
+        /// Вопрос который на данный момент на экране
+        /// </summary>
+        private QuestionWithAnswers question;
+
+        private async void Awake()
         {
-            await GetQuestions();
-        }
-        SetQuestion();
-        _timer.StartTimer(5);
-    }
-
-    /// <summary>
-    /// Дополнение вопросов с сервера 
-    /// </summary>
-    public async Task GetQuestions()
-    {
-        if (order > 25)
-        {
-            order = 0;
-            questions.Clear();
-        }
-        var ques = await _apiProvider.GetQuestions(_userService.UserInfo.Token);
-
-        questions.AddRange(ques);
-    }
-
-    /// <summary>
-    /// Запись текста вопросов и ответов в интерфейс
-    /// </summary>
-    public void SetQuestion()
-    {
-        QuestiolLabel.text = questions[order].Text;
-        var answers = questions[order].Answers
-            .ToList()
-            .Shuffle();
-
-        for (int i = 0; i < 4; i++)
-        {
-            Buttons[i].GetComponent<UserAnswerClick>().WriteAnswer(answers[i]);
-        }
-    }
-
-
-
-
-    /// <summary>
-    /// Проверка ответа игрока
-    /// </summary>
-    public async Task CheckUserAnswer(Answer answer)
-    {
-        _timer.StopAllCoroutines();
-        if (answer.IsCorrect)
-        {
-            _gameOverScreen.Show("Ответ верный");
-        }
-        else
-        {
-            _gameOverScreen.Show("Ответ не верный");
+            await NewQuestion();
         }
 
-        await _userService.SendUserAnswer(answer, questions[order].QuestionId);
-    }
+        /// <summary>
+        /// Следующий вопрос
+        /// </summary>
+        private async Task NewQuestion()
+        {
+            question = await _questionsService.NextQuestion();
+            SetQuestion();
+            _timer.StartTimer(5);
+        }
 
-    /// <summary>
-    /// Следующий вопрос
-    /// </summary>
-    public async void NextQuestion()
-    {
-        order++;
-        await NewQuestion();
-        _gameOverScreen.Hide();
-    }
+        /// <summary>
+        /// Запись текста вопросов и ответов в интерфейс
+        /// </summary>
+        public void SetQuestion()
+        {
+            QuestiolLabel.text = question.Text;
+            var answers = question.Answers
+                .ToList()
+                .Shuffle();
 
-    /// <summary>
-    /// Выход в главное меню
-    /// </summary>
-    public void ExitButtonClick()
-    {
-        SceneManager.LoadScene("MainMenu");
+            for (int i = 0; i < 4; i++)
+            {
+                Buttons[i].GetComponent<UserAnswerClick>().WriteAnswer(answers[i]);
+            }
+        }
+
+        /// <summary>
+        /// Проверка ответа игрока
+        /// </summary>
+        public async Task CheckUserAnswer(Answer answer)
+        {
+            _timer.StopTimer();
+            if (answer.IsCorrect)
+            {
+                _gameOverScreen.Show("Ответ верный");
+            }
+            else
+            {
+                _gameOverScreen.Show("Ответ не верный");
+            }
+
+            await _userService.SendUserAnswer(answer, question.QuestionId);
+        }
+
+        /// <summary>
+        /// Следующий вопрос
+        /// </summary>
+        public async void NextQuestion()
+        {
+            await NewQuestion();
+            _gameOverScreen.Hide();
+        }
+
+        /// <summary>
+        /// Выход в главное меню
+        /// </summary>
+        public void ExitButtonClick()
+        {
+            _scene.ShowMainMenuScene();
+        }
     }
 }

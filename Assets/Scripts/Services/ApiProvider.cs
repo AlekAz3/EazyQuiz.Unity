@@ -7,17 +7,22 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
 using Newtonsoft.Json;
-using EazyQuiz.Extensions;
-using Zenject;
 using System.Collections.Generic;
 using System.Net;
-using Unity.VisualScripting.Antlr3.Runtime;
 
-namespace EazyQuiz.Unity
+namespace EazyQuiz.Unity.Services
 {
+    /// <summary>
+    /// Работа с АПИ EazyQuiz
+    /// </summary>
     public class ApiProvider
     {
-        private static readonly string BaseAdress = "http://localhost:5274";
+        /// <summary>
+        /// IP адрес сервера
+        /// </summary>
+        private static readonly string BaseAdress = "http://10.61.140.42:5274";
+
+        /// <inheritdoc cref="HttpClient"/>
         private readonly HttpClient _client;
 
 
@@ -26,6 +31,12 @@ namespace EazyQuiz.Unity
             _client = new HttpClient();
         }
 
+        /// <summary>
+        /// Аутентификация пользователя
+        /// </summary>
+        /// <param name="username">Ник</param>
+        /// <param name="password">Пароль</param>
+        /// <returns>Данные о пользователе в <see cref="UserResponse"/></returns>
         public async Task<UserResponse> Authtenticate(string username, string password)
         {
             string userSalt = await GetUserSalt(username);
@@ -60,6 +71,11 @@ namespace EazyQuiz.Unity
             return new UserResponse() { Id = Guid.Empty }; ;
         }
 
+        /// <summary>
+        /// Получить с сервера соль пользователя
+        /// </summary>
+        /// <param name="username">Ник</param>
+        /// <returns>Строку соль</returns>
         private async Task<string> GetUserSalt(string username)
         {
             var response = await _client.GetAsync($"{BaseAdress}/api/Auth/{username}");
@@ -151,7 +167,7 @@ namespace EazyQuiz.Unity
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/Questions/GetQuestions"),
+                RequestUri = new Uri($"{BaseAdress}/api/Questions"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -175,7 +191,7 @@ namespace EazyQuiz.Unity
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"{BaseAdress}/api/Questions/PostUserAnswer"),
+                RequestUri = new Uri($"{BaseAdress}/api/Questions"),
                 Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
@@ -185,6 +201,13 @@ namespace EazyQuiz.Unity
             await _client.SendAsync(request);
         }
 
+        /// <summary>
+        /// Получить коллекцию истории
+        /// </summary>
+        /// <param name="userId">Ид пользователя</param>
+        /// <param name="command">Параметры пагинации</param>
+        /// <param name="token">JWT токен</param>
+        /// <returns>Коллекцию ответов пользователей</returns>
         public async Task<InputCountDTO<UserAnswerHistory>> GetHistory(Guid userId, AnswersGetHistoryCommand command, string token)
         {
             var request = new HttpRequestMessage

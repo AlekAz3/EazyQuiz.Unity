@@ -1,39 +1,57 @@
-using EazyQuiz.Models.DTO;
-using EazyQuiz.Unity;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+using EazyQuiz.Unity.Elements.Common;
+using EazyQuiz.Unity.Services;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Zenject;
 
-public class MainmenuController : MonoBehaviour
+namespace EazyQuiz.Unity.Controllers
 {
-    [Inject] private readonly UserService _userService;
-    private  LoadingScreen _loadingScreen;
-
-    [SerializeField] private TMP_Text UsernameLabel;
-    [SerializeField] private TMP_Text PointsLabel;
-    [SerializeField] private GameObject LoadingGO;
-
-    private void Awake()
+    /// <summary>
+    /// Панель главного меню
+    /// </summary>
+    public class MainmenuController : MonoBehaviour
     {
-        _loadingScreen = LoadingGO.GetComponent<LoadingScreen>();
-        UsernameLabel.text = _userService.UserInfo.UserName;
-        PointsLabel.text = $"Очки: {_userService.UserInfo.Points}";
-    }
+        /// <inheritdoc cref="LoadingScreen"/>
+        [SerializeField] private LoadingScreen _loadingScreen;
 
-    public void StartGameButtonClick()
-    {
-        _loadingScreen.Show();
-        SceneManager.LoadScene("GameScene");
-    }
+        /// <summary>
+        /// Ник игрока
+        /// </summary>
+        [SerializeField] private TMP_Text UsernameLabel;
 
-    public void ViewHistoryButtonClick()
-    {
-        _loadingScreen.Show();
-        SceneManager.LoadScene("HistoryScene");
+        /// <summary>
+        /// Количество баллов
+        /// </summary>
+        [SerializeField] private TMP_Text PointsLabel;
+
+        /// <inheritdoc cref="SwitchSceneService"/>
+        [Inject] private readonly SwitchSceneService _scene;
+        
+        /// <inheritdoc cref="UserService"/>
+        [Inject] private readonly UserService _userService;
+
+        private void Awake()
+        {
+            UsernameLabel.text = _userService.UserInfo.UserName;
+            PointsLabel.text = $"Очки: {_userService.UserInfo.Points}";
+        }
+
+        /// <summary>
+        /// Начать игру
+        /// </summary>
+        public void StartGameButtonClick()
+        {
+            _loadingScreen.Show();
+            _scene.ShowGameScene();
+        }
+
+        /// <summary>
+        /// Посмотреть историю
+        /// </summary>
+        public void ViewHistoryButtonClick()
+        {
+            _loadingScreen.Show();
+            _scene.ShowHistoryScene();
+        }
     }
 }
