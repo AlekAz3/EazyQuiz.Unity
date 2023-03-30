@@ -1,20 +1,35 @@
 ﻿using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// Всплывающее окно ошибки
+/// </summary>
 public class ErrorScreen : MonoBehaviour
 {
+    /// <summary>
+    /// <see cref="GameObject"/> окна
+    /// </summary>
     [SerializeField] public GameObject ErrorLabel;
+
+    /// <summary>
+    /// Текст окна
+    /// </summary>
     [SerializeField] private TMP_Text ErrorText;
 
+    /// <summary>
+    /// Скрыть окно
+    /// </summary>
     public void Hide()
     {
-        Debug.Log("HideError");
         ErrorLabel.SetActive(false);
     }
-
+    
+    /// <summary>
+    /// Показать окно с текстом ошибки
+    /// </summary>
+    /// <param name="error">Текст ошибки</param>
     public void Activate(string error)
     {
-        Debug.Log("Show Error");
         ErrorLabel.SetActive(true);
         ErrorText.text = error;
     }

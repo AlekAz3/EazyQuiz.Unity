@@ -444,6 +444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonText: {fileID: 888341658}
+  gameController: {fileID: 546504153}
 --- !u!224 &886179445
 RectTransform:
   m_ObjectHideFlags: 0
@@ -778,7 +779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 1066078983}
-  gameovers: {fileID: 8795320609930148632}
+  _gameOverScreen: {fileID: 0}
 --- !u!1 &1113645187
 GameObject:
   m_ObjectHideFlags: 0
@@ -1138,6 +1139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonText: {fileID: 2007338389}
+  gameController: {fileID: 546504153}
 --- !u!224 &1398858887
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1488,6 +1490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonText: {fileID: 1552162123}
+  gameController: {fileID: 546504153}
 --- !u!224 &1541316029
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1830,6 +1833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonText: {fileID: 1228650702}
+  gameController: {fileID: 546504153}
 --- !u!1 &1593516418
 GameObject:
   m_ObjectHideFlags: 0

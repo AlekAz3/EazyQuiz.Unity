@@ -1,6 +1,9 @@
 using EazyQuiz.Unity;
 using Zenject;
 
+/// <summary>
+/// Инсталлер для Zenject
+/// </summary>
 public class ProjectInstaller : MonoInstaller
 { 
     public override void InstallBindings()

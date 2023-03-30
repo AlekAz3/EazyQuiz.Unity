@@ -10,17 +10,44 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
+/// <summary>
+/// Контроллер ответов на вопросы
+/// </summary>
 public class GameController : MonoBehaviour
 {
+    /// <summary>
+    /// Коллекция кнопок для ответа
+    /// </summary>
     [SerializeField] private List<Button> Buttons;
+
+    /// <summary>
+    /// Текст вопроса
+    /// </summary>
     [SerializeField] private TMP_Text QuestiolLabel;
 
+    /// <summary>
+    /// Экран завершения ответа на вопрос
+    /// </summary>
     [SerializeField] private GameOverScreen _gameOverScreen;
+
+    /// <summary>
+    /// Таймер
+    /// </summary>
     [SerializeField] private Timer _timer;
 
+    /// <summary>
+    /// Сервис вопросов
+    /// </summary>
     [Inject] private QuestionsService _questionsService;
+
+    /// <summary>
+    /// Сервис пользователя
+    /// </summary>
     [Inject] private UserService _userService;
 
+    /// <summary>
+    /// Вопрос который на данный момент на экране
+    /// </summary>
     private QuestionWithAnswers question;
 
     private async void Awake()

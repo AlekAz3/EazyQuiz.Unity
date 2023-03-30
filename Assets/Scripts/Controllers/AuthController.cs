@@ -6,29 +6,87 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
+/// <summary>
+/// Контроллер панели Аутентификации и Регистрации
+/// </summary>
 public class AuthController : MonoBehaviour
 {
+    /// <summary>
+    /// Панель Аутентификации
+    /// </summary>
     [SerializeField] private GameObject LoginGO;
+
+    /// <summary>
+    /// Панель Регистрации
+    /// </summary>
     [SerializeField] private GameObject RegisterGO;
 
+    /// <summary>
+    /// Надпись "Вход"
+    /// </summary>
     [SerializeField] private GameObject LoginLabel;
-    [SerializeField] private GameObject RegisterLabel;
 
+    /// <summary>
+    /// Надпись "Регистрация"
+    /// </summary>
+    [SerializeField] private GameObject RegisterLabel;
+    
+    /// <summary>
+    /// Ввод ника для аутентификации
+    /// </summary>
     [SerializeField] private TMP_InputField UsernameLoginInput;
+
+    /// <summary>
+    /// Ввод пароля для аутентификации 
+    /// </summary>
     [SerializeField] private TMP_InputField PasswordLoginInput;
 
+
+    /// <summary>
+    /// Ввод ника для регистрации
+    /// </summary>
     [SerializeField] private TMP_InputField UsernameRegisteInput;
+
+    /// <summary>
+    /// Ввод пароля для регистрации 
+    /// </summary>
     [SerializeField] private TMP_InputField PasswordRegisteInput;
+
+    /// <summary>
+    /// Повтор пароля для регистрации
+    /// </summary>
     [SerializeField] private TMP_InputField RepeatPasswordRegisteInput;
+
+    /// <summary>
+    /// Ввод возраста для регистрации
+    /// </summary>
     [SerializeField] private TMP_InputField AgeRegisteInput;
+
+    /// <summary>
+    /// Выбор пола для регистрации
+    /// </summary>
     [SerializeField] private TMP_Dropdown GenderRegisteInput;
+
+    /// <summary>
+    /// Выбор страны для регистрации
+    /// </summary>
     [SerializeField] private TMP_Dropdown CountryRegisteInput;
 
-    [SerializeField] private LoadingScreen _loadingScreen;
+    /// <summary>
+    /// Панель Ошибки
+    /// </summary>
     [SerializeField] private ErrorScreen _error;
 
-    
+
+    /// <summary>
+    /// Панель Загрузки
+    /// </summary>
+    [SerializeField] private LoadingScreen _loadingScreen;
+
+    /// <inheritdoc cref="UserService"/>
     [Inject] private UserService _userService;
+
+    /// <inheritdoc cref="ApiProvider"/>
     [Inject] private ApiProvider _apiProvider;
 
     private void Awake()
@@ -36,6 +94,9 @@ public class AuthController : MonoBehaviour
         Screen.fullScreen = false;
     }
 
+    /// <summary>
+    /// Переключение входа и регистрации
+    /// </summary>
     public void Switch()
     {
         LoginGO.SetActive(!LoginGO.activeSelf);
@@ -45,6 +106,9 @@ public class AuthController : MonoBehaviour
         RegisterLabel.SetActive(!RegisterLabel.activeSelf);
     }
 
+    /// <summary>
+    /// Нажатие кнопки "Войти"
+    /// </summary>
     public async void Login()
     {
         string username = UsernameLoginInput.text;
@@ -85,6 +149,9 @@ public class AuthController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Нажатие кнопки "Зарегистрироваться"
+    /// </summary>
     public async void Registrate()
     {
         string username = UsernameRegisteInput.text;

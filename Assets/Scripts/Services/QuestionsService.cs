@@ -18,7 +18,10 @@ public class QuestionsService
     /// </summary>
     private int order = -1;
 
+    /// <inheritdoc cref="UserService"/>
     private readonly UserService _userService;
+
+    /// <inheritdoc cref="ApiProvider"/>
     private readonly ApiProvider _apiProvider;
 
     public QuestionsService(UserService userService, ApiProvider apiProvider)

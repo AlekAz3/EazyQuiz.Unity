@@ -9,17 +9,47 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
+/// <summary>
+/// Контроллер панели просмотра истории ответов
+/// </summary>
 public class HistoryController : MonoBehaviour
 {
+    /// <summary>
+    /// Префаб карточки ответа
+    /// </summary>
     [SerializeField] public GameObject prefab;
+    
+    /// <summary>
+    /// Скроллбар
+    /// </summary>
     [SerializeField] public Scrollbar scrollbar;
+    
+    /// <summary>
+    /// Сервис пользователя
+    /// </summary>
     [Inject] private readonly UserService user;
+
+    /// <summary>
+    /// Сервис общения с сервером
+    /// </summary>
     [Inject] private readonly ApiProvider apiProvider;
 
+    
     public RectTransform content;
 
+    /// <summary>
+    /// Текущая "Страница"
+    /// </summary>
     private int page = 0;
+
+    /// <summary>
+    /// Всего элементов
+    /// </summary>
     private int count = 0;
+
+    /// <summary>
+    /// Флаг
+    /// </summary>
     private bool flag = true;
 
     private async void Awake()
@@ -27,18 +57,25 @@ public class HistoryController : MonoBehaviour
         await AddHistoryCard();
     }
 
-    public async Task AddHistoryCard()
+    /// <summary>
+    /// Добавить карточку ответа на вопрос
+    /// </summary>
+    private async Task AddHistoryCard()
     {
-        var a = await apiProvider.GetHistory(
+        var historyAnswers = await apiProvider.GetHistory(
             user.UserInfo.Id,
             new AnswersGetHistoryCommand() { PageNumber = page, PageSize = 10 },
             user.UserInfo.Token
             );
-        Debug.Log(a.Count);
-        count = (int)a.Count;
-         GenerateGameObjects(a.Items);
+        Debug.Log(historyAnswers.Count);
+        count = (int)historyAnswers.Count;
+        GenerateGameObjects(historyAnswers.Items);
     }
 
+    /// <summary>
+    /// Сгенерировать карточки ответа на вопрос
+    /// </summary>
+    /// <param name="answerHistory"></param>
     private void GenerateGameObjects(IEnumerable<UserAnswerHistory> answerHistory)
     {
         foreach (var item in answerHistory)
@@ -49,6 +86,10 @@ public class HistoryController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Проверка значение скроллбара для автоподгрузки истории
+    /// </summary>
+    /// <param name="vector"></param>
     public async void ValueCheck(Vector2 vector)
     {
         if (vector.y > 0.2)
@@ -68,7 +109,11 @@ public class HistoryController : MonoBehaviour
         }
     }
 
-    public bool AddPage()
+    /// <summary>
+    /// Переводит на следующую страницу
+    /// </summary>
+    /// <returns></returns>
+    private bool AddPage()
     {
         if (Math.Ceiling(count / 10d) > page)
         {
@@ -78,6 +123,9 @@ public class HistoryController : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Выход в главное меню
+    /// </summary>
     public void ExitToMenu()
     {
         SceneManager.LoadScene("MainMenu");

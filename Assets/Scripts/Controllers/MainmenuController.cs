@@ -7,7 +7,7 @@ using Zenject;
 public class MainmenuController : MonoBehaviour
 {
     [Inject] private readonly UserService _userService;
-    [SerializeField] private  LoadingScreen _loadingScreen;
+    [SerializeField] private LoadingScreen _loadingScreen;
 
     [SerializeField] private TMP_Text UsernameLabel;
     [SerializeField] private TMP_Text PointsLabel;

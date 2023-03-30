@@ -2,19 +2,30 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Элемент Таймера
+/// </summary>
 public class Timer : MonoBehaviour
 {
+    /// <summary>
+    /// Таймер
+    /// </summary>
     [SerializeField] private Slider slider;
-    [SerializeField] private GameObject gameovers;
+
+    /// <summary>
+    /// Окно завершения игры
+    /// </summary>
+    [SerializeField] private GameOverScreen _gameOverScreen;
+
+    /// <summary>
+    /// Время на ответ на вопрос
+    /// </summary>
     private float time;
 
-    private GameOverScreen _gameOverScreen;
-
-    private void Awake()
-    {
-        _gameOverScreen = gameovers.GetComponent<GameOverScreen>();
-    }
-
+    /// <summary>
+    /// Запустить таймер
+    /// </summary>
+    /// <param name="cooldownTime">Время таймера</param>
     public void StartTimer(float cooldownTime)
     {
         Debug.Log("Start Timer");
@@ -23,7 +34,11 @@ public class Timer : MonoBehaviour
         StartCoroutine(TimerCoroutine());
     }
 
-    IEnumerator TimerCoroutine()
+    /// <summary>
+    /// Карутина ожидания таймера
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator TimerCoroutine()
     {
         while (time > 0)
         {
@@ -34,6 +49,9 @@ public class Timer : MonoBehaviour
         _gameOverScreen.Show("Время вышло");
     }
 
+    /// <summary>
+    /// Остановка таймера
+    /// </summary>
     public void StopTimer()
     {
         StopAllCoroutines();
