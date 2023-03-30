@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -44,6 +45,9 @@ public class GameController : MonoBehaviour
     /// Сервис пользователя
     /// </summary>
     [Inject] private UserService _userService;
+
+    /// <inheritdoc cref="SwitchSceneService"/>
+    [Inject] private SwitchSceneService _scene;
 
     /// <summary>
     /// Вопрос который на данный момент на экране
@@ -113,6 +117,6 @@ public class GameController : MonoBehaviour
     /// </summary>
     public void ExitButtonClick()
     {
-        SceneManager.LoadScene("MainMenu");
+        _scene.ShowMainMenuScene();
     }
 }

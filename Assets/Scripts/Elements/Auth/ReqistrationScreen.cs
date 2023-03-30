@@ -8,32 +8,32 @@ using Zenject;
 public class ReqistrationScreen : MonoBehaviour
 {
     /// <summary>
-    /// Ввод ника для регистрации
+    /// Ввод ника
     /// </summary>
     [SerializeField] private TMP_InputField UsernameRegisteInput;
 
     /// <summary>
-    /// Ввод пароля для регистрации 
+    /// Ввод пароля  
     /// </summary>
     [SerializeField] private TMP_InputField PasswordRegisteInput;
 
     /// <summary>
-    /// Повтор пароля для регистрации
+    /// Повтор пароля 
     /// </summary>
     [SerializeField] private TMP_InputField RepeatPasswordRegisteInput;
 
     /// <summary>
-    /// Ввод возраста для регистрации
+    /// Ввод возраста 
     /// </summary>
     [SerializeField] private TMP_InputField AgeRegisteInput;
 
     /// <summary>
-    /// Выбор пола для регистрации
+    /// Выбор пола 
     /// </summary>
     [SerializeField] private TMP_Dropdown GenderRegisteInput;
 
     /// <summary>
-    /// Выбор страны для регистрации
+    /// Выбор страны 
     /// </summary>
     [SerializeField] private TMP_Dropdown CountryRegisteInput;
 
@@ -51,9 +51,6 @@ public class ReqistrationScreen : MonoBehaviour
     /// Панель
     /// </summary>
     [SerializeField] private AuthtorizationPanel _panel;
-
-    /// <inheritdoc cref="UserService"/>
-    [Inject] private UserService _userService;
 
     /// <inheritdoc cref="ApiProvider"/>
     [Inject] private ApiProvider _apiProvider;

@@ -10,13 +10,7 @@ public class ProjectInstaller : MonoInstaller
     {
         Container.Bind<ApiProvider>().AsCached().NonLazy();
         Container.Bind<UserService>().AsCached().NonLazy();
-
+        Container.Bind<SwitchSceneService>().AsCached();
         Container.Bind<QuestionsService>().AsTransient().NonLazy();
-        Container.Bind<GameOverScreen>().AsCached();
-
-        Container.Bind<AuthtorizationPanel>().AsCached();
-        Container.Bind<HistoryController>().AsCached();
-        Container.Bind<GameController>().AsCached();
-        Container.Bind<MainmenuController>().AsCached();
     }
 }

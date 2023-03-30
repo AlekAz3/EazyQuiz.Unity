@@ -1,5 +1,6 @@
 using EazyQuiz.Unity;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
@@ -12,6 +13,9 @@ public class MainmenuController : MonoBehaviour
     [SerializeField] private TMP_Text UsernameLabel;
     [SerializeField] private TMP_Text PointsLabel;
 
+    /// <inheritdoc cref="SwitchSceneService"/>
+    [Inject] private SwitchSceneService _scene;
+
     private void Awake()
     {
         UsernameLabel.text = _userService.UserInfo.UserName;
@@ -21,12 +25,12 @@ public class MainmenuController : MonoBehaviour
     public void StartGameButtonClick()
     {
         _loadingScreen.Show();
-        SceneManager.LoadScene("GameScene");
+        _scene.ShowGameScene();
     }
 
     public void ViewHistoryButtonClick()
     {
         _loadingScreen.Show();
-        SceneManager.LoadScene("HistoryScene");
+        _scene.ShowHistoryScene();
     }
 }

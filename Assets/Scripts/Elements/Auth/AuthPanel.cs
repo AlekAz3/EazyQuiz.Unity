@@ -2,12 +2,11 @@ using EazyQuiz.Extensions;
 using EazyQuiz.Unity;
 using System;
 using TMPro;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-public class APanel : MonoBehaviour
+public class AuthPanel : MonoBehaviour
 {
     /// <summary>
     /// Ввод ника для аутентификации
@@ -31,6 +30,9 @@ public class APanel : MonoBehaviour
 
     /// <inheritdoc cref="UserService"/>
     [Inject] private UserService _userService;
+
+    /// <inheritdoc cref="SwitchSceneService"/>
+    [Inject] private SwitchSceneService _scene;
 
     /// <summary>
     /// Нажатие кнопки "Войти"
@@ -71,6 +73,6 @@ public class APanel : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene("MainMenu");
+        _scene.ShowMainMenuScene();
     }
 }

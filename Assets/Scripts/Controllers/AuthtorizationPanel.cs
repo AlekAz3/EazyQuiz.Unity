@@ -25,7 +25,6 @@ public class AuthtorizationPanel : MonoBehaviour
     /// </summary>
     [SerializeField] private GameObject RegisterLabel;
  
-
     private void Awake()
     {
         Screen.fullScreen = false;

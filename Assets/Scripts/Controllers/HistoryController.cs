@@ -34,7 +34,10 @@ public class HistoryController : MonoBehaviour
     /// </summary>
     [Inject] private readonly ApiProvider apiProvider;
 
-    
+    /// <inheritdoc cref="SwitchSceneService"/>
+    [Inject] private SwitchSceneService _scene;
+
+
     public RectTransform content;
 
     /// <summary>
@@ -128,6 +131,6 @@ public class HistoryController : MonoBehaviour
     /// </summary>
     public void ExitToMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        _scene.ShowMainMenuScene();
     }
 }
