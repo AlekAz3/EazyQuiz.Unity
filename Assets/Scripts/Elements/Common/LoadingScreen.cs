@@ -1,28 +1,31 @@
 using UnityEngine;
 
-/// <summary>
-/// Окно загрузки
-/// </summary>
-public class LoadingScreen : MonoBehaviour
+namespace EazyQuiz.Unity.Elements.Common
 {
     /// <summary>
-    /// <see cref="GameObject"/> окна
+    /// Окно загрузки
     /// </summary>
-    [SerializeField] private GameObject screen;
-
-    /// <summary>
-    /// Показать окно
-    /// </summary>
-    public void Show()
+    public class LoadingScreen : MonoBehaviour
     {
-        screen.SetActive(true);
-    }
+        /// <summary>
+        /// <see cref="GameObject"/> окна
+        /// </summary>
+        [SerializeField] private GameObject screen;
 
-    /// <summary>
-    /// Скрыть окно
-    /// </summary>
-    public void Hide()
-    {
-        screen.SetActive(false);
+        /// <summary>
+        /// Показать окно
+        /// </summary>
+        public void Show()
+        {
+            screen.SetActive(true);
+        }
+
+        /// <summary>
+        /// Скрыть окно
+        /// </summary>
+        public void Hide()
+        {
+            screen.SetActive(false);
+        }
     }
 }

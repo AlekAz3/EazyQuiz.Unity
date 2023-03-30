@@ -1,36 +1,57 @@
-using EazyQuiz.Unity;
+using EazyQuiz.Unity.Elements.Common;
+using EazyQuiz.Unity.Services;
 using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Zenject;
 
-public class MainmenuController : MonoBehaviour
+namespace EazyQuiz.Unity.Controllers
 {
-    [Inject] private readonly UserService _userService;
-    [SerializeField] private LoadingScreen _loadingScreen;
-
-    [SerializeField] private TMP_Text UsernameLabel;
-    [SerializeField] private TMP_Text PointsLabel;
-
-    /// <inheritdoc cref="SwitchSceneService"/>
-    [Inject] private SwitchSceneService _scene;
-
-    private void Awake()
+    /// <summary>
+    /// Панель главного меню
+    /// </summary>
+    public class MainmenuController : MonoBehaviour
     {
-        UsernameLabel.text = _userService.UserInfo.UserName;
-        PointsLabel.text = $"Очки: {_userService.UserInfo.Points}";
-    }
+        /// <inheritdoc cref="LoadingScreen"/>
+        [SerializeField] private LoadingScreen _loadingScreen;
 
-    public void StartGameButtonClick()
-    {
-        _loadingScreen.Show();
-        _scene.ShowGameScene();
-    }
+        /// <summary>
+        /// Ник игрока
+        /// </summary>
+        [SerializeField] private TMP_Text UsernameLabel;
 
-    public void ViewHistoryButtonClick()
-    {
-        _loadingScreen.Show();
-        _scene.ShowHistoryScene();
+        /// <summary>
+        /// Количество баллов
+        /// </summary>
+        [SerializeField] private TMP_Text PointsLabel;
+
+        /// <inheritdoc cref="SwitchSceneService"/>
+        [Inject] private SwitchSceneService _scene;
+        
+        /// <inheritdoc cref="UserService"/>
+        [Inject] private readonly UserService _userService;
+
+        private void Awake()
+        {
+            UsernameLabel.text = _userService.UserInfo.UserName;
+            PointsLabel.text = $"Очки: {_userService.UserInfo.Points}";
+        }
+
+        /// <summary>
+        /// Начать игру
+        /// </summary>
+        public void StartGameButtonClick()
+        {
+            _loadingScreen.Show();
+            _scene.ShowGameScene();
+        }
+
+        /// <summary>
+        /// Посмотреть историю
+        /// </summary>
+        public void ViewHistoryButtonClick()
+        {
+            _loadingScreen.Show();
+            _scene.ShowHistoryScene();
+        }
     }
 }

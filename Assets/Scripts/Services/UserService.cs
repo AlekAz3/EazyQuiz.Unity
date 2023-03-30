@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace EazyQuiz.Unity
+namespace EazyQuiz.Unity.Services
 {
     /// <summary>
     /// Сервис работы с пользователем
@@ -36,7 +36,6 @@ namespace EazyQuiz.Unity
         /// </summary>
         /// <param name="answer">Ответ</param>
         /// <param name="questionId">Ид вопроса</param>
-        /// <returns></returns>
         internal async Task SendUserAnswer(Answer answer, Guid questionId)
         {
             var userAnswer = new UserAnswer()

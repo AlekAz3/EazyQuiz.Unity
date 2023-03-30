@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net;
 
-namespace EazyQuiz.Unity
+namespace EazyQuiz.Unity.Services
 {
     /// <summary>
     /// Работа с АПИ EazyQuiz

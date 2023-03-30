@@ -1,16 +1,19 @@
-using EazyQuiz.Unity;
+using EazyQuiz.Unity.Services;
 using Zenject;
 
-/// <summary>
-/// Инсталлер для Zenject
-/// </summary>
-public class ProjectInstaller : MonoInstaller
-{ 
-    public override void InstallBindings()
+namespace EazyQuiz.Unity.Zenject
+{
+    /// <summary>
+    /// Инсталлер для Zenject
+    /// </summary>
+    public class ProjectInstaller : MonoInstaller
     {
-        Container.Bind<ApiProvider>().AsCached().NonLazy();
-        Container.Bind<UserService>().AsCached().NonLazy();
-        Container.Bind<SwitchSceneService>().AsCached();
-        Container.Bind<QuestionsService>().AsTransient().NonLazy();
+        public override void InstallBindings()
+        {
+            Container.Bind<ApiProvider>().AsCached().NonLazy();
+            Container.Bind<UserService>().AsCached().NonLazy();
+            Container.Bind<SwitchSceneService>().AsCached();
+            Container.Bind<QuestionsService>().AsTransient().NonLazy();
+        }
     }
 }
