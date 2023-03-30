@@ -14,7 +14,7 @@ public class ProjectInstaller : MonoInstaller
         Container.Bind<QuestionsService>().AsTransient().NonLazy();
         Container.Bind<GameOverScreen>().AsCached();
 
-        Container.Bind<AuthController>().AsCached();
+        Container.Bind<AuthtorizationPanel>().AsCached();
         Container.Bind<HistoryController>().AsCached();
         Container.Bind<GameController>().AsCached();
         Container.Bind<MainmenuController>().AsCached();

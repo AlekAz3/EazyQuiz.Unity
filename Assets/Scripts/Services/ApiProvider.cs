@@ -167,7 +167,7 @@ namespace EazyQuiz.Unity
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/Questions/GetQuestions"),
+                RequestUri = new Uri($"{BaseAdress}/api/Questions"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -191,7 +191,7 @@ namespace EazyQuiz.Unity
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"{BaseAdress}/api/Questions/PostUserAnswer"),
+                RequestUri = new Uri($"{BaseAdress}/api/Questions"),
                 Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");

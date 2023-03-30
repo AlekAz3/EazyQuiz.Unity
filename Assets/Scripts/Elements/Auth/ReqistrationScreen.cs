@@ -3,45 +3,10 @@ using EazyQuiz.Unity;
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Zenject;
 
-/// <summary>
-/// Контроллер панели Аутентификации и Регистрации
-/// </summary>
-public class AuthController : MonoBehaviour
+public class ReqistrationScreen : MonoBehaviour
 {
-    /// <summary>
-    /// Панель Аутентификации
-    /// </summary>
-    [SerializeField] private GameObject LoginGO;
-
-    /// <summary>
-    /// Панель Регистрации
-    /// </summary>
-    [SerializeField] private GameObject RegisterGO;
-
-    /// <summary>
-    /// Надпись "Вход"
-    /// </summary>
-    [SerializeField] private GameObject LoginLabel;
-
-    /// <summary>
-    /// Надпись "Регистрация"
-    /// </summary>
-    [SerializeField] private GameObject RegisterLabel;
-    
-    /// <summary>
-    /// Ввод ника для аутентификации
-    /// </summary>
-    [SerializeField] private TMP_InputField UsernameLoginInput;
-
-    /// <summary>
-    /// Ввод пароля для аутентификации 
-    /// </summary>
-    [SerializeField] private TMP_InputField PasswordLoginInput;
-
-
     /// <summary>
     /// Ввод ника для регистрации
     /// </summary>
@@ -77,77 +42,21 @@ public class AuthController : MonoBehaviour
     /// </summary>
     [SerializeField] private ErrorScreen _error;
 
-
     /// <summary>
     /// Панель Загрузки
     /// </summary>
     [SerializeField] private LoadingScreen _loadingScreen;
+
+    /// <summary>
+    /// Панель
+    /// </summary>
+    [SerializeField] private AuthtorizationPanel _panel;
 
     /// <inheritdoc cref="UserService"/>
     [Inject] private UserService _userService;
 
     /// <inheritdoc cref="ApiProvider"/>
     [Inject] private ApiProvider _apiProvider;
-
-    private void Awake()
-    {
-        Screen.fullScreen = false;
-    }
-
-    /// <summary>
-    /// Переключение входа и регистрации
-    /// </summary>
-    public void Switch()
-    {
-        LoginGO.SetActive(!LoginGO.activeSelf);
-        LoginLabel.SetActive(!LoginLabel.activeSelf);
-
-        RegisterGO.SetActive(!RegisterGO.activeSelf);
-        RegisterLabel.SetActive(!RegisterLabel.activeSelf);
-    }
-
-    /// <summary>
-    /// Нажатие кнопки "Войти"
-    /// </summary>
-    public async void Login()
-    {
-        string username = UsernameLoginInput.text;
-        string password = PasswordLoginInput.text;
-        _loadingScreen.Show();
-        if (username.IsNullOrEmpty() || password.IsNullOrEmpty())
-        {
-            _loadingScreen.Hide();
-            _error.Activate("Есть пустые поля");
-            return;
-        }
-
-        if (!password.IsMoreEightSymbols())
-        {
-            _loadingScreen.Hide();
-            _error.Activate("Меньше 8ми символов пароль");
-            return;
-        }
-        try
-        {
-            await _userService.Authtenticate(username, password);
-        }
-        catch (Exception)
-        {
-            _loadingScreen.Hide();
-            _error.Activate("Сервер не доступен\nПовторите попытку позже");
-            return;
-        }
-
-        if (_userService.UserInfo.Id == Guid.Empty)    
-        {
-            _loadingScreen.Hide();
-            _error.Activate("Пользователь не найден");
-            return;
-        }
-
-        SceneManager.LoadScene("MainMenu");
-
-    }
 
     /// <summary>
     /// Нажатие кнопки "Зарегистрироваться"
@@ -216,13 +125,13 @@ public class AuthController : MonoBehaviour
         }
 
         await _apiProvider.Registrate(
-            password, 
+            password,
             username,
-            Convert.ToInt32(age), 
+            Convert.ToInt32(age),
             gender,
             country
         );
         _loadingScreen.Hide();
-        Switch();
+        _panel.Switch();
     }
 }
