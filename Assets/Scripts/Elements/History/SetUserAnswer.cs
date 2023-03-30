@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace EazyQuiz.Unity.Elements.History
 {
     /// <summary>
-    /// «апись ответа пользовател€ в краточку
+    /// «апись ответа пользовател€ в карточку
     /// </summary>
     public class SetUserAnswer : MonoBehaviour
     {

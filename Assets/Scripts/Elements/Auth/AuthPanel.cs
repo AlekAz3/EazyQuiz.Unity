@@ -31,10 +31,10 @@ namespace EazyQuiz.Unity.Elements.Auth
         [SerializeField] private LoadingScreen _loadingScreen;
 
         /// <inheritdoc cref="UserService"/>
-        [Inject] private UserService _userService;
+        [Inject] private readonly UserService _userService;
 
         /// <inheritdoc cref="SwitchSceneService"/>
-        [Inject] private SwitchSceneService _scene;
+        [Inject] private readonly SwitchSceneService _scene;
 
         /// <summary>
         /// Нажатие кнопки "Войти"

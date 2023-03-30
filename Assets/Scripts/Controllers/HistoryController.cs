@@ -36,7 +36,7 @@ namespace EazyQuiz.Unity.Controllers
         [Inject] private readonly ApiProvider apiProvider;
 
         /// <inheritdoc cref="SwitchSceneService"/>
-        [Inject] private SwitchSceneService _scene;
+        [Inject] private readonly SwitchSceneService _scene;
 
         public RectTransform content;
 

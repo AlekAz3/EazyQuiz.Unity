@@ -25,7 +25,7 @@ namespace EazyQuiz.Unity.Controllers
         [SerializeField] private TMP_Text PointsLabel;
 
         /// <inheritdoc cref="SwitchSceneService"/>
-        [Inject] private SwitchSceneService _scene;
+        [Inject] private readonly SwitchSceneService _scene;
         
         /// <inheritdoc cref="UserService"/>
         [Inject] private readonly UserService _userService;

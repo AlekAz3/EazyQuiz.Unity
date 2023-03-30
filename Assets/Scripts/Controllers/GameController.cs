@@ -1,6 +1,5 @@
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
-using EazyQuiz.Unity;
 using EazyQuiz.Unity.Elements.Game;
 using EazyQuiz.Unity.Services;
 using System.Collections.Generic;
@@ -46,10 +45,10 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Сервис пользователя
         /// </summary>
-        [Inject] private UserService _userService;
+        [Inject] private readonly UserService _userService;
 
         /// <inheritdoc cref="SwitchSceneService"/>
-        [Inject] private SwitchSceneService _scene;
+        [Inject] private readonly SwitchSceneService _scene;
 
         /// <summary>
         /// Вопрос который на данный момент на экране
