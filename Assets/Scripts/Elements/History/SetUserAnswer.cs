@@ -26,7 +26,7 @@ namespace EazyQuiz.Unity.Elements.History
         [SerializeField] private TMP_Text Date;
 
         /// <summary>
-        /// фон
+        /// ‘он
         /// </summary>
         [SerializeField] private Image Background;
 
