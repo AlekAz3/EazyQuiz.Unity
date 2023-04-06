@@ -67,7 +67,7 @@ namespace EazyQuiz.Unity.Controllers
         {
             var historyAnswers = await apiProvider.GetHistory(
                 user.UserInfo.Id,
-                new AnswersGetHistoryCommand() { PageNumber = page, PageSize = 10 },
+                new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
                 user.UserInfo.Token
                 );
             Debug.Log(historyAnswers.Count);
@@ -95,19 +95,18 @@ namespace EazyQuiz.Unity.Controllers
         /// <param name="vector"></param>
         public async void ValueCheck(Vector2 vector)
         {
-            if (vector.y > 0.2)
+            if (vector.y > 0.005)
             {
                 flag = true;
             }
 
-            if (vector.y < 0.2 && flag)
+            if (vector.y < 0.005 && flag)
             {
                 if (AddPage())
                 {
                     flag = false;
                     await AddHistoryCard();
                     Debug.Log("AddPage");
-
                 }
             }
         }

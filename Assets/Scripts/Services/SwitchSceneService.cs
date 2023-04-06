@@ -31,5 +31,13 @@ namespace EazyQuiz.Unity.Services
         {
             SceneManager.LoadScene("GameScene");
         }
+
+        /// <summary>
+        /// Переключить на сцену предложения своего вопроса 
+        /// </summary>
+        public void ShowAddUserQuestionScene()
+        {
+            SceneManager.LoadScene("AddQuestionScene");
+        }
     }
 }
