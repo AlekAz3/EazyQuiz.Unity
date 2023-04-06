@@ -208,7 +208,7 @@ namespace EazyQuiz.Unity.Services
         /// <param name="command">Параметры пагинации</param>
         /// <param name="token">JWT токен</param>
         /// <returns>Коллекцию ответов пользователей</returns>
-        public async Task<InputCountDTO<UserAnswerHistory>> GetHistory(Guid userId, AnswersGetHistoryCommand command, string token)
+        public async Task<InputCountDTO<UserAnswerHistory>> GetHistory(Guid userId, GetHistoryCommand command, string token)
         {
             var request = new HttpRequestMessage
             {
@@ -222,6 +222,39 @@ namespace EazyQuiz.Unity.Services
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<InputCountDTO<UserAnswerHistory>>(responseBody);
+        }
+
+        public async Task SendUserQuestion(AddQuestionByUser addQuestion, string token)
+        {
+            string json = JsonConvert.SerializeObject(addQuestion);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAdress}/api/AddUserQuestion"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+
+            await _client.SendAsync(request);
+        }
+
+        public async Task<InputCountDTO<QuestionByUserResponse>> GetCurrentUserQuestions(Guid userId, GetHistoryCommand command, string token)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/AddUserQuestion?userId={userId}&PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            var response = await _client.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<InputCountDTO<QuestionByUserResponse>>(responseBody);
         }
     }
 }

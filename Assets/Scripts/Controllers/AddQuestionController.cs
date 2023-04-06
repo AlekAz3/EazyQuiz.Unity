@@ -1,39 +1,35 @@
+using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
+using EazyQuiz.Unity.Elements.Auth;
+using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Elements.History;
+using EazyQuiz.Unity.Elements.UserQuestion;
 using EazyQuiz.Unity.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace EazyQuiz.Unity.Controllers
 {
-    /// <summary>
-    /// Контроллер панели просмотра истории ответов
-    /// </summary>
-    public class HistoryController : MonoBehaviour
+    public class AddQuestionController : MonoBehaviour
     {
-        /// <summary>
-        /// Префаб карточки ответа
-        /// </summary>
         [SerializeField] public GameObject prefab;
 
-        /// <summary>
-        /// Скроллбар
-        /// </summary>
-        [SerializeField] public Scrollbar scrollbar;
+        [SerializeField] private TMP_InputField QuestionText;
 
-        /// <summary>
-        /// Сервис пользователя
-        /// </summary>
-        [Inject] private readonly UserService user;
+        [SerializeField] private TMP_InputField AnswerText;
+
+        [SerializeField] private ErrorScreen ErrorScreen;
 
         /// <summary>
         /// Сервис общения с сервером
         /// </summary>
-        [Inject] private readonly ApiProvider apiProvider;
+        [Inject] private readonly ApiProvider _apiProvider;
+
+        [Inject] private readonly UserService user;
 
         /// <inheritdoc cref="SwitchSceneService"/>
         [Inject] private readonly SwitchSceneService _scene;
@@ -57,15 +53,15 @@ namespace EazyQuiz.Unity.Controllers
 
         private async void Awake()
         {
-            await AddHistoryCard();
+            await AddHistoryQuestion();
         }
 
         /// <summary>
         /// Добавить карточку ответа на вопрос
         /// </summary>
-        private async Task AddHistoryCard()
+        private async Task AddHistoryQuestion()
         {
-            var historyAnswers = await apiProvider.GetHistory(
+            var historyAnswers = await _apiProvider.GetCurrentUserQuestions(
                 user.UserInfo.Id,
                 new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
                 user.UserInfo.Token
@@ -75,24 +71,16 @@ namespace EazyQuiz.Unity.Controllers
             GenerateGameObjects(historyAnswers.Items);
         }
 
-        /// <summary>
-        /// Сгенерировать карточки ответа на вопрос
-        /// </summary>
-        /// <param name="answerHistory"></param>
-        private void GenerateGameObjects(IEnumerable<UserAnswerHistory> answerHistory)
+        private void GenerateGameObjects(IEnumerable<QuestionByUserResponse> questionHistory)
         {
-            foreach (var item in answerHistory)
+            foreach (var item in questionHistory)
             {
                 var instants = Instantiate(prefab);
                 instants.transform.SetParent(content, false);
-                instants.GetComponent<SetUserAnswer>().ItemView(item);
+                instants.GetComponent<SetUserQuestion>().ItemView(item);
             }
         }
 
-        /// <summary>
-        /// Проверка значение скроллбара для автоподгрузки истории
-        /// </summary>
-        /// <param name="vector"></param>
         public async void ValueCheck(Vector2 vector)
         {
             if (vector.y > 0.005)
@@ -105,7 +93,7 @@ namespace EazyQuiz.Unity.Controllers
                 if (AddPage())
                 {
                     flag = false;
-                    await AddHistoryCard();
+                    await AddHistoryQuestion();
                     Debug.Log("AddPage");
                 }
             }
@@ -124,6 +112,32 @@ namespace EazyQuiz.Unity.Controllers
             }
             return false;
         }
+
+        /// <summary>
+        /// Отправляет вопрос на сервер
+        /// </summary>
+        public async void SendUserQuestion()
+        {
+            var question = QuestionText.text;
+            var answer = AnswerText.text;
+
+            if (question.IsNullOrEmpty() || answer.IsNullOrEmpty())
+            {
+                ErrorScreen.Activate("Есть пустые поля");
+                return;
+            }
+            var q = new AddQuestionByUser()
+            {
+                UserId = user.UserInfo.Id,
+                QuestionText = question,
+                AnswerText = answer,
+            };
+
+            await _apiProvider.SendUserQuestion(q, user.UserInfo.Token);
+            QuestionText.text = string.Empty;
+            AnswerText.text = string.Empty;
+        }
+
 
         /// <summary>
         /// Выход в главное меню

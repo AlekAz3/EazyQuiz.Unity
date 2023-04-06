@@ -53,5 +53,14 @@ namespace EazyQuiz.Unity.Controllers
             _loadingScreen.Show();
             _scene.ShowHistoryScene();
         }
+
+        /// <summary>
+        /// Панель добавления истории 
+        /// </summary>
+        public void ViewAddUserQuestionButtonClick()
+        {
+            _loadingScreen.Show();
+            _scene.ShowAddUserQuestionScene();
+        }
     }
 }

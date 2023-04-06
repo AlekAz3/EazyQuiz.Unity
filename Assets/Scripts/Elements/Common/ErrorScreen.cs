@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace EazyQuiz.Unity.Elements.Auth
+namespace EazyQuiz.Unity.Elements.Common
 {
     /// <summary>
     /// Всплывающее окно ошибки

@@ -26,7 +26,7 @@ namespace EazyQuiz.Unity.Elements.History
         [SerializeField] private TMP_Text Date;
 
         /// <summary>
-        /// фон
+        /// ‘он
         /// </summary>
         [SerializeField] private Image Background;
 
@@ -38,7 +38,7 @@ namespace EazyQuiz.Unity.Elements.History
         {
             Answer.text = history.AnswerText;
             Question.text = history.QuestionText;
-            Date.text = history.AnswerTime.ToString("dd.MM.yyyy");
+            Date.text = history.AnswerTime.ToString("dd.MM.yyyy HH:mm");
             if (history.IsCorrect)
             {
                 Background.color = Color.green;
