@@ -41,7 +41,6 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         public void StartGameButtonClick()
         {
-            _loadingScreen.Show();
             _scene.ShowGameScene();
         }
 
@@ -50,7 +49,6 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         public void ViewHistoryButtonClick()
         {
-            _loadingScreen.Show();
             _scene.ShowHistoryScene();
         }
 
@@ -59,7 +57,6 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         public void ViewAddUserQuestionButtonClick()
         {
-            _loadingScreen.Show();
             _scene.ShowAddUserQuestionScene();
         }
     }
