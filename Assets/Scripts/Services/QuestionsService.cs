@@ -1,6 +1,8 @@
 using EazyQuiz.Models.DTO;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine.Experimental.GlobalIllumination;
 
 namespace EazyQuiz.Unity.Services
 {
@@ -24,6 +26,8 @@ namespace EazyQuiz.Unity.Services
 
         /// <inheritdoc cref="ApiProvider"/>
         private readonly ApiProvider _apiProvider;
+
+        public Guid? ThemeId { get; set; }  
 
         public QuestionsService(UserService userService, ApiProvider apiProvider)
         {
@@ -55,9 +59,15 @@ namespace EazyQuiz.Unity.Services
                 order = 0;
                 questions.Clear();
             }
-            var ques = await _apiProvider.GetQuestions(_userService.UserInfo.Token);
+            var ques = await _apiProvider.GetQuestions(ThemeId,_userService.UserInfo.Token);
 
             questions.AddRange(ques);
         }
+
+        public async Task<IReadOnlyCollection<ThemeResponse>> GetThemes()
+        {
+            return await _apiProvider.GetThemes(_userService.UserInfo.Token);
+        }
+
     }
 }

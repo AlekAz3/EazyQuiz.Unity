@@ -97,7 +97,6 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Проверка значение скроллбара для автоподгрузки истории
         /// </summary>
-        /// <param name="vector"></param>
         public async void ValueCheck(Vector2 vector)
         {
             if (vector.y > 0.005)

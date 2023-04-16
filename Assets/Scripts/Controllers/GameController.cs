@@ -1,5 +1,6 @@
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
+using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Elements.Game;
 using EazyQuiz.Unity.Services;
 using System.Collections.Generic;
@@ -32,10 +33,16 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         [SerializeField] private GameOverScreen _gameOverScreen;
 
+        [SerializeField] private GameObject settingsGame;
+
         /// <summary>
         /// Таймер
         /// </summary>
         [SerializeField] private Timer _timer;
+
+        [SerializeField] private TMP_Dropdown _chooseTheme;
+
+        [SerializeField] private LoadingScreen _loadingScreen;
 
         /// <summary>
         /// Сервис вопросов
@@ -54,10 +61,13 @@ namespace EazyQuiz.Unity.Controllers
         /// Вопрос который на данный момент на экране
         /// </summary>
         private QuestionWithAnswers question;
+        private List<ThemeResponse> themes;
 
         private async void Awake()
-        {
-            await NewQuestion();
+         {
+            themes = (await _questionsService.GetThemes()).ToList();
+            _chooseTheme.AddOptions(themes.Select(x => x.Name).ToList());
+            Debug.Log(themes);
         }
 
         /// <summary>
@@ -67,7 +77,7 @@ namespace EazyQuiz.Unity.Controllers
         {
             question = await _questionsService.NextQuestion();
             SetQuestion();
-            _timer.StartTimer(5);
+            _timer.StartTimer(10);
         }
 
         /// <summary>
@@ -79,11 +89,20 @@ namespace EazyQuiz.Unity.Controllers
             var answers = question.Answers
                 .ToList()
                 .Shuffle();
-
             for (int i = 0; i < 4; i++)
             {
                 Buttons[i].GetComponent<UserAnswerClick>().WriteAnswer(answers[i]);
             }
+            
+        }
+
+        public async void StartGame()
+        {
+            _questionsService.ThemeId = themes.Where(x => x.Name == _chooseTheme.captionText.text).Select(x => x.Id).FirstOrDefault();
+            _loadingScreen.Show();
+            await NewQuestion();
+            settingsGame.SetActive(false);
+            _loadingScreen.Hide();
         }
 
         /// <summary>

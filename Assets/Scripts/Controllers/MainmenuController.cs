@@ -19,6 +19,8 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         [SerializeField] private TMP_Text UsernameLabel;
 
+        [SerializeField] private ErrorScreen _error;
+
         /// <summary>
         /// Количество баллов
         /// </summary>
@@ -58,6 +60,11 @@ namespace EazyQuiz.Unity.Controllers
         public void ViewAddUserQuestionButtonClick()
         {
             _scene.ShowAddUserQuestionScene();
+        }
+
+        public void NotImplementButton()
+        {
+            _error.Activate("В разработке");
         }
     }
 }

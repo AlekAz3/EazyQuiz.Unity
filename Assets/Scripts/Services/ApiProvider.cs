@@ -20,8 +20,9 @@ namespace EazyQuiz.Unity.Services
         /// <summary>
         /// IP адрес сервера
         /// </summary>
-        private static readonly string BaseAdress = "http://10.61.140.42:5274";
-
+        //private static readonly string BaseAdress = "http://10.61.140.42:5274";
+        //private static readonly string BaseAdress = "http://192.168.1.90:5274";
+        private static readonly string BaseAdress = "http://eazyquiz-ru.1gb.ru";
         /// <inheritdoc cref="HttpClient"/>
         private readonly HttpClient _client;
 
@@ -162,16 +163,25 @@ namespace EazyQuiz.Unity.Services
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<List<QuestionWithAnswers>> GetQuestions(string token)
+        public async Task<List<QuestionWithAnswers>> GetQuestions(Guid? themeId, string token)
         {
+            var url = "";
+            if (themeId == Guid.Empty)
+            {
+                url = $"{BaseAdress}/api/Questions";
+            }
+            else
+            {
+                url = $"{BaseAdress}/api/Questions?ThemeId={themeId}";
+            }
+
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/Questions"),
+                RequestUri = new Uri(url),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
-
             var response = await _client.SendAsync(request);
 
             var responseBody = await response.Content.ReadAsStringAsync();
@@ -255,6 +265,22 @@ namespace EazyQuiz.Unity.Services
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<InputCountDTO<QuestionByUserResponse>>(responseBody);
+        }
+
+        public async Task<IReadOnlyCollection<ThemeResponse>> GetThemes(string token)
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/Themes"),
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            var response = await _client.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<List<ThemeResponse>>(responseBody);
         }
     }
 }
