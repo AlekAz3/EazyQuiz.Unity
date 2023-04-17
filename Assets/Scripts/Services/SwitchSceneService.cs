@@ -7,7 +7,6 @@ namespace EazyQuiz.Unity.Services
     /// </summary>
     public class SwitchSceneService
     {
-
         /// <summary>
         /// Переключить на сцену главного меню
         /// </summary>
