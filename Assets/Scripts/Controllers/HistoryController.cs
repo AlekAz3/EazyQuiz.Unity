@@ -1,4 +1,5 @@
 using EazyQuiz.Models.DTO;
+using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Elements.History;
 using EazyQuiz.Unity.Services;
 using System;
@@ -24,6 +25,8 @@ namespace EazyQuiz.Unity.Controllers
         /// Скроллбар
         /// </summary>
         [SerializeField] public Scrollbar scrollbar;
+
+        [SerializeField] private LoadingScreen loadingScreen;
 
         /// <summary>
         /// Сервис пользователя
@@ -57,7 +60,9 @@ namespace EazyQuiz.Unity.Controllers
 
         private async void Awake()
         {
+            loadingScreen.Show();
             await AddHistoryCard();
+            loadingScreen.Hide();
         }
 
         /// <summary>
@@ -92,7 +97,6 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Проверка значение скроллбара для автоподгрузки истории
         /// </summary>
-        /// <param name="vector"></param>
         public async void ValueCheck(Vector2 vector)
         {
             if (vector.y > 0.005)
