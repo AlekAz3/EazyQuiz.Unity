@@ -19,7 +19,7 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         [SerializeField] private TMP_Text UsernameLabel;
 
-        [SerializeField] private ErrorScreen _error;
+        [SerializeField] private InformationScreen _error;
 
         /// <summary>
         /// Количество баллов
@@ -35,7 +35,7 @@ namespace EazyQuiz.Unity.Controllers
         private void Awake()
         {
             UsernameLabel.text = _userService.UserInfo.UserName;
-            PointsLabel.text = $"Очки: {_userService.UserInfo.Points}";
+            PointsLabel.text = $"Счёт: {_userService.UserInfo.Points}";
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace EazyQuiz.Unity.Controllers
 
         public void NotImplementButton()
         {
-            _error.Activate("В разработке");
+            _error.ShowError("В разработке");
         }
     }
 }

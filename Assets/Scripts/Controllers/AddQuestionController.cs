@@ -22,7 +22,7 @@ namespace EazyQuiz.Unity.Controllers
 
         [SerializeField] private TMP_InputField AnswerText;
 
-        [SerializeField] private ErrorScreen ErrorScreen;
+        [SerializeField] private InformationScreen InfoScreen;
 
         /// <summary>
         /// Сервис общения с сервером
@@ -123,9 +123,10 @@ namespace EazyQuiz.Unity.Controllers
 
             if (question.IsNullOrEmpty() || answer.IsNullOrEmpty())
             {
-                ErrorScreen.Activate("Есть пустые поля");
+                InfoScreen.ShowError("Есть пустые поля");
                 return;
             }
+            InfoScreen.ShowInformation("Ваш предложенный вопрос отправлен");
             var q = new AddQuestionByUser()
             {
                 UserId = user.UserInfo.Id,
@@ -136,6 +137,17 @@ namespace EazyQuiz.Unity.Controllers
             await _apiProvider.SendUserQuestion(q, user.UserInfo.Token);
             QuestionText.text = string.Empty;
             AnswerText.text = string.Empty;
+            await Refresh();
+        }
+
+        private async Task Refresh()
+        {
+            page = 0;
+            foreach (Transform child in content.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            await AddHistoryQuestion();
         }
 
 

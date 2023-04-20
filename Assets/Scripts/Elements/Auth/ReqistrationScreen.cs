@@ -44,7 +44,7 @@ namespace EazyQuiz.Unity.Elements.Auth
         /// <summary>
         /// Панель Ошибки
         /// </summary>
-        [SerializeField] private ErrorScreen _error;
+        [SerializeField] private InformationScreen _error;
 
         /// <summary>
         /// Панель Загрузки
@@ -77,42 +77,42 @@ namespace EazyQuiz.Unity.Elements.Auth
             if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty() || age.IsNullOrEmpty())
             {
                 _loadingScreen.Hide();
-                _error.Activate("Есть пустые поля");
+                _error.ShowError("Есть пустые поля");
                 return;
             }
 
             if (!password.IsMoreEightSymbols())
             {
                 _loadingScreen.Hide();
-                _error.Activate("В пароле меньше 8ми символов");
+                _error.ShowError("В пароле меньше 8ми символов");
                 return;
             }
 
             if (!password.IsEqual(repeatpassword))
             {
                 _loadingScreen.Hide();
-                _error.Activate("Пароли не совпадают");
+                _error.ShowError("Пароли не совпадают");
                 return;
             }
 
             if (!password.IsNoBannedSymbols())
             {
                 _loadingScreen.Hide();
-                _error.Activate("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
+                _error.ShowError("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
                 return;
             }
 
             if (!(password.IsContaintsUpperCaseLetter() && password.IsContaintsLowerCaseLetter() && password.IsContaintsNumeric()))
             {
                 _loadingScreen.Hide();
-                _error.Activate("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
+                _error.ShowError("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
                 return;
             }
 
             if (Convert.ToInt32(age) <= 0)
             {
                 _loadingScreen.Hide();
-                _error.Activate("Неверный возраст");
+                _error.ShowError("Неверный возраст");
                 return;
             }
 
@@ -121,14 +121,14 @@ namespace EazyQuiz.Unity.Elements.Auth
                 if (await _apiProvider.CheckUsername(username))
                 {
                     _loadingScreen.Hide();
-                    _error.Activate("Такой ник уже существует");
+                    _error.ShowError("Такой ник уже существует");
                     return;
                 }
             }
             catch (Exception)
             {
                 _loadingScreen.Hide();
-                _error.Activate("Сервер не доступен\nПовторите попытку позже");
+                _error.ShowError("Сервер не доступен\nПовторите попытку позже");
                 return;
             }
 
