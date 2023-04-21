@@ -34,7 +34,7 @@ namespace EazyQuiz.Unity.Controllers
 
         private void Awake()
         {
-            UsernameLabel.text = _userService.UserInfo.UserName;
+            UsernameLabel.text =$"Приветствуем тебя {_userService.UserInfo.UserName}";
             PointsLabel.text = $"Счёт: {_userService.UserInfo.Points}";
         }
 
