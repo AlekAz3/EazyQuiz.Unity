@@ -108,7 +108,7 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Проверка ответа игрока
         /// </summary>
-        public async Task CheckUserAnswer(Answer answer)
+        public async Task CheckUserAnswer(AnswerDTO answer)
         {
             _timer.StopTimer();
             if (answer.IsCorrect)

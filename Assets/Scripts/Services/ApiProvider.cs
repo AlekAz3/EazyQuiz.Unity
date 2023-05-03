@@ -20,9 +20,9 @@ namespace EazyQuiz.Unity.Services
         /// <summary>
         /// IP адрес сервера
         /// </summary>
-        //private static readonly string BaseAdress = "http://10.61.140.42:5274";
+        private static readonly string BaseAdress = "http://10.61.140.42:5274";
         //private static readonly string BaseAdress = "http://192.168.1.90:5274";
-        private static readonly string BaseAdress = "http://eazyquiz-ru.1gb.ru";
+        //private static readonly string BaseAdress = "https://eazyquiz.ru";
         /// <inheritdoc cref="HttpClient"/>
         private readonly HttpClient _client;
 
@@ -96,18 +96,15 @@ namespace EazyQuiz.Unity.Services
         /// </summary>
         /// <param name="password">Пароль</param>
         /// <param name="username">Ник</param>
-        /// <param name="age">Возраст</param>
-        /// <param name="gender">Пол</param>
         /// <param name="country">Страна</param>
-        internal async Task Registrate(string password, string username, int age, string gender, string country)
+        internal async Task Registrate(string password, string username, string country)
         {
             var user = new UserRegister()
             {
                 Username = username,
-                Age = age,
-                Gender = gender,
                 Country = country,
-                Password = PasswordHash.Hash(password)
+                Password = PasswordHash.Hash(password),
+                Role = "Player"
             };
 
             string json = JsonConvert.SerializeObject(user);
@@ -165,7 +162,7 @@ namespace EazyQuiz.Unity.Services
         /// <returns></returns>
         public async Task<List<QuestionWithAnswers>> GetQuestions(Guid? themeId, string token)
         {
-            var url = "";
+            var url = string.Empty;
             if (themeId == Guid.Empty)
             {
                 url = $"{BaseAdress}/api/Questions";

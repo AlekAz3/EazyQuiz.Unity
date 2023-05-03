@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
@@ -53,7 +54,7 @@ namespace EazyQuiz.Unity.Controllers
 
         private async void Awake()
         {
-            await AddHistoryQuestion();
+            await AddHistoryQuestion(); 
         }
 
         /// <summary>
@@ -61,14 +62,14 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         private async Task AddHistoryQuestion()
         {
-            var historyAnswers = await _apiProvider.GetCurrentUserQuestions(
+            var historyQuestion = await _apiProvider.GetCurrentUserQuestions(
                 user.UserInfo.Id,
                 new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
                 user.UserInfo.Token
                 );
-            Debug.Log(historyAnswers.Count);
-            count = (int)historyAnswers.Count;
-            GenerateGameObjects(historyAnswers.Items);
+            Debug.Log(historyQuestion.Count);
+            count = (int)historyQuestion.Count;
+            GenerateGameObjects(historyQuestion.Items);
         }
 
         private void GenerateGameObjects(IEnumerable<QuestionByUserResponse> questionHistory)
@@ -102,7 +103,6 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Переводит на следующую страницу
         /// </summary>
-        /// <returns></returns>
         private bool AddPage()
         {
             if (Math.Ceiling(count / 10d) > page)
@@ -118,23 +118,23 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         public async void SendUserQuestion()
         {
-            var question = QuestionText.text;
-            var answer = AnswerText.text;
+            var questionText = QuestionText.text;
+            var answerText = AnswerText.text;
 
-            if (question.IsNullOrEmpty() || answer.IsNullOrEmpty())
+            if (questionText.IsNullOrEmpty() || answerText.IsNullOrEmpty())
             {
                 InfoScreen.ShowError("Есть пустые поля");
                 return;
             }
             InfoScreen.ShowInformation("Ваш предложенный вопрос отправлен");
-            var q = new AddQuestionByUser()
+            var question = new AddQuestionByUser()
             {
                 UserId = user.UserInfo.Id,
-                QuestionText = question,
-                AnswerText = answer,
+                QuestionText = questionText,
+                AnswerText = answerText,
             };
 
-            await _apiProvider.SendUserQuestion(q, user.UserInfo.Token);
+            await _apiProvider.SendUserQuestion(question, user.UserInfo.Token);
             QuestionText.text = string.Empty;
             AnswerText.text = string.Empty;
             await Refresh();

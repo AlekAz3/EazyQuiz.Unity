@@ -57,7 +57,7 @@ namespace EazyQuiz.Unity.Elements.Auth
         [SerializeField] private AuthtorizationPanel _panel;
 
         /// <inheritdoc cref="ApiProvider"/>
-        [Inject] private ApiProvider _apiProvider;
+        [Inject] private readonly ApiProvider _apiProvider;
 
         /// <summary>
         /// Нажатие кнопки "Зарегистрироваться"
@@ -68,13 +68,9 @@ namespace EazyQuiz.Unity.Elements.Auth
             string username = UsernameRegisteInput.text;
             string password = PasswordRegisteInput.text;
             string repeatpassword = RepeatPasswordRegisteInput.text;
-            string age = AgeRegisteInput.text;
-            string gender = GenderRegisteInput.captionText.text;
             string country = CountryRegisteInput.captionText.text;
 
-            Debug.Log(password);
-
-            if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty() || age.IsNullOrEmpty())
+            if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty())
             {
                 _loadingScreen.Hide();
                 _error.ShowError("Есть пустые поля");
@@ -108,14 +104,6 @@ namespace EazyQuiz.Unity.Elements.Auth
                 _error.ShowError("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
                 return;
             }
-
-            if (Convert.ToInt32(age) <= 0)
-            {
-                _loadingScreen.Hide();
-                _error.ShowError("Неверный возраст");
-                return;
-            }
-
             try
             {
                 if (await _apiProvider.CheckUsername(username))
@@ -135,8 +123,6 @@ namespace EazyQuiz.Unity.Elements.Auth
             await _apiProvider.Registrate(
                 password,
                 username,
-                Convert.ToInt32(age),
-                gender,
                 country
             );
             _loadingScreen.Hide();
