@@ -1843,7 +1843,7 @@ MonoBehaviour:
       - m_Target: {fileID: 353646368}
         m_TargetAssemblyTypeName: EazyQuiz.Unity.Controllers.MainmenuController,
           Assembly-CSharp
-        m_MethodName: NotImplementButton
+        m_MethodName: ViewLeaderboardScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2637,7 +2637,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -163.66998, y: -65}
+  m_AnchoredPosition: {x: -163.66997, y: -65}
   m_SizeDelta: {x: -378.44, y: 88.97}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1951153723

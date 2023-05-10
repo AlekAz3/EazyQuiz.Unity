@@ -40,7 +40,6 @@ namespace EazyQuiz.Unity.Services
         {
             var userAnswer = new UserAnswer()
             {
-                UserId = UserInfo.Id,
                 QuestionId = questionId,
                 AnswerId = answer.AnswerId
             };

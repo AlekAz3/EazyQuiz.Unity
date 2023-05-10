@@ -9,6 +9,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 namespace EazyQuiz.Unity.Services
 {
@@ -45,7 +46,7 @@ namespace EazyQuiz.Unity.Services
 
             if (userSalt == "")
             {
-                return new UserResponse() { Id = Guid.Empty };
+                return null;
             }
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
@@ -69,7 +70,7 @@ namespace EazyQuiz.Unity.Services
             {
                 Debug.Log("NotFound");
             }
-            return new UserResponse() { Id = Guid.Empty }; ;
+            return null; ;
         }
 
         /// <summary>
@@ -215,12 +216,12 @@ namespace EazyQuiz.Unity.Services
         /// <param name="command">Параметры пагинации</param>
         /// <param name="token">JWT токен</param>
         /// <returns>Коллекцию ответов пользователей</returns>
-        public async Task<InputCountDTO<UserAnswerHistory>> GetHistory(Guid userId, GetHistoryCommand command, string token)
+        public async Task<InputCountDTO<UserAnswerHistory>> GetHistory(GetHistoryCommand command, string token)
         {
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/History?userId={userId}&PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
+                RequestUri = new Uri($"{BaseAdress}/api/History?PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -248,12 +249,12 @@ namespace EazyQuiz.Unity.Services
             await _client.SendAsync(request);
         }
 
-        public async Task<InputCountDTO<QuestionByUserResponse>> GetCurrentUserQuestions(Guid userId, GetHistoryCommand command, string token)
+        public async Task<InputCountDTO<QuestionByUserResponse>> GetCurrentUserQuestions(GetHistoryCommand command, string token)
         {
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/AddUserQuestion?userId={userId}&PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
+                RequestUri = new Uri($"{BaseAdress}/api/AddUserQuestion?PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -278,6 +279,47 @@ namespace EazyQuiz.Unity.Services
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<List<ThemeResponse>>(responseBody);
+        }
+
+        internal async Task<int> GetUserPosition(string country, string token)
+        {
+            string url = "Leaderboard/user";
+            if (country is not null)
+            {
+                url = $"Leaderboard/user?Country={country}";
+            }
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/{url}"),
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            var response = await _client.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<int>(responseBody);
+        }
+
+        internal async Task<IReadOnlyCollection<PublicUserInfo>> GetLeaderboard(string country, string token)
+        {
+            string url = "Leaderboard?Count=5";
+            if (country is not null)
+            {
+                url = $"Leaderboard?Count=5&Country={country}";
+            }
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/{url}"),
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            var response = await _client.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IReadOnlyCollection<PublicUserInfo>>(responseBody);
         }
     }
 }

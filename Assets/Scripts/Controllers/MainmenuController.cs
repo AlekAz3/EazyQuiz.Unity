@@ -62,6 +62,14 @@ namespace EazyQuiz.Unity.Controllers
             _scene.ShowAddUserQuestionScene();
         }
 
+        /// <summary>
+        /// Таблица лидеров
+        /// </summary>
+        public void ViewLeaderboardScene()
+        {
+            _scene.ShowLeaderboardScene();
+        }
+
         public void NotImplementButton()
         {
             _error.ShowError("В разработке");

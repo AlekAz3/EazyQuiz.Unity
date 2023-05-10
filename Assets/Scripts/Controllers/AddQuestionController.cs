@@ -63,7 +63,6 @@ namespace EazyQuiz.Unity.Controllers
         private async Task AddHistoryQuestion()
         {
             var historyQuestion = await _apiProvider.GetCurrentUserQuestions(
-                user.UserInfo.Id,
                 new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
                 user.UserInfo.Token
                 );
@@ -129,7 +128,6 @@ namespace EazyQuiz.Unity.Controllers
             InfoScreen.ShowInformation("Ваш предложенный вопрос отправлен");
             var question = new AddQuestionByUser()
             {
-                UserId = user.UserInfo.Id,
                 QuestionText = questionText,
                 AnswerText = answerText,
             };

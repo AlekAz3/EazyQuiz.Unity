@@ -68,7 +68,7 @@ namespace EazyQuiz.Unity.Elements.Auth
                 return;
             }
 
-            if (_userService.UserInfo.Id == Guid.Empty)
+            if (_userService.UserInfo is null)
             {
                 _loadingScreen.Hide();
                 _error.ShowError("Пользователь не найден");
