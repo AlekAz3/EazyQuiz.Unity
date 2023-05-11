@@ -76,6 +76,12 @@ namespace EazyQuiz.Unity.Elements.Auth
                 _error.ShowError("Есть пустые поля");
                 return;
             }
+            if (username.Contains(' ') || password.Contains(' '))
+            {
+                _loadingScreen.Hide();
+                _error.ShowError("В Логине или пароле присутствуют пробелы");
+                return;
+            }
 
             if (!password.IsMoreEightSymbols())
             {

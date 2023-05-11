@@ -16,6 +16,7 @@ namespace EazyQuiz.Unity.Controllers
         [Inject] private readonly ApiProvider _apiProvider;
         [Inject] private readonly UserService _userService;
         [Inject] private readonly SwitchSceneService _scene;
+
         public void Awake()
         {
             RefrashLeaderboard(0);
@@ -45,10 +46,8 @@ namespace EazyQuiz.Unity.Controllers
                     break;
             }
 
-            Debug.Log("RefrashLeaderboard");
             var userPosition = await _apiProvider.GetUserPosition(countryStr, _userService.UserInfo.Token);
             var users = (await _apiProvider.GetLeaderboard(countryStr, _userService.UserInfo.Token)).ToList();
-            Debug.Log(userPosition);
 
             if (userPosition<=5)
             {
@@ -66,8 +65,6 @@ namespace EazyQuiz.Unity.Controllers
                 }
                 usersElements.Last().ApplyUserPublucElement(userPosition, new Models.DTO.PublicUserInfo() { UserName = _userService.UserInfo.UserName, Points = _userService.UserInfo.Points });
             }
-            Debug.Log(userPosition);
-            Debug.Log(users);
         }
 
         /// <summary>

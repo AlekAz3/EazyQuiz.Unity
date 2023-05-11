@@ -9,7 +9,6 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net;
-using Unity.VisualScripting.Antlr3.Runtime;
 
 namespace EazyQuiz.Unity.Services
 {
@@ -24,9 +23,9 @@ namespace EazyQuiz.Unity.Services
         private static readonly string BaseAdress = "http://10.61.140.42:5274";
         //private static readonly string BaseAdress = "http://192.168.1.90:5274";
         //private static readonly string BaseAdress = "https://eazyquiz.ru";
+        
         /// <inheritdoc cref="HttpClient"/>
         private readonly HttpClient _client;
-
 
         public ApiProvider()
         {
@@ -42,7 +41,6 @@ namespace EazyQuiz.Unity.Services
         public async Task<UserResponse> Authtenticate(string username, string password)
         {
             string userSalt = await GetUserSalt(username);
-            Debug.Log($"Get Salt and password \n {userSalt}");
 
             if (userSalt == "")
             {
@@ -50,7 +48,6 @@ namespace EazyQuiz.Unity.Services
             }
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
-            Debug.Log($"Get Salt and password {passwordHash} \n {userSalt}");
 
             var user = new UserAuth()
             {
@@ -70,7 +67,7 @@ namespace EazyQuiz.Unity.Services
             {
                 Debug.Log("NotFound");
             }
-            return null; ;
+            return null;
         }
 
         /// <summary>
@@ -89,7 +86,6 @@ namespace EazyQuiz.Unity.Services
 
             var responseBody = await response.Content.ReadAsStringAsync();
             return responseBody;
-
         }
 
         /// <summary>
