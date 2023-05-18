@@ -36,11 +36,10 @@ namespace EazyQuiz.Unity.Services
         /// </summary>
         /// <param name="answer">Ответ</param>
         /// <param name="questionId">Ид вопроса</param>
-        internal async Task SendUserAnswer(Answer answer, Guid questionId)
+        internal async Task SendUserAnswer(AnswerDTO answer, Guid questionId)
         {
             var userAnswer = new UserAnswer()
             {
-                UserId = UserInfo.Id,
                 QuestionId = questionId,
                 AnswerId = answer.AnswerId
             };

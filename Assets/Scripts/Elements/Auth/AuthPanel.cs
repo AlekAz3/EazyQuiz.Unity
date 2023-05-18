@@ -23,7 +23,7 @@ namespace EazyQuiz.Unity.Elements.Auth
         /// <summary>
         /// Панель Ошибки
         /// </summary>
-        [SerializeField] private ErrorScreen _error;
+        [SerializeField] private InformationScreen _error;
 
         /// <summary>
         /// Панель Загрузки
@@ -47,14 +47,14 @@ namespace EazyQuiz.Unity.Elements.Auth
             if (username.IsNullOrEmpty() || password.IsNullOrEmpty())
             {
                 _loadingScreen.Hide();
-                _error.Activate("Есть пустые поля");
+                _error.ShowError("Есть пустые поля");
                 return;
             }
 
             if (!password.IsMoreEightSymbols())
             {
                 _loadingScreen.Hide();
-                _error.Activate("Меньше 8ми символов пароль");
+                _error.ShowError("Меньше 8ми символов пароль");
                 return;
             }
             try
@@ -64,14 +64,14 @@ namespace EazyQuiz.Unity.Elements.Auth
             catch (Exception)
             {
                 _loadingScreen.Hide();
-                _error.Activate("Сервер не доступен\nПовторите попытку позже");
+                _error.ShowError("Сервер не доступен\nПовторите попытку позже");
                 return;
             }
 
-            if (_userService.UserInfo.Id == Guid.Empty)
+            if (_userService.UserInfo is null)
             {
                 _loadingScreen.Hide();
-                _error.Activate("Пользователь не найден");
+                _error.ShowError("Пользователь не найден");
                 return;
             }
 

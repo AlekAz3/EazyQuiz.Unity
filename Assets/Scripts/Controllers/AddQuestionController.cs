@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
@@ -22,7 +23,7 @@ namespace EazyQuiz.Unity.Controllers
 
         [SerializeField] private TMP_InputField AnswerText;
 
-        [SerializeField] private ErrorScreen ErrorScreen;
+        [SerializeField] private InformationScreen InfoScreen;
 
         /// <summary>
         /// Сервис общения с сервером
@@ -53,7 +54,7 @@ namespace EazyQuiz.Unity.Controllers
 
         private async void Awake()
         {
-            await AddHistoryQuestion();
+            await AddHistoryQuestion(); 
         }
 
         /// <summary>
@@ -61,14 +62,13 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         private async Task AddHistoryQuestion()
         {
-            var historyAnswers = await _apiProvider.GetCurrentUserQuestions(
-                user.UserInfo.Id,
+            var historyQuestion = await _apiProvider.GetCurrentUserQuestions(
                 new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
                 user.UserInfo.Token
                 );
-            Debug.Log(historyAnswers.Count);
-            count = (int)historyAnswers.Count;
-            GenerateGameObjects(historyAnswers.Items);
+            Debug.Log(historyQuestion.Count);
+            count = (int)historyQuestion.Count;
+            GenerateGameObjects(historyQuestion.Items);
         }
 
         private void GenerateGameObjects(IEnumerable<QuestionByUserResponse> questionHistory)
@@ -102,7 +102,6 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Переводит на следующую страницу
         /// </summary>
-        /// <returns></returns>
         private bool AddPage()
         {
             if (Math.Ceiling(count / 10d) > page)
@@ -118,24 +117,35 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         public async void SendUserQuestion()
         {
-            var question = QuestionText.text;
-            var answer = AnswerText.text;
+            var questionText = QuestionText.text;
+            var answerText = AnswerText.text;
 
-            if (question.IsNullOrEmpty() || answer.IsNullOrEmpty())
+            if (questionText.IsNullOrEmpty() || answerText.IsNullOrEmpty())
             {
-                ErrorScreen.Activate("Есть пустые поля");
+                InfoScreen.ShowError("Есть пустые поля");
                 return;
             }
-            var q = new AddQuestionByUser()
+            InfoScreen.ShowInformation("Ваш предложенный вопрос отправлен");
+            var question = new AddQuestionByUser()
             {
-                UserId = user.UserInfo.Id,
-                QuestionText = question,
-                AnswerText = answer,
+                QuestionText = questionText,
+                AnswerText = answerText,
             };
 
-            await _apiProvider.SendUserQuestion(q, user.UserInfo.Token);
+            await _apiProvider.SendUserQuestion(question, user.UserInfo.Token);
             QuestionText.text = string.Empty;
             AnswerText.text = string.Empty;
+            await Refresh();
+        }
+
+        private async Task Refresh()
+        {
+            page = 0;
+            foreach (Transform child in content.transform)
+            {
+                Destroy(child.gameObject);
+            }
+            await AddHistoryQuestion();
         }
 
 

@@ -2,6 +2,8 @@ using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Services;
 using TMPro;
 using UnityEngine;
+using YandexMobileAds;
+using YandexMobileAds.Base;
 using Zenject;
 
 namespace EazyQuiz.Unity.Controllers
@@ -19,7 +21,10 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         [SerializeField] private TMP_Text UsernameLabel;
 
-        [SerializeField] private ErrorScreen _error;
+        [SerializeField] private InformationScreen _error;
+
+        private Banner banner;
+
 
         /// <summary>
         /// Количество баллов
@@ -34,8 +39,9 @@ namespace EazyQuiz.Unity.Controllers
 
         private void Awake()
         {
-            UsernameLabel.text = _userService.UserInfo.UserName;
-            PointsLabel.text = $"Очки: {_userService.UserInfo.Points}";
+            UsernameLabel.text =$"Приветствуем тебя {_userService.UserInfo.UserName}";
+            PointsLabel.text = $"Счёт: {_userService.UserInfo.Points}";
+            RequestBanner();
         }
 
         /// <summary>
@@ -45,6 +51,19 @@ namespace EazyQuiz.Unity.Controllers
         {
             _scene.ShowGameScene();
         }
+
+        private void RequestBanner()
+        {
+            string adUnitId = "kek";
+
+            banner = new Banner(adUnitId, AdSize.BANNER_320x50, AdPosition.BottomCenter);
+
+            AdRequest request = new AdRequest.Builder().Build();
+
+            banner.LoadAd(request);
+
+        }
+
 
         /// <summary>
         /// Посмотреть историю
@@ -62,9 +81,17 @@ namespace EazyQuiz.Unity.Controllers
             _scene.ShowAddUserQuestionScene();
         }
 
+        /// <summary>
+        /// Таблица лидеров
+        /// </summary>
+        public void ViewLeaderboardScene()
+        {
+            _scene.ShowLeaderboardScene();
+        }
+
         public void NotImplementButton()
         {
-            _error.Activate("В разработке");
+            _error.ShowError("В разработке");
         }
     }
 }

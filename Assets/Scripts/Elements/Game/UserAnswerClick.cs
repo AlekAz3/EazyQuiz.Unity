@@ -23,13 +23,13 @@ namespace EazyQuiz.Unity.Elements.Game
         /// <summary>
         /// Ответ назначенный на кнопку
         /// </summary>
-        private Answer _answer;
+        private AnswerDTO _answer;
 
         /// <summary>
         /// Записать ответ на кнопку
         /// </summary>
-        /// <param name="answer">Ответ в <see cref="Answer"/></param>
-        public void WriteAnswer(Answer answer)
+        /// <param name="answer">Ответ в <see cref="AnswerDTO"/></param>
+        public void WriteAnswer(AnswerDTO answer)
         {
             _answer = answer;
             ButtonText.text = answer.AnswerText;

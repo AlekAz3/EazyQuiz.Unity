@@ -23,7 +23,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AddQuestionScene.unity
     guid: 5fa3520bfa7b642449f19930788bd36e
+  - enabled: 1
+    path: Assets/Scenes/Leaderboard.unity
+    guid: 81496e0cc492d2f4e8bae86f32bcbaca
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: f70e3af7237ff944699932fa1065dc91, type: 2}
-    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: e2e5f3a57e0a97643bc09a685d8352d7, type: 2}
+    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: 25bd610e66a847f40a106db4b8a5f09e, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 565c975cc1db6434098941ec2e6ec4f2, type: 2}

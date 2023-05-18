@@ -71,7 +71,6 @@ namespace EazyQuiz.Unity.Controllers
         private async Task AddHistoryCard()
         {
             var historyAnswers = await apiProvider.GetHistory(
-                user.UserInfo.Id,
                 new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
                 user.UserInfo.Token
                 );
