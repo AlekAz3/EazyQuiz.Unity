@@ -1,15 +1,12 @@
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
-using EazyQuiz.Unity.Elements.Auth;
 using EazyQuiz.Unity.Elements.Common;
-using EazyQuiz.Unity.Elements.History;
 using EazyQuiz.Unity.Elements.UserQuestion;
 using EazyQuiz.Unity.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 

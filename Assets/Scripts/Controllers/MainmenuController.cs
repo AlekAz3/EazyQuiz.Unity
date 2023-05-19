@@ -2,8 +2,6 @@ using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Services;
 using TMPro;
 using UnityEngine;
-using YandexMobileAds;
-using YandexMobileAds.Base;
 using Zenject;
 
 namespace EazyQuiz.Unity.Controllers
@@ -21,10 +19,8 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         [SerializeField] private TMP_Text UsernameLabel;
 
+
         [SerializeField] private InformationScreen _error;
-
-        private Banner banner;
-
 
         /// <summary>
         /// Количество баллов
@@ -41,7 +37,6 @@ namespace EazyQuiz.Unity.Controllers
         {
             UsernameLabel.text =$"Приветствуем тебя {_userService.UserInfo.UserName}";
             PointsLabel.text = $"Счёт: {_userService.UserInfo.Points}";
-            RequestBanner();
         }
 
         /// <summary>
@@ -50,18 +45,6 @@ namespace EazyQuiz.Unity.Controllers
         public void StartGameButtonClick()
         {
             _scene.ShowGameScene();
-        }
-
-        private void RequestBanner()
-        {
-            string adUnitId = "kek";
-
-            banner = new Banner(adUnitId, AdSize.BANNER_320x50, AdPosition.BottomCenter);
-
-            AdRequest request = new AdRequest.Builder().Build();
-
-            banner.LoadAd(request);
-
         }
 
 
