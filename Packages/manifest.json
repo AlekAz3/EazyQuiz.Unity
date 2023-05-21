@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.mrpart.yandexsdkplugin": "https://github.com/MrPart256/YandexSDKWebGLUnityPlugin.git",
     "com.unity.adaptiveperformance.samsung.android": "5.0.0",
     "com.unity.ads": "3.7.5",
     "com.unity.collab-proxy": "2.0.0",
