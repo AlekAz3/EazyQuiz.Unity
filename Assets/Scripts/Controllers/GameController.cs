@@ -113,11 +113,11 @@ namespace EazyQuiz.Unity.Controllers
             _timer.StopTimer();
             if (answer.IsCorrect)
             {
-                _gameOverScreen.Show("Ответ верный");
+                _gameOverScreen.Show("Ответ: верный");
             }
             else
             {
-                _gameOverScreen.Show("Ответ не верный");
+                _gameOverScreen.Show($"Ответ: не верный\n\nВерный ответ: {question.Answers.Where(x => x.IsCorrect).Single().AnswerText}");
             }
 
             await _userService.SendUserAnswer(answer, question.QuestionId);

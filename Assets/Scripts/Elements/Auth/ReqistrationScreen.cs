@@ -65,9 +65,9 @@ namespace EazyQuiz.Unity.Elements.Auth
         public async void Registrate()
         {
             _loadingScreen.Show();
-            string username = UsernameRegisteInput.text;
-            string password = PasswordRegisteInput.text;
-            string repeatpassword = RepeatPasswordRegisteInput.text;
+            string username = UsernameRegisteInput.text.Trim();
+            string password = PasswordRegisteInput.text.Trim();
+            string repeatpassword = RepeatPasswordRegisteInput.text.Trim();
             string country = CountryRegisteInput.captionText.text;
 
             if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty())
@@ -133,6 +133,10 @@ namespace EazyQuiz.Unity.Elements.Auth
             );
             _loadingScreen.Hide();
             _panel.Switch();
+
+            UsernameRegisteInput.text = "";
+            PasswordRegisteInput.text = "";
+            RepeatPasswordRegisteInput.text = "";
         }
     }
 }

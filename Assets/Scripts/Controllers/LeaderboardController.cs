@@ -1,3 +1,4 @@
+using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Elements.Leaderboard;
 using EazyQuiz.Unity.Services;
 using Newtonsoft.Json;
@@ -12,10 +13,12 @@ namespace EazyQuiz.Unity.Controllers
     public class LeaderboardController : MonoBehaviour
     {
         [SerializeField] private List<UserPublicElement> usersElements;
+        [SerializeField] private LoadingScreen loading;
 
         [Inject] private readonly ApiProvider _apiProvider;
         [Inject] private readonly UserService _userService;
         [Inject] private readonly SwitchSceneService _scene;
+
 
         public void Awake()
         {
@@ -24,6 +27,7 @@ namespace EazyQuiz.Unity.Controllers
 
         public async void RefrashLeaderboard(int country)
         {
+            loading.Show();
             foreach (var user in usersElements)
             {
                 user.Clear();
@@ -39,10 +43,13 @@ namespace EazyQuiz.Unity.Controllers
                     countryStr = "Россия";
                     break;
                 case 2:
-                    countryStr = "Украина";
+                    countryStr = "Беларусь";
                     break;
                 case 3:
-                    countryStr = "Беларусь";
+                    countryStr = "Казахстан";
+                    break;
+                case 4:
+                    countryStr = "Украина";
                     break;
             }
 
@@ -65,6 +72,7 @@ namespace EazyQuiz.Unity.Controllers
                 }
                 usersElements.Last().ApplyUserPublucElement(userPosition, new Models.DTO.PublicUserInfo() { UserName = _userService.UserInfo.UserName, Points = _userService.UserInfo.Points });
             }
+            loading.Hide();
         }
 
         /// <summary>
@@ -72,6 +80,7 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         public void ExitButtonClick()
         {
+            loading.Show();
             _scene.ShowMainMenuScene();
         }
     }

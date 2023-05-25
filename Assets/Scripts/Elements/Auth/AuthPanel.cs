@@ -41,8 +41,8 @@ namespace EazyQuiz.Unity.Elements.Auth
         /// </summary>
         public async void Login()
         {
-            string username = UsernameLoginInput.text;
-            string password = PasswordLoginInput.text;
+            string username = UsernameLoginInput.text.Trim();
+            string password = PasswordLoginInput.text.Trim();
             _loadingScreen.Show();
             if (username.IsNullOrEmpty() || password.IsNullOrEmpty())
             {
@@ -71,7 +71,7 @@ namespace EazyQuiz.Unity.Elements.Auth
             if (_userService.UserInfo is null)
             {
                 _loadingScreen.Hide();
-                _error.ShowError("Пользователь не найден");
+                _error.ShowError("Ник или пароль введены неправильно");
                 return;
             }
 

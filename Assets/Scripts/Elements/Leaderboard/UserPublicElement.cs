@@ -17,22 +17,22 @@ namespace EazyQuiz.Unity.Elements.Leaderboard
 
         public void ApplyUserPublucElement(int place, PublicUserInfo userInfo)
         {
-            switch (place)
-            {
-                case 1:
-                    Background.color = Color.yellow;
-                    break;
-                case 2:
-                    Background.color = Color.gray;
-                    break;
-                case 3:
-                    Background.color = Color.red;
-                    break;
-            }
-            if (place>5)
-            {
-                Background.color = Color.cyan;
-            }
+            //switch (place)
+            //{
+            //    case 1:
+            //        Background.color = Color.yellow;
+            //        break;
+            //    case 2:
+            //        Background.color = Color.gray;
+            //        break;
+            //    case 3:
+            //        Background.color = Color.red;
+            //        break;
+            //}
+            //if (place>5)
+            //{
+            //    Background.color = Color.cyan;
+            //}
             Place.text = place.ToString();
             Username.text = userInfo.UserName;
             Score.text = userInfo.Points.ToString();
@@ -41,9 +41,10 @@ namespace EazyQuiz.Unity.Elements.Leaderboard
         public void Clear()
         {
             Object.SetActive(true);
-            Background.color = Color.white;
+            //Background.color = Color.white;
             Username.text = string.Empty;
             Score.text = string.Empty;
+            Place.text = string.Empty;
         }
 
         public void Hide()
