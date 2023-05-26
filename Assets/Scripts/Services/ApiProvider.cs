@@ -20,9 +20,9 @@ namespace EazyQuiz.Unity.Services
         /// <summary>
         /// IP адрес сервера
         /// </summary>
-        //private static readonly string BaseAdress = "http://10.61.140.42:5274";
+        private static readonly string BaseAdress = "http://10.61.140.42:5274";
         //private static readonly string BaseAdress = "http://192.168.1.90:5274";
-        private static readonly string BaseAdress = "https://eazyquiz.ru";
+        //private static readonly string BaseAdress = "https://eazyquiz.ru";
         
         /// <inheritdoc cref="HttpClient"/>
         private readonly HttpClient _client;
