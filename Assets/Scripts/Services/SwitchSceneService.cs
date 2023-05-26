@@ -1,4 +1,5 @@
-﻿using UnityEngine.SceneManagement;
+﻿using System;
+using UnityEngine.SceneManagement;
 
 namespace EazyQuiz.Unity.Services
 {
@@ -42,6 +43,21 @@ namespace EazyQuiz.Unity.Services
         public void ShowAddUserQuestionScene()
         {
             SceneManager.LoadScene("AddQuestionScene");
+        }
+
+        public void ShowAuthScene()
+        {
+            SceneManager.LoadScene("AuthScene");
+        }
+
+        public void ShowSettingScene()
+        {
+            SceneManager.LoadScene("SettingsScene");
+        }
+
+        public void ShowFeedbackScene()
+        {
+            SceneManager.LoadScene("FeedbackScene");
         }
     }
 }

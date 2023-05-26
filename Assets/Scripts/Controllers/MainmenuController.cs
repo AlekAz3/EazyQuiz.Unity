@@ -76,5 +76,15 @@ namespace EazyQuiz.Unity.Controllers
         {
             _error.ShowError("В разработке");
         }
+
+        public void ViewFeedbackScene()
+        {
+            _scene.ShowFeedbackScene();
+        }
+
+        public void ViewSettingScene()
+        {
+            _scene.ShowSettingScene();
+        }
     }
 }
