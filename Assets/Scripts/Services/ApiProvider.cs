@@ -22,10 +22,10 @@ namespace EazyQuiz.Unity.Services
         /// </summary>
         //private static readonly string BaseAdress = "http://10.61.140.42:5274";
         //private static readonly string BaseAdress = "http://192.168.1.90:5274";
-        private static readonly string BaseAdress = "http://eazyquiz-ru.1gb.ru";
+        private static readonly string BaseAdress = "https://eazyquiz.ru";
+        
         /// <inheritdoc cref="HttpClient"/>
         private readonly HttpClient _client;
-
 
         public ApiProvider()
         {
@@ -41,15 +41,13 @@ namespace EazyQuiz.Unity.Services
         public async Task<UserResponse> Authtenticate(string username, string password)
         {
             string userSalt = await GetUserSalt(username);
-            Debug.Log($"Get Salt and password \n {userSalt}");
 
             if (userSalt == "")
             {
-                return new UserResponse() { Id = Guid.Empty };
+                return null;
             }
 
             var passwordHash = PasswordHash.HashWithCurrentSalt(password, userSalt);
-            Debug.Log($"Get Salt and password {passwordHash} \n {userSalt}");
 
             var user = new UserAuth()
             {
@@ -69,7 +67,7 @@ namespace EazyQuiz.Unity.Services
             {
                 Debug.Log("NotFound");
             }
-            return new UserResponse() { Id = Guid.Empty }; ;
+            return null;
         }
 
         /// <summary>
@@ -88,7 +86,6 @@ namespace EazyQuiz.Unity.Services
 
             var responseBody = await response.Content.ReadAsStringAsync();
             return responseBody;
-
         }
 
         /// <summary>
@@ -96,18 +93,15 @@ namespace EazyQuiz.Unity.Services
         /// </summary>
         /// <param name="password">Пароль</param>
         /// <param name="username">Ник</param>
-        /// <param name="age">Возраст</param>
-        /// <param name="gender">Пол</param>
         /// <param name="country">Страна</param>
-        internal async Task Registrate(string password, string username, int age, string gender, string country)
+        internal async Task Registrate(string password, string username, string country)
         {
             var user = new UserRegister()
             {
                 Username = username,
-                Age = age,
-                Gender = gender,
                 Country = country,
-                Password = PasswordHash.Hash(password)
+                Password = PasswordHash.Hash(password),
+                Role = "Player"
             };
 
             string json = JsonConvert.SerializeObject(user);
@@ -165,7 +159,7 @@ namespace EazyQuiz.Unity.Services
         /// <returns></returns>
         public async Task<List<QuestionWithAnswers>> GetQuestions(Guid? themeId, string token)
         {
-            var url = "";
+            var url = string.Empty;
             if (themeId == Guid.Empty)
             {
                 url = $"{BaseAdress}/api/Questions";
@@ -218,12 +212,12 @@ namespace EazyQuiz.Unity.Services
         /// <param name="command">Параметры пагинации</param>
         /// <param name="token">JWT токен</param>
         /// <returns>Коллекцию ответов пользователей</returns>
-        public async Task<InputCountDTO<UserAnswerHistory>> GetHistory(Guid userId, GetHistoryCommand command, string token)
+        public async Task<InputCountDTO<UserAnswerHistory>> GetHistory(GetHistoryCommand command, string token)
         {
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/History?userId={userId}&PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
+                RequestUri = new Uri($"{BaseAdress}/api/History?PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -251,12 +245,12 @@ namespace EazyQuiz.Unity.Services
             await _client.SendAsync(request);
         }
 
-        public async Task<InputCountDTO<QuestionByUserResponse>> GetCurrentUserQuestions(Guid userId, GetHistoryCommand command, string token)
+        public async Task<InputCountDTO<QuestionByUserResponse>> GetCurrentUserQuestions(GetHistoryCommand command, string token)
         {
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/AddUserQuestion?userId={userId}&PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
+                RequestUri = new Uri($"{BaseAdress}/api/AddUserQuestion?PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -281,6 +275,63 @@ namespace EazyQuiz.Unity.Services
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<List<ThemeResponse>>(responseBody);
+        }
+
+        internal async Task<int> GetUserPosition(string country, string token)
+        {
+            string url = "Leaderboard/user";
+            if (country is not null)
+            {
+                url = $"Leaderboard/user?Country={country}";
+            }
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/{url}"),
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            var response = await _client.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<int>(responseBody);
+        }
+
+        internal async Task<IReadOnlyCollection<PublicUserInfo>> GetLeaderboard(string country, string token)
+        {
+            string url = "Leaderboard?Count=5";
+            if (country is not null)
+            {
+                url = $"Leaderboard?Count=5&Country={country}";
+            }
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseAdress}/api/{url}"),
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            var response = await _client.SendAsync(request);
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IReadOnlyCollection<PublicUserInfo>>(responseBody);
+        }
+
+        public async Task SendFeedback(FeedbackRequest feedback, string token)
+        {
+            string json = JsonConvert.SerializeObject(feedback);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAdress}/api/Feedback"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            await _client.SendAsync(request);
         }
     }
 }

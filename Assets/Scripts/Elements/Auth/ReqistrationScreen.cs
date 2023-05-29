@@ -44,7 +44,7 @@ namespace EazyQuiz.Unity.Elements.Auth
         /// <summary>
         /// Панель Ошибки
         /// </summary>
-        [SerializeField] private ErrorScreen _error;
+        [SerializeField] private InformationScreen _error;
 
         /// <summary>
         /// Панель Загрузки
@@ -57,7 +57,7 @@ namespace EazyQuiz.Unity.Elements.Auth
         [SerializeField] private AuthtorizationPanel _panel;
 
         /// <inheritdoc cref="ApiProvider"/>
-        [Inject] private ApiProvider _apiProvider;
+        [Inject] private readonly ApiProvider _apiProvider;
 
         /// <summary>
         /// Нажатие кнопки "Зарегистрироваться"
@@ -65,82 +65,78 @@ namespace EazyQuiz.Unity.Elements.Auth
         public async void Registrate()
         {
             _loadingScreen.Show();
-            string username = UsernameRegisteInput.text;
-            string password = PasswordRegisteInput.text;
-            string repeatpassword = RepeatPasswordRegisteInput.text;
-            string age = AgeRegisteInput.text;
-            string gender = GenderRegisteInput.captionText.text;
+            string username = UsernameRegisteInput.text.Trim();
+            string password = PasswordRegisteInput.text.Trim();
+            string repeatpassword = RepeatPasswordRegisteInput.text.Trim();
             string country = CountryRegisteInput.captionText.text;
 
-            Debug.Log(password);
-
-            if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty() || age.IsNullOrEmpty())
+            if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty())
             {
                 _loadingScreen.Hide();
-                _error.Activate("Есть пустые поля");
+                _error.ShowError("Есть пустые поля");
+                return;
+            }
+            if (username.Contains(' ') || password.Contains(' '))
+            {
+                _loadingScreen.Hide();
+                _error.ShowError("В Логине или пароле присутствуют пробелы");
                 return;
             }
 
             if (!password.IsMoreEightSymbols())
             {
                 _loadingScreen.Hide();
-                _error.Activate("В пароле меньше 8ми символов");
+                _error.ShowError("В пароле меньше 8ми символов");
                 return;
             }
 
             if (!password.IsEqual(repeatpassword))
             {
                 _loadingScreen.Hide();
-                _error.Activate("Пароли не совпадают");
+                _error.ShowError("Пароли не совпадают");
                 return;
             }
 
             if (!password.IsNoBannedSymbols())
             {
                 _loadingScreen.Hide();
-                _error.Activate("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
+                _error.ShowError("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
                 return;
             }
 
             if (!(password.IsContaintsUpperCaseLetter() && password.IsContaintsLowerCaseLetter() && password.IsContaintsNumeric()))
             {
                 _loadingScreen.Hide();
-                _error.Activate("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
+                _error.ShowError("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
                 return;
             }
-
-            if (Convert.ToInt32(age) <= 0)
-            {
-                _loadingScreen.Hide();
-                _error.Activate("Неверный возраст");
-                return;
-            }
-
             try
             {
                 if (await _apiProvider.CheckUsername(username))
                 {
                     _loadingScreen.Hide();
-                    _error.Activate("Такой ник уже существует");
+                    _error.ShowError("Такой ник уже существует");
                     return;
                 }
             }
             catch (Exception)
             {
                 _loadingScreen.Hide();
-                _error.Activate("Сервер не доступен\nПовторите попытку позже");
+                _error.ShowError("Сервер не доступен\nПовторите попытку позже");
                 return;
             }
 
             await _apiProvider.Registrate(
                 password,
                 username,
-                Convert.ToInt32(age),
-                gender,
                 country
             );
             _loadingScreen.Hide();
             _panel.Switch();
+
+            UsernameRegisteInput.text = "";
+            PasswordRegisteInput.text = "";
+            RepeatPasswordRegisteInput.text = "";
         }
     }
 }

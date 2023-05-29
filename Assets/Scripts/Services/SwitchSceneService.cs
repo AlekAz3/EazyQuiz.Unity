@@ -1,4 +1,5 @@
-﻿using UnityEngine.SceneManagement;
+﻿using System;
+using UnityEngine.SceneManagement;
 
 namespace EazyQuiz.Unity.Services
 {
@@ -31,12 +32,32 @@ namespace EazyQuiz.Unity.Services
             SceneManager.LoadScene("GameScene");
         }
 
+        public void ShowLeaderboardScene()
+        {
+            SceneManager.LoadScene("Leaderboard");
+        }
+
         /// <summary>
         /// Переключить на сцену предложения своего вопроса 
         /// </summary>
         public void ShowAddUserQuestionScene()
         {
             SceneManager.LoadScene("AddQuestionScene");
+        }
+
+        public void ShowAuthScene()
+        {
+            SceneManager.LoadScene("AuthScene");
+        }
+
+        public void ShowSettingScene()
+        {
+            SceneManager.LoadScene("SettingsScene");
+        }
+
+        public void ShowFeedbackScene()
+        {
+            SceneManager.LoadScene("FeedbackScene");
         }
     }
 }
