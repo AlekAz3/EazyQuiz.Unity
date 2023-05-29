@@ -1288,7 +1288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8153795469936812714, guid: c354ea71afdcf884f82fa00beb0d53d7, type: 3}
       propertyPath: m_text
-      value: "\u0417\u0430\u0440\u0435\u0433\u0435\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F"
+      value: "\u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u0442\u044C\u0441\u044F"
       objectReference: {fileID: 0}
     - target: {fileID: 8153795469936812714, guid: c354ea71afdcf884f82fa00beb0d53d7, type: 3}
       propertyPath: m_fontSize

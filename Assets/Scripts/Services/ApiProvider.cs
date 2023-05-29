@@ -20,9 +20,9 @@ namespace EazyQuiz.Unity.Services
         /// <summary>
         /// IP адрес сервера
         /// </summary>
-        private static readonly string BaseAdress = "http://10.61.140.42:5274";
+        //private static readonly string BaseAdress = "http://10.61.140.42:5274";
         //private static readonly string BaseAdress = "http://192.168.1.90:5274";
-        //private static readonly string BaseAdress = "https://eazyquiz.ru";
+        private static readonly string BaseAdress = "https://eazyquiz.ru";
         
         /// <inheritdoc cref="HttpClient"/>
         private readonly HttpClient _client;
@@ -316,6 +316,22 @@ namespace EazyQuiz.Unity.Services
             var response = await _client.SendAsync(request);
             var responseBody = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IReadOnlyCollection<PublicUserInfo>>(responseBody);
+        }
+
+        public async Task SendFeedback(FeedbackRequest feedback, string token)
+        {
+            string json = JsonConvert.SerializeObject(feedback);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAdress}/api/Feedback"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            await _client.SendAsync(request);
         }
     }
 }

@@ -28,7 +28,6 @@ namespace EazyQuiz.Unity.Services
         public async Task Authtenticate(string login, string password)
         {
             UserInfo = await _apiProvider.Authtenticate(login, password);
-
         }
 
         /// <summary>
