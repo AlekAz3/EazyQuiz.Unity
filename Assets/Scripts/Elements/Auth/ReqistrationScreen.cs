@@ -44,7 +44,7 @@ namespace EazyQuiz.Unity.Elements.Auth
         /// <summary>
         /// Панель Ошибки
         /// </summary>
-        [SerializeField] private InformationScreen _error;
+        [SerializeField] private ErrorScreen _error;
 
         /// <summary>
         /// Панель Загрузки
@@ -57,7 +57,7 @@ namespace EazyQuiz.Unity.Elements.Auth
         [SerializeField] private AuthtorizationPanel _panel;
 
         /// <inheritdoc cref="ApiProvider"/>
-        [Inject] private readonly ApiProvider _apiProvider;
+        [Inject] private ApiProvider _apiProvider;
 
         /// <summary>
         /// Нажатие кнопки "Зарегистрироваться"
@@ -68,67 +68,75 @@ namespace EazyQuiz.Unity.Elements.Auth
             string username = UsernameRegisteInput.text;
             string password = PasswordRegisteInput.text;
             string repeatpassword = RepeatPasswordRegisteInput.text;
+            string age = AgeRegisteInput.text;
+            string gender = GenderRegisteInput.captionText.text;
             string country = CountryRegisteInput.captionText.text;
 
-            if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty())
+            Debug.Log(password);
+
+            if (username.IsNullOrEmpty() || password.IsNullOrEmpty() || repeatpassword.IsNullOrEmpty() || age.IsNullOrEmpty())
             {
                 _loadingScreen.Hide();
-                _error.ShowError("Есть пустые поля");
-                return;
-            }
-            if (username.Contains(' ') || password.Contains(' '))
-            {
-                _loadingScreen.Hide();
-                _error.ShowError("В Логине или пароле присутствуют пробелы");
+                _error.Activate("Есть пустые поля");
                 return;
             }
 
             if (!password.IsMoreEightSymbols())
             {
                 _loadingScreen.Hide();
-                _error.ShowError("В пароле меньше 8ми символов");
+                _error.Activate("В пароле меньше 8ми символов");
                 return;
             }
 
             if (!password.IsEqual(repeatpassword))
             {
                 _loadingScreen.Hide();
-                _error.ShowError("Пароли не совпадают");
+                _error.Activate("Пароли не совпадают");
                 return;
             }
 
             if (!password.IsNoBannedSymbols())
             {
                 _loadingScreen.Hide();
-                _error.ShowError("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
+                _error.Activate("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
                 return;
             }
 
             if (!(password.IsContaintsUpperCaseLetter() && password.IsContaintsLowerCaseLetter() && password.IsContaintsNumeric()))
             {
                 _loadingScreen.Hide();
-                _error.ShowError("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
+                _error.Activate("Пароль слишком слабый\n\nДолжны присутствовать большие маленький буквы и цифры");
                 return;
             }
+
+            if (Convert.ToInt32(age) <= 0)
+            {
+                _loadingScreen.Hide();
+                _error.Activate("Неверный возраст");
+                return;
+            }
+
             try
             {
                 if (await _apiProvider.CheckUsername(username))
                 {
                     _loadingScreen.Hide();
-                    _error.ShowError("Такой ник уже существует");
+                    _error.Activate("Такой ник уже существует");
                     return;
                 }
             }
             catch (Exception)
             {
                 _loadingScreen.Hide();
-                _error.ShowError("Сервер не доступен\nПовторите попытку позже");
+                _error.Activate("Сервер не доступен\nПовторите попытку позже");
                 return;
             }
 
             await _apiProvider.Registrate(
                 password,
                 username,
+                Convert.ToInt32(age),
+                gender,
                 country
             );
             _loadingScreen.Hide();
