@@ -59,15 +59,14 @@ namespace EazyQuiz.Unity.Services
                 order = 0;
                 questions.Clear();
             }
-            var ques = await _apiProvider.GetQuestions(ThemeId,_userService.UserInfo.Token);
+            var ques = await _apiProvider.GetQuestions(ThemeId,_userService.UserInfo.Token.Jwt);
 
             questions.AddRange(ques);
         }
 
         public async Task<IReadOnlyCollection<ThemeResponse>> GetThemes()
         {
-            return await _apiProvider.GetThemes(_userService.UserInfo.Token);
+            return await _apiProvider.GetThemes(_userService.UserInfo.Token.Jwt);
         }
-
     }
 }

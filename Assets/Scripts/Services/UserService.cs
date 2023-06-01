@@ -1,6 +1,7 @@
 ﻿using EazyQuiz.Models.DTO;
 using System;
 using System.Threading.Tasks;
+using Zenject;
 
 namespace EazyQuiz.Unity.Services
 {
@@ -15,6 +16,8 @@ namespace EazyQuiz.Unity.Services
         /// <inheritdoc cref="UserResponse"/>
         public UserResponse UserInfo { get; private set; }
 
+        [Inject] private SaveUserService _saveUser;
+
         public UserService()
         {
             _apiProvider = new ApiProvider();
@@ -28,6 +31,15 @@ namespace EazyQuiz.Unity.Services
         public async Task Authtenticate(string login, string password)
         {
             UserInfo = await _apiProvider.Authtenticate(login, password);
+            _saveUser.SaveUser(UserInfo);
+        }
+
+        public async void SetUser(UserResponse user)
+        {
+            UserInfo = user;
+            var newToken = await _apiProvider.RefreshToken(user.Token.RefrashToken);
+            UserInfo.Token = newToken;
+            _saveUser.SaveUser(UserInfo);
         }
 
         /// <summary>
@@ -48,7 +60,7 @@ namespace EazyQuiz.Unity.Services
                 AddPoint();
             }
 
-            await _apiProvider.SendUserAnswer(userAnswer, UserInfo.Token);
+            await _apiProvider.SendUserAnswer(userAnswer, UserInfo.Token.Jwt);
         }
 
         /// <summary>
@@ -57,6 +69,7 @@ namespace EazyQuiz.Unity.Services
         private void AddPoint()
         {
             UserInfo.Points++;
+            _saveUser.SaveUser(UserInfo);
         }
     }
 }

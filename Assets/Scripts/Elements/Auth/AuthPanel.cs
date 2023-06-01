@@ -36,6 +36,18 @@ namespace EazyQuiz.Unity.Elements.Auth
         /// <inheritdoc cref="SwitchSceneService"/>
         [Inject] private readonly SwitchSceneService _scene;
 
+        [Inject] private readonly SaveUserService _saveUser;
+
+        private void Awake()
+        {
+            var user = _saveUser.LoadUser();
+            if (user != null)
+            {
+                _userService.SetUser(user);
+                _scene.ShowMainMenuScene();
+            }
+        }
+
         /// <summary>
         /// Нажатие кнопки "Войти"
         /// </summary>
@@ -43,7 +55,9 @@ namespace EazyQuiz.Unity.Elements.Auth
         {
             string username = UsernameLoginInput.text.Trim();
             string password = PasswordLoginInput.text.Trim();
+
             _loadingScreen.Show();
+
             if (username.IsNullOrEmpty() || password.IsNullOrEmpty())
             {
                 _loadingScreen.Hide();
@@ -57,14 +71,16 @@ namespace EazyQuiz.Unity.Elements.Auth
                 _error.ShowError("Меньше 8ми символов пароль");
                 return;
             }
+
             try
             {
                 await _userService.Authtenticate(username, password);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _loadingScreen.Hide();
                 _error.ShowError("Сервер не доступен\nПовторите попытку позже");
+                Debug.LogException(ex);
                 return;
             }
 

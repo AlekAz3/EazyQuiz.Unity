@@ -1,3 +1,4 @@
+using EazyQuiz.Unity.Services;
 using UnityEngine;
 
 namespace EazyQuiz.Unity.Controllers
@@ -27,6 +28,16 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         [SerializeField] private GameObject RegisterLabel;
 
+        /// <summary>
+        /// Надпись "Логин" на кнопке
+        /// </summary>
+        [SerializeField] private GameObject LoginButtonText;
+
+        /// <summary>
+        /// Надпись "Регистрация" на кнопке
+        /// </summary>
+        [SerializeField] private GameObject RegisterButtonText;
+
         private void Awake()
         {
             Screen.fullScreen = false;
@@ -42,6 +53,9 @@ namespace EazyQuiz.Unity.Controllers
 
             RegisterGO.SetActive(!RegisterGO.activeSelf);
             RegisterLabel.SetActive(!RegisterLabel.activeSelf);
+
+            LoginButtonText.SetActive(!LoginButtonText.activeSelf);
+            RegisterButtonText.SetActive(!RegisterButtonText.activeSelf);
         }
     }
 }

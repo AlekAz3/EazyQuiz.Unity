@@ -61,7 +61,7 @@ namespace EazyQuiz.Unity.Controllers
         {
             var historyQuestion = await _apiProvider.GetCurrentUserQuestions(
                 new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
-                user.UserInfo.Token
+                user.UserInfo.Token.Jwt
                 );
             Debug.Log(historyQuestion.Count);
             count = (int)historyQuestion.Count;
@@ -129,7 +129,7 @@ namespace EazyQuiz.Unity.Controllers
                 AnswerText = answerText,
             };
 
-            await _apiProvider.SendUserQuestion(question, user.UserInfo.Token);
+            await _apiProvider.SendUserQuestion(question, user.UserInfo.Token.Jwt);
             QuestionText.text = string.Empty;
             AnswerText.text = string.Empty;
             await Refresh();

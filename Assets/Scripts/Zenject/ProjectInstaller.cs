@@ -13,6 +13,7 @@ namespace EazyQuiz.Unity.Zenject
             Container.Bind<ApiProvider>().AsCached().NonLazy();
             Container.Bind<UserService>().AsCached().NonLazy();
             Container.Bind<SwitchSceneService>().AsCached();
+            Container.Bind<SaveUserService>().AsSingle();
             Container.Bind<QuestionsService>().AsTransient().NonLazy();
         }
     }

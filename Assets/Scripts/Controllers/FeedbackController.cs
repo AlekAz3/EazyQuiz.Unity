@@ -31,7 +31,7 @@ namespace EazyQuiz.Unity.Controllers
                 return;
             }
             var a = new FeedbackRequest() { Text = FeedbackText.text, Email = Email.text };
-            await _provider.SendFeedback(a, _user.UserInfo.Token);
+            await _provider.SendFeedback(a, _user.UserInfo.Token.Jwt);
             information.ShowInformation("Ваш вопрос или предложение было отправлено");
             FeedbackText.text = string.Empty;
             Email.text = string.Empty;

@@ -2,6 +2,7 @@ using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Services;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AdaptivePerformance;
 using Zenject;
 
 namespace EazyQuiz.Unity.Controllers
@@ -33,10 +34,12 @@ namespace EazyQuiz.Unity.Controllers
         /// <inheritdoc cref="UserService"/>
         [Inject] private readonly UserService _userService;
 
-        private void Awake()
+        private void Update()
         {
-            UsernameLabel.text =$"Приветствуем тебя {_userService.UserInfo.UserName}";
-            PointsLabel.text = $"Твой счёт: {_userService.UserInfo.Points}";
+            if (_userService.UserInfo != null)
+            {
+                UsernameLabel.text = $"Приветствуем тебя: {_userService.UserInfo.UserName}\nТвой счёт: {_userService.UserInfo.Points}";
+            }
         }
 
         /// <summary>
@@ -46,7 +49,6 @@ namespace EazyQuiz.Unity.Controllers
         {
             _scene.ShowGameScene();
         }
-
 
         /// <summary>
         /// Посмотреть историю

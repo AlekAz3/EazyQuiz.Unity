@@ -53,8 +53,8 @@ namespace EazyQuiz.Unity.Controllers
                     break;
             }
 
-            var userPosition = await _apiProvider.GetUserPosition(countryStr, _userService.UserInfo.Token);
-            var users = (await _apiProvider.GetLeaderboard(countryStr, _userService.UserInfo.Token)).ToList();
+            var userPosition = await _apiProvider.GetUserPosition(countryStr, _userService.UserInfo.Token.Jwt);
+            var users = (await _apiProvider.GetLeaderboard(countryStr, _userService.UserInfo.Token.Jwt)).ToList();
 
             if (userPosition<=5)
             {

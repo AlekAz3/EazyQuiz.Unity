@@ -72,7 +72,7 @@ namespace EazyQuiz.Unity.Controllers
         {
             var historyAnswers = await apiProvider.GetHistory(
                 new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
-                user.UserInfo.Token
+                user.UserInfo.Token.Jwt
                 );
             Debug.Log(historyAnswers.Count);
             count = (int)historyAnswers.Count;
