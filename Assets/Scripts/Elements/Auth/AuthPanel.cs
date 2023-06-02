@@ -38,13 +38,27 @@ namespace EazyQuiz.Unity.Elements.Auth
 
         [Inject] private readonly SaveUserService _saveUser;
 
-        private void Awake()
+        private async void Start()
         {
-            var user = _saveUser.LoadUser();
-            if (user != null)
+           var user = _saveUser.LoadUser();
+
+            try
             {
-                _userService.SetUser(user);
-                _scene.ShowMainMenuScene();
+               if (user != null && (Application.internetReachability != NetworkReachability.NotReachable))
+               {
+                    _loadingScreen.Show();
+                    if (await _userService.SetUser(user))
+                    {
+                        _scene.ShowMainMenuScene();
+                    }
+                    _loadingScreen.Hide();
+                }
+            }
+            catch (Exception)
+            {
+
+                _loadingScreen.Hide();
+                _error.ShowError("Сервер не доступен\nПовторите попытку позже");
             }
         }
 

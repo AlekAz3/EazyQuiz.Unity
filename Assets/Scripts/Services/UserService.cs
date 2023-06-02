@@ -34,12 +34,17 @@ namespace EazyQuiz.Unity.Services
             _saveUser.SaveUser(UserInfo);
         }
 
-        public async void SetUser(UserResponse user)
+        public async Task<bool> SetUser(UserResponse user)
         {
-            UserInfo = user;
             var newToken = await _apiProvider.RefreshToken(user.Token.RefrashToken);
-            UserInfo.Token = newToken;
-            _saveUser.SaveUser(UserInfo);
+            if (newToken != null)
+            {
+                UserInfo = user;
+                UserInfo.Token = newToken;
+                _saveUser.SaveUser(UserInfo);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

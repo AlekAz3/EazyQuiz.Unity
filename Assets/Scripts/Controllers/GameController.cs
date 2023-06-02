@@ -3,6 +3,7 @@ using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Elements.Game;
 using EazyQuiz.Unity.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -62,9 +63,13 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         private QuestionWithAnswers question;
         private List<ThemeResponse> themes;
+        private int timerTime = 10;
+        [SerializeField] private TMP_InputField timerInput;
+        [SerializeField] private InformationScreen information;
 
         private async void Awake()
          {
+            timerInput.text = timerTime.ToString();
             themes = (await _questionsService.GetThemes()).ToList();
             _chooseTheme.AddOptions(themes.Select(x => x.Name).ToList());
             Debug.Log(themes);
@@ -77,7 +82,7 @@ namespace EazyQuiz.Unity.Controllers
         {
             question = await _questionsService.NextQuestion();
             SetQuestion();
-            _timer.StartTimer(10);
+            _timer.StartTimer(timerTime);
         }
 
         /// <summary>
@@ -98,7 +103,19 @@ namespace EazyQuiz.Unity.Controllers
 
         public async void StartGame()
         {
-            _questionsService.ThemeId = themes.Where(x => x.Name == _chooseTheme.captionText.text).Select(x => x.Id).FirstOrDefault();
+            var timerValue = Convert.ToInt32(timerInput.text);
+
+            if (timerValue >= 50 || timerValue <= 0)
+            {
+                information.ShowError("Неверное значение таймера");
+                return;
+            }
+            timerTime = timerValue;
+
+            _questionsService.ThemeId = themes.Where(x => x.Name == _chooseTheme.captionText.text)
+                .Select(x => x.Id)
+                .FirstOrDefault();
+
             _loadingScreen.Show();
             await NewQuestion();
             settingsGame.SetActive(false);

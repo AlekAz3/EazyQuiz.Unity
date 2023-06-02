@@ -20,8 +20,8 @@ namespace EazyQuiz.Unity.Services
         /// <summary>
         /// IP адрес сервера
         /// </summary>
-        //private static readonly string BaseAdress = "http://10.61.140.42:5274";
-        private static readonly string BaseAdress = "http://192.168.1.90:5274";
+        private static readonly string BaseAdress = "http://10.61.140.42:5274";
+        //private static readonly string BaseAdress = "http://192.168.1.90:5274";
         //private static readonly string BaseAdress = "https://eazyquiz.ru";
         
         /// <inheritdoc cref="HttpClient"/>
@@ -348,9 +348,13 @@ namespace EazyQuiz.Unity.Services
 
             var response = await _client.SendAsync(request);
 
-            var responseBody = await response.Content.ReadAsStringAsync();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<Token>(responseBody);
+                return JsonConvert.DeserializeObject<Token>(responseBody);
+            }
+            return null;
         }
     }
 }
