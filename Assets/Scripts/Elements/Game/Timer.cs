@@ -17,12 +17,12 @@ namespace EazyQuiz.Unity.Elements.Game
         /// <summary>
         /// Окно завершения игры
         /// </summary>
-        [SerializeField] private GameOverScreen _gameOverScreen;
+        [SerializeField] private GameOverScreen gameOverScreen;
 
         /// <summary>
         /// Время на ответ на вопрос
         /// </summary>
-        private float time;
+        private float _time;
 
         /// <summary>
         /// Запустить таймер
@@ -32,7 +32,7 @@ namespace EazyQuiz.Unity.Elements.Game
         {
             Debug.Log("Start Timer");
             slider.maxValue = cooldownTime;
-            time = cooldownTime;
+            _time = cooldownTime;
             StartCoroutine(TimerCoroutine());
         }
 
@@ -42,13 +42,13 @@ namespace EazyQuiz.Unity.Elements.Game
         /// <returns></returns>
         private IEnumerator TimerCoroutine()
         {
-            while (time > 0)
+            while (_time > 0)
             {
-                time -= Time.deltaTime;
-                slider.value = time;
+                _time -= Time.deltaTime;
+                slider.value = _time;
                 yield return null;
             }
-            _gameOverScreen.Show("Время вышло");
+            gameOverScreen.Show("Время вышло");
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace EazyQuiz.Unity.Controllers
         [Inject] private readonly ApiProvider _provider;
         [Inject] private readonly UserService _user;
 
-        [SerializeField] private TMP_InputField FeedbackText;
+        [SerializeField] private TMP_InputField feedbackText;
         [SerializeField] private TMP_InputField Email;
         [SerializeField] private InformationScreen information;
 
@@ -25,15 +25,17 @@ namespace EazyQuiz.Unity.Controllers
         
         public async void SendPlayerFeedback()
         {
-            if (FeedbackText.text.IsNullOrEmpty())
+            if (feedbackText.text.IsNullOrEmpty())
             {
                 information.ShowError("Поле Текст пустое");
                 return;
             }
-            var a = new FeedbackRequest() { Text = FeedbackText.text, Email = Email.text };
+            var a = new FeedbackRequest() { Text = feedbackText.text, Email = Email.text };
             await _provider.SendFeedback(a, _user.UserInfo.Token.Jwt);
+            
             information.ShowInformation("Ваш вопрос или предложение было отправлено");
-            FeedbackText.text = string.Empty;
+            
+            feedbackText.text = string.Empty;
             Email.text = string.Empty;
         }
     }

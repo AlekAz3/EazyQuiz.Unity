@@ -374,7 +374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a85a83186468f2446981a32c7112f770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FeedbackText: {fileID: 1487352424}
+  feedbackText: {fileID: 1487352424}
   Email: {fileID: 530077216}
   information: {fileID: 732216860}
 --- !u!1 &278653663

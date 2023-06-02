@@ -1,4 +1,3 @@
-using EazyQuiz.Unity.Services;
 using UnityEngine;
 
 namespace EazyQuiz.Unity.Controllers
@@ -6,37 +5,37 @@ namespace EazyQuiz.Unity.Controllers
     /// <summary>
     /// Контроллер панели Аутентификации и Регистрации
     /// </summary>
-    public class AuthtorizationPanel : MonoBehaviour
+    public class AuthorizationPanel : MonoBehaviour
     {
         /// <summary>
         /// Панель Аутентификации
         /// </summary>
-        [SerializeField] private GameObject LoginGO;
+        [SerializeField] private GameObject loginGo;
 
         /// <summary>
         /// Панель Регистрации
         /// </summary>
-        [SerializeField] private GameObject RegisterGO;
+        [SerializeField] private GameObject registerGo;
 
         /// <summary>
         /// Надпись "Вход"
         /// </summary>
-        [SerializeField] private GameObject LoginLabel;
+        [SerializeField] private GameObject loginLabel;
 
         /// <summary>
         /// Надпись "Регистрация"
         /// </summary>
-        [SerializeField] private GameObject RegisterLabel;
+        [SerializeField] private GameObject registerLabel;
 
         /// <summary>
         /// Надпись "Логин" на кнопке
         /// </summary>
-        [SerializeField] private GameObject LoginButtonText;
+        [SerializeField] private GameObject loginButtonText;
 
         /// <summary>
         /// Надпись "Регистрация" на кнопке
         /// </summary>
-        [SerializeField] private GameObject RegisterButtonText;
+        [SerializeField] private GameObject registerButtonText;
 
         private void Awake()
         {
@@ -48,14 +47,14 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         public void Switch()
         {
-            LoginGO.SetActive(!LoginGO.activeSelf);
-            LoginLabel.SetActive(!LoginLabel.activeSelf);
+            loginGo.SetActive(!loginGo.activeSelf);
+            loginLabel.SetActive(!loginLabel.activeSelf);
 
-            RegisterGO.SetActive(!RegisterGO.activeSelf);
-            RegisterLabel.SetActive(!RegisterLabel.activeSelf);
+            registerGo.SetActive(!registerGo.activeSelf);
+            registerLabel.SetActive(!registerLabel.activeSelf);
 
-            LoginButtonText.SetActive(!LoginButtonText.activeSelf);
-            RegisterButtonText.SetActive(!RegisterButtonText.activeSelf);
+            loginButtonText.SetActive(!loginButtonText.activeSelf);
+            registerButtonText.SetActive(!registerButtonText.activeSelf);
         }
     }
 }

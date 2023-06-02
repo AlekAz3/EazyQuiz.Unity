@@ -11,23 +11,23 @@ namespace EazyQuiz.Unity.Elements.Common
         /// <summary>
         /// <see cref="GameObject"/> окна
         /// </summary>
-        [SerializeField] public GameObject InformationLabel;
+        [SerializeField] public GameObject informationLabel;
 
         /// <summary>
         /// Текст окна
         /// </summary>
-        [SerializeField] private TMP_Text InformationText;
+        [SerializeField] private TMP_Text informationText;
         /// <summary>
         /// Текст окна
         /// </summary>
-        [SerializeField] private TMP_Text InformationHeader;
+        [SerializeField] private TMP_Text informationHeader;
 
         /// <summary>
         /// Скрыть окно
         /// </summary>
         public void Hide()
         {
-            InformationLabel.SetActive(false);
+            informationLabel.SetActive(false);
         }
 
         /// <summary>
@@ -36,9 +36,9 @@ namespace EazyQuiz.Unity.Elements.Common
         /// <param name="error">Текст ошибки</param>
         public void ShowError(string error)
         {
-            InformationLabel.SetActive(true);
-            InformationHeader.text = "Ошибка";
-            InformationText.text = error;
+            informationLabel.SetActive(true);
+            informationHeader.text = "Ошибка";
+            informationText.text = error;
         }
 
         /// <summary>
@@ -47,9 +47,9 @@ namespace EazyQuiz.Unity.Elements.Common
         /// <param name="text">Текст</param>
         public void ShowInformation(string text)
         {
-            InformationLabel.SetActive(true);
-            InformationHeader.text = "Спасибо";
-            InformationText.text = text;
+            informationLabel.SetActive(true);
+            informationHeader.text = "Спасибо";
+            informationText.text = text;
         }
     }
 }

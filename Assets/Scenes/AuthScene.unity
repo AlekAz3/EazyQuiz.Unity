@@ -572,15 +572,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b833f54cfe868f48a859e527c45417d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UsernameRegisteInput: {fileID: 1281775867}
-  PasswordRegisteInput: {fileID: 636957431}
-  RepeatPasswordRegisteInput: {fileID: 331696960}
-  AgeRegisteInput: {fileID: 0}
-  GenderRegisteInput: {fileID: 0}
-  CountryRegisteInput: {fileID: 1980156011}
-  _error: {fileID: 620368048}
-  _loadingScreen: {fileID: 771510938}
-  _panel: {fileID: 1725209287}
+  usernameRegisterInput: {fileID: 1281775867}
+  passwordRegisterInput: {fileID: 636957431}
+  repeatPasswordRegisterInput: {fileID: 331696960}
+  countryRegisterInput: {fileID: 1980156011}
+  error: {fileID: 620368048}
+  loadingScreen: {fileID: 771510938}
+  panel: {fileID: 1725209287}
 --- !u!1001 &258388514
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2088,10 +2086,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41ca461aedfe565439af38647d74fc4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UsernameLoginInput: {fileID: 1438209934}
-  PasswordLoginInput: {fileID: 1262400515}
-  _error: {fileID: 620368048}
-  _loadingScreen: {fileID: 771510938}
+  usernameLoginInput: {fileID: 1438209934}
+  passwordLoginInput: {fileID: 1262400515}
+  error: {fileID: 620368048}
+  loadingScreen: {fileID: 771510938}
 --- !u!114 &771510938 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8850353638455895288, guid: 2f28ca7f4ba411a45821dcf4de08a343, type: 3}
@@ -4216,12 +4214,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce0dff8c08dec1c44ae877dd5fb50a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LoginGO: {fileID: 763871846}
-  RegisterGO: {fileID: 254274318}
-  LoginLabel: {fileID: 2059342255}
-  RegisterLabel: {fileID: 226727416}
-  LoginButtonText: {fileID: 1044004887}
-  RegisterButtonText: {fileID: 421763402}
+  loginGo: {fileID: 763871846}
+  registerGo: {fileID: 254274318}
+  loginLabel: {fileID: 2059342255}
+  registerLabel: {fileID: 226727416}
+  loginButtonText: {fileID: 1044004887}
+  registerButtonText: {fileID: 421763402}
 --- !u!1 &1731871164
 GameObject:
   m_ObjectHideFlags: 0

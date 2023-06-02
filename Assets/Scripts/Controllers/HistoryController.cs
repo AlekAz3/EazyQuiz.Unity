@@ -1,10 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Elements.History;
 using EazyQuiz.Unity.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -31,12 +31,12 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Сервис пользователя
         /// </summary>
-        [Inject] private readonly UserService user;
+        [Inject] private readonly UserService _user;
 
         /// <summary>
         /// Сервис общения с сервером
         /// </summary>
-        [Inject] private readonly ApiProvider apiProvider;
+        [Inject] private readonly ApiProvider _apiProvider;
 
         /// <inheritdoc cref="SwitchSceneService"/>
         [Inject] private readonly SwitchSceneService _scene;
@@ -46,17 +46,17 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Текущая "Страница"
         /// </summary>
-        private int page = 0;
+        private int _page = 0;
 
         /// <summary>
         /// Всего элементов
         /// </summary>
-        private int count = 0;
+        private int _count = 0;
 
         /// <summary>
         /// Флаг
         /// </summary>
-        private bool flag = true;
+        private bool _flag = true;
 
         private async void Awake()
         {
@@ -70,12 +70,12 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         private async Task AddHistoryCard()
         {
-            var historyAnswers = await apiProvider.GetHistory(
-                new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
-                user.UserInfo.Token.Jwt
+            var historyAnswers = await _apiProvider.GetHistory(
+                new GetHistoryCommand() { PageNumber = _page, PageSize = 10 },
+                _user.UserInfo.Token.Jwt
                 );
             Debug.Log(historyAnswers.Count);
-            count = (int)historyAnswers.Count;
+            _count = (int)historyAnswers.Count;
             GenerateGameObjects(historyAnswers.Items);
         }
 
@@ -100,14 +100,14 @@ namespace EazyQuiz.Unity.Controllers
         {
             if (vector.y > 0.005)
             {
-                flag = true;
+                _flag = true;
             }
 
-            if (vector.y < 0.005 && flag)
+            if (vector.y < 0.005 && _flag)
             {
                 if (AddPage())
                 {
-                    flag = false;
+                    _flag = false;
                     await AddHistoryCard();
                     Debug.Log("AddPage");
                 }
@@ -120,9 +120,9 @@ namespace EazyQuiz.Unity.Controllers
         /// <returns></returns>
         private bool AddPage()
         {
-            if (Math.Ceiling(count / 10d) > page)
+            if (Math.Ceiling(_count / 10d) > _page)
             {
-                page++;
+                _page++;
                 return true;
             }
             return false;

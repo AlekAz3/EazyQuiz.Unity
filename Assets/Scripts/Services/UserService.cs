@@ -1,6 +1,6 @@
-﻿using EazyQuiz.Models.DTO;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using EazyQuiz.Models.DTO;
 using Zenject;
 
 namespace EazyQuiz.Unity.Services
@@ -11,7 +11,7 @@ namespace EazyQuiz.Unity.Services
     public class UserService
     {
         /// <inheritdoc cref="ApiProvider"/>
-        private ApiProvider _apiProvider;
+        private readonly ApiProvider _apiProvider;
 
         /// <inheritdoc cref="UserResponse"/>
         public UserResponse UserInfo { get; private set; }
@@ -28,23 +28,22 @@ namespace EazyQuiz.Unity.Services
         /// </summary>
         /// <param name="login">Логин</param>
         /// <param name="password">Пароль</param>
-        public async Task Authtenticate(string login, string password)
+        public async Task Authenticate(string login, string password)
         {
-            UserInfo = await _apiProvider.Authtenticate(login, password);
+            UserInfo = await _apiProvider.Authenticate(login, password);
             _saveUser.SaveUser(UserInfo);
         }
 
         public async Task<bool> SetUser(UserResponse user)
         {
             var newToken = await _apiProvider.RefreshToken(user.Token.RefrashToken);
-            if (newToken != null)
-            {
-                UserInfo = user;
-                UserInfo.Token = newToken;
-                _saveUser.SaveUser(UserInfo);
-                return true;
-            }
-            return false;
+            if (newToken == null) return false;
+            
+            UserInfo = user;
+            UserInfo.Token = newToken;
+            _saveUser.SaveUser(UserInfo);
+            
+            return true;
         }
 
         /// <summary>

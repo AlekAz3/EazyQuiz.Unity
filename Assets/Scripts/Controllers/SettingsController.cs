@@ -6,6 +6,7 @@ namespace EazyQuiz.Unity.Controllers
 {
     public class SettingsController : MonoBehaviour
     {
+        /// <inheritdoc cref="SwitchSceneService"/>
         [Inject] private readonly SwitchSceneService _scene;
         [Inject] private readonly SaveUserService _saveUser;
 

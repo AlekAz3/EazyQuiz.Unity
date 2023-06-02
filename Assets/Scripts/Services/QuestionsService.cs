@@ -1,8 +1,7 @@
-using EazyQuiz.Models.DTO;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine.Experimental.GlobalIllumination;
+using EazyQuiz.Models.DTO;
 
 namespace EazyQuiz.Unity.Services
 {
@@ -14,12 +13,12 @@ namespace EazyQuiz.Unity.Services
         /// <summary>
         /// Пол вопросов
         /// </summary>
-        private List<QuestionWithAnswers> questions = new List<QuestionWithAnswers>();
+        private readonly List<QuestionWithAnswers> _questions = new List<QuestionWithAnswers>();
 
         /// <summary>
         /// Порядок вопроса 
         /// </summary>
-        private int order = -1;
+        private int _order = -1;
 
         /// <inheritdoc cref="UserService"/>
         private readonly UserService _userService;
@@ -41,12 +40,12 @@ namespace EazyQuiz.Unity.Services
         /// <returns>Вопрос с ответами в <see cref="QuestionWithAnswers"/></returns>
         public async Task<QuestionWithAnswers> NextQuestion()
         {
-            order++;
-            if (questions.Count - order < 5)
+            _order++;
+            if (_questions.Count - _order < 5)
             {
                 await GetQuestions();
             }
-            return questions[order];
+            return _questions[_order];
         }
 
         /// <summary>
@@ -54,14 +53,14 @@ namespace EazyQuiz.Unity.Services
         /// </summary>
         public async Task GetQuestions()
         {
-            if (order > 25)
+            if (_order > 25)
             {
-                order = 0;
-                questions.Clear();
+                _order = 0;
+                _questions.Clear();
             }
             var ques = await _apiProvider.GetQuestions(ThemeId,_userService.UserInfo.Token.Jwt);
 
-            questions.AddRange(ques);
+            _questions.AddRange(ques);
         }
 
         public async Task<IReadOnlyCollection<ThemeResponse>> GetThemes()

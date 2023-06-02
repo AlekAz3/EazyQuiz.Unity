@@ -811,7 +811,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 787013999}
   m_HandleRect: {fileID: 787013998}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1827,9 +1827,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 5988325025001534676, guid: b9dc46e289472da46bbaee9e257ebeba, type: 3}
-  QuestionText: {fileID: 148739298}
-  AnswerText: {fileID: 446362772}
-  InfoScreen: {fileID: 972752320}
+  questionText: {fileID: 148739298}
+  answerText: {fileID: 446362772}
+  infoScreen: {fileID: 972752320}
   content: {fileID: 981802036}
 --- !u!1 &1908761076
 GameObject:

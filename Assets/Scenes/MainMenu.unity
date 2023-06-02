@@ -537,9 +537,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _loadingScreen: {fileID: 571679696}
-  UsernameLabel: {fileID: 1474208815}
-  _error: {fileID: 2002485543}
-  PointsLabel: {fileID: 0}
+  helloLabel: {fileID: 1474208815}
+  error: {fileID: 2002485543}
 --- !u!1001 &408013561
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -2,7 +2,6 @@ using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Services;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AdaptivePerformance;
 using Zenject;
 
 namespace EazyQuiz.Unity.Controllers
@@ -18,15 +17,10 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Ник игрока
         /// </summary>
-        [SerializeField] private TMP_Text UsernameLabel;
+        [SerializeField] private TMP_Text helloLabel;
 
 
-        [SerializeField] private InformationScreen _error;
-
-        /// <summary>
-        /// Количество баллов
-        /// </summary>
-        [SerializeField] private TMP_Text PointsLabel;
+        [SerializeField] private InformationScreen error;
 
         /// <inheritdoc cref="SwitchSceneService"/>
         [Inject] private readonly SwitchSceneService _scene;
@@ -38,7 +32,7 @@ namespace EazyQuiz.Unity.Controllers
         {
             if (_userService.UserInfo != null)
             {
-                UsernameLabel.text = $"Приветствуем тебя: {_userService.UserInfo.UserName}\nТвой счёт: {_userService.UserInfo.Points}";
+                helloLabel.text = $"Приветствуем тебя: {_userService.UserInfo.UserName}\nТвой счёт: {_userService.UserInfo.Points}";
             }
         }
 
@@ -76,7 +70,7 @@ namespace EazyQuiz.Unity.Controllers
 
         public void NotImplementButton()
         {
-            _error.ShowError("В разработке");
+            error.ShowError("В разработке");
         }
 
         public void ViewFeedbackScene()

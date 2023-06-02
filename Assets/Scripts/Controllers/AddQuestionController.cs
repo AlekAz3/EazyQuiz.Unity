@@ -1,33 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Elements.UserQuestion;
 using EazyQuiz.Unity.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using Zenject;
 
 namespace EazyQuiz.Unity.Controllers
 {
+    /// <summary>
+    /// РљРѕРЅС‚СЂРѕР»Р»РµСЂ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РІРѕРїСЂРѕСЃРѕРІ РІ РІРёРєС‚РѕСЂРёРЅСѓ 
+    /// </summary>
     public class AddQuestionController : MonoBehaviour
     {
+        /// <summary>
+        /// РџСЂРµС„Р°Р± РєР°СЂС‚РѕС‡РєРё РІРѕРїСЂРѕСЃР°
+        /// </summary>
         [SerializeField] public GameObject prefab;
 
-        [SerializeField] private TMP_InputField QuestionText;
+        /// <summary>
+        /// РўРµСЃС‚ РїСЂРµРґР»РѕР¶РµРЅРЅРѕРіРѕ РІРѕРїСЂРѕСЃР° 
+        /// </summary>
+        [SerializeField] private TMP_InputField questionText;
+        
+        /// <summary>
+        /// РўРµРєСЃС‚ РѕС‚РІРµС‚Р° РЅР° РїСЂРµРґР»РѕР¶РµРЅРЅС‹Р№ РІРѕРїСЂРѕСЃ 
+        /// </summary>
+        [SerializeField] private TMP_InputField answerText;
 
-        [SerializeField] private TMP_InputField AnswerText;
-
-        [SerializeField] private InformationScreen InfoScreen;
+        [SerializeField] private InformationScreen infoScreen;
 
         /// <summary>
-        /// Сервис общения с сервером
+        /// РЎРµСЂРІРёСЃ РѕР±С‰РµРЅРёСЏ СЃ СЃРµСЂРІРµСЂРѕРј
         /// </summary>
         [Inject] private readonly ApiProvider _apiProvider;
 
-        [Inject] private readonly UserService user;
+        [Inject] private readonly UserService _user;
 
         /// <inheritdoc cref="SwitchSceneService"/>
         [Inject] private readonly SwitchSceneService _scene;
@@ -35,19 +47,19 @@ namespace EazyQuiz.Unity.Controllers
         public RectTransform content;
 
         /// <summary>
-        /// Текущая "Страница"
+        /// РўРµРєСѓС‰Р°СЏ "РЎС‚СЂР°РЅРёС†Р°"
         /// </summary>
-        private int page = 0;
+        private int _page = 0;
 
         /// <summary>
-        /// Всего элементов
+        /// Р’СЃРµРіРѕ СЌР»РµРјРµРЅС‚РѕРІ
         /// </summary>
-        private int count = 0;
+        private int _count = 0;
 
         /// <summary>
-        /// Флаг
+        /// Р¤Р»Р°Рі
         /// </summary>
-        private bool flag = true;
+        private bool _flag = true;
 
         private async void Awake()
         {
@@ -55,25 +67,27 @@ namespace EazyQuiz.Unity.Controllers
         }
 
         /// <summary>
-        /// Добавить карточку ответа на вопрос
+        /// Р”РѕР±Р°РІРёС‚СЊ РєР°СЂС‚РѕС‡РєСѓ РѕС‚РІРµС‚Р° РЅР° РІРѕРїСЂРѕСЃ
         /// </summary>
         private async Task AddHistoryQuestion()
         {
-            var historyQuestion = await _apiProvider.GetCurrentUserQuestions(
-                new GetHistoryCommand() { PageNumber = page, PageSize = 10 },
-                user.UserInfo.Token.Jwt
+            if (_user.UserInfo.Token != null)
+            {
+                var historyQuestion = await _apiProvider.GetCurrentUserQuestions(
+                    new GetHistoryCommand() { PageNumber = _page, PageSize = 10 },
+                    _user.UserInfo.Token.Jwt
                 );
-            Debug.Log(historyQuestion.Count);
-            count = (int)historyQuestion.Count;
-            GenerateGameObjects(historyQuestion.Items);
+                Debug.Log(historyQuestion.Count);
+                _count = (int)historyQuestion.Count;
+                GenerateGameObjects(historyQuestion.Items);
+            }
         }
 
         private void GenerateGameObjects(IEnumerable<QuestionByUserResponse> questionHistory)
         {
             foreach (var item in questionHistory)
             {
-                var instants = Instantiate(prefab);
-                instants.transform.SetParent(content, false);
+                var instants = Instantiate(prefab, content, false);
                 instants.GetComponent<SetUserQuestion>().ItemView(item);
             }
         }
@@ -82,62 +96,58 @@ namespace EazyQuiz.Unity.Controllers
         {
             if (vector.y > 0.005)
             {
-                flag = true;
+                _flag = true;
             }
 
-            if (vector.y < 0.005 && flag)
-            {
-                if (AddPage())
-                {
-                    flag = false;
-                    await AddHistoryQuestion();
-                    Debug.Log("AddPage");
-                }
-            }
+            if (!(vector.y < 0.005) || !_flag) return;
+
+            if (!AddPage()) return;
+            
+            _flag = false;
+            await AddHistoryQuestion();
         }
 
         /// <summary>
-        /// Переводит на следующую страницу
+        /// РџРµСЂРµРІРѕРґРёС‚ РЅР° СЃР»РµРґСѓСЋС‰СѓСЋ СЃС‚СЂР°РЅРёС†Сѓ
         /// </summary>
         private bool AddPage()
         {
-            if (Math.Ceiling(count / 10d) > page)
-            {
-                page++;
-                return true;
-            }
-            return false;
+            if (!(Math.Ceiling(_count / 10d) > _page)) return false;
+            
+            _page++;
+            
+            return true;
         }
 
         /// <summary>
-        /// Отправляет вопрос на сервер
+        /// РћС‚РїСЂР°РІР»СЏРµС‚ РІРѕРїСЂРѕСЃ РЅР° СЃРµСЂРІРµСЂ
         /// </summary>
         public async void SendUserQuestion()
         {
-            var questionText = QuestionText.text;
-            var answerText = AnswerText.text;
+            var questionText = this.questionText.text;
+            var answerText = this.answerText.text;
 
             if (questionText.IsNullOrEmpty() || answerText.IsNullOrEmpty())
             {
-                InfoScreen.ShowError("Есть пустые поля");
+                infoScreen.ShowError("Р•СЃС‚СЊ РїСѓСЃС‚С‹Рµ РїРѕР»СЏ");
                 return;
             }
-            InfoScreen.ShowInformation("Ваш предложенный вопрос отправлен");
+            infoScreen.ShowInformation("Р’Р°С€ РїСЂРµРґР»РѕР¶РµРЅРЅС‹Р№ РІРѕРїСЂРѕСЃ РѕС‚РїСЂР°РІР»РµРЅ");
             var question = new AddQuestionByUser()
             {
                 QuestionText = questionText,
                 AnswerText = answerText,
             };
 
-            await _apiProvider.SendUserQuestion(question, user.UserInfo.Token.Jwt);
-            QuestionText.text = string.Empty;
-            AnswerText.text = string.Empty;
+            await _apiProvider.SendUserQuestion(question, _user.UserInfo.Token.Jwt);
+            this.questionText.text = string.Empty;
+            this.answerText.text = string.Empty;
             await Refresh();
         }
 
         private async Task Refresh()
         {
-            page = 0;
+            _page = 0;
             foreach (Transform child in content.transform)
             {
                 Destroy(child.gameObject);
@@ -147,7 +157,7 @@ namespace EazyQuiz.Unity.Controllers
 
 
         /// <summary>
-        /// Выход в главное меню
+        /// Р’С‹С…РѕРґ РІ РіР»Р°РІРЅРѕРµ РјРµРЅСЋ
         /// </summary>
         public void ExitToMenu()
         {

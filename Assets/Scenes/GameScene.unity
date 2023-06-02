@@ -376,7 +376,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -35.04004, y: -450.59003}
+  m_AnchoredPosition: {x: -35.040047, y: -450.59003}
   m_SizeDelta: {x: -170, y: 82.81}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &323958414
@@ -663,7 +663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0876688a51fbc8b4dae00da9dee5f9eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonText: {fileID: 420319925}
+  buttonText: {fileID: 420319925}
   gameController: {fileID: 546504153}
 --- !u!114 &420319928 stripped
 MonoBehaviour:
@@ -1157,17 +1157,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9f0634a1ed56f04ea5729859a1fc59c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Buttons:
+  buttons:
   - {fileID: 1698776694}
   - {fileID: 420319928}
   - {fileID: 1662245923}
   - {fileID: 1433719783}
-  QuestiolLabel: {fileID: 55740819}
-  _gameOverScreen: {fileID: 8795320609930148633}
+  questionLabel: {fileID: 55740819}
+  gameOverScreen: {fileID: 8795320609930148633}
   settingsGame: {fileID: 232503598}
-  _timer: {fileID: 1066078984}
-  _chooseTheme: {fileID: 1796087332}
-  _loadingScreen: {fileID: 1924548520}
+  timer: {fileID: 1066078984}
+  chooseTheme: {fileID: 1796087332}
+  loadingScreen: {fileID: 1924548520}
   timerInput: {fileID: 465022810}
   information: {fileID: 509838284}
 --- !u!1 &546717401
@@ -1985,7 +1985,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 1066078983}
-  _gameOverScreen: {fileID: 8795320609930148633}
+  gameOverScreen: {fileID: 8795320609930148633}
 --- !u!1 &1172101317
 GameObject:
   m_ObjectHideFlags: 0
@@ -2442,7 +2442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0876688a51fbc8b4dae00da9dee5f9eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonText: {fileID: 1433719784}
+  buttonText: {fileID: 1433719784}
   gameController: {fileID: 546504153}
 --- !u!1 &1491783902
 GameObject:
@@ -2892,7 +2892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0876688a51fbc8b4dae00da9dee5f9eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonText: {fileID: 1662245924}
+  buttonText: {fileID: 1662245924}
   gameController: {fileID: 546504153}
 --- !u!1 &1695644610
 GameObject:
@@ -3128,7 +3128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0876688a51fbc8b4dae00da9dee5f9eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ButtonText: {fileID: 1698776695}
+  buttonText: {fileID: 1698776695}
   gameController: {fileID: 546504153}
 --- !u!1 &1717202532
 GameObject:
