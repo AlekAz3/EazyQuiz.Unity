@@ -11,9 +11,6 @@ namespace EazyQuiz.Unity.Controllers
     /// </summary>
     public class MainmenuController : MonoBehaviour
     {
-        /// <inheritdoc cref="LoadingScreen"/>
-        [SerializeField] private LoadingScreen _loadingScreen;
-
         /// <summary>
         /// Ник игрока
         /// </summary>

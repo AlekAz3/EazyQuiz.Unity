@@ -87,8 +87,7 @@ namespace EazyQuiz.Unity.Controllers
         {
             foreach (var item in answerHistory)
             {
-                var instants = Instantiate(prefab);
-                instants.transform.SetParent(content, false);
+                var instants = Instantiate(prefab, content, false);
                 instants.GetComponent<SetUserAnswer>().ItemView(item);
             }
         }
@@ -103,15 +102,13 @@ namespace EazyQuiz.Unity.Controllers
                 _flag = true;
             }
 
-            if (vector.y < 0.005 && _flag)
-            {
-                if (AddPage())
-                {
-                    _flag = false;
-                    await AddHistoryCard();
-                    Debug.Log("AddPage");
-                }
-            }
+            if (!(vector.y < 0.005) || !_flag) return;
+            
+            if (!AddPage()) return;
+            
+            _flag = false;
+            await AddHistoryCard();
+            Debug.Log("AddPage");
         }
 
         /// <summary>
@@ -120,12 +117,11 @@ namespace EazyQuiz.Unity.Controllers
         /// <returns></returns>
         private bool AddPage()
         {
-            if (Math.Ceiling(_count / 10d) > _page)
-            {
-                _page++;
-                return true;
-            }
-            return false;
+            if (!(Math.Ceiling(_count / 10d) > _page)) return false;
+            
+            _page++;
+            
+            return true;
         }
 
         /// <summary>

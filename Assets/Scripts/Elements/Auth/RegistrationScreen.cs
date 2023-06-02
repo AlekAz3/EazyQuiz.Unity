@@ -9,7 +9,7 @@ using Zenject;
 
 namespace EazyQuiz.Unity.Elements.Auth
 {
-    public class ReqistrationScreen : MonoBehaviour
+    public class RegistrationScreen : MonoBehaviour
     {
         /// <summary>
         /// ¬вод ника

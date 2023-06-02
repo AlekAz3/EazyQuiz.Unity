@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace EazyQuiz.Unity.Elements.UserQuestion
 {
+    /// <summary>
+    /// Карточка ответа пользователя  
+    /// </summary>
     public class SetUserQuestion : MonoBehaviour
     {
         /// <summary>
