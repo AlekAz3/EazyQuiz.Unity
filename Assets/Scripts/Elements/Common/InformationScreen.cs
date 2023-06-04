@@ -1,5 +1,10 @@
-﻿using TMPro;
+﻿using EazyQuiz.Unity.Controllers;
+using EazyQuiz.Unity.Services;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+using Zenject;
 
 namespace EazyQuiz.Unity.Elements.Common
 {
@@ -21,7 +26,7 @@ namespace EazyQuiz.Unity.Elements.Common
         /// Текст окна
         /// </summary>
         [SerializeField] private TMP_Text informationHeader;
-
+        
         /// <summary>
         /// Скрыть окно
         /// </summary>
@@ -42,13 +47,13 @@ namespace EazyQuiz.Unity.Elements.Common
         }
 
         /// <summary>
-        /// Показать окно с благодарностью 
+        /// Показать окно с информацией 
         /// </summary>
         /// <param name="text">Текст</param>
         public void ShowInformation(string text)
         {
             informationLabel.SetActive(true);
-            informationHeader.text = "Спасибо";
+            informationHeader.text = "Информация";
             informationText.text = text;
         }
     }

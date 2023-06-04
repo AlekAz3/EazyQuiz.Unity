@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using EazyQuiz.Cryptography;
 using EazyQuiz.Models.DTO;
 using Zenject;
 
@@ -74,6 +75,24 @@ namespace EazyQuiz.Unity.Services
         {
             UserInfo.Points++;
             _saveUser.SaveUser(UserInfo);
+        }
+
+        public async Task ChangeNickname(string nickname)
+        {
+            await _apiProvider.ChangeUsername(nickname, UserInfo.Token.Jwt);
+            UserInfo.UserName = nickname;
+            _saveUser.SaveUser(UserInfo);
+        }
+
+        public async Task<bool> CheckNickname(string nickname)
+        {
+            return await _apiProvider.CheckUsername(nickname);
+        }
+
+        public async Task ChangePassword(string password)
+        {
+            var passwordDto = PasswordHash.Hash(password);
+            await _apiProvider.ChangePassword(passwordDto, UserInfo.Token.Jwt);
         }
     }
 }

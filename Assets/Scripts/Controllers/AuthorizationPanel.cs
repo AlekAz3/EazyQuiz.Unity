@@ -3,37 +3,37 @@ using UnityEngine;
 namespace EazyQuiz.Unity.Controllers
 {
     /// <summary>
-    /// Контроллер панели Аутентификации и Регистрации
+    /// РљРѕРЅС‚СЂРѕР»Р»РµСЂ РїР°РЅРµР»Рё РђСѓС‚РµРЅС‚РёС„РёРєР°С†РёРё Рё Р РµРіРёСЃС‚СЂР°С†РёРё
     /// </summary>
     public class AuthorizationPanel : MonoBehaviour
     {
         /// <summary>
-        /// Панель Аутентификации
+        /// РџР°РЅРµР»СЊ РђСѓС‚РµРЅС‚РёС„РёРєР°С†РёРё
         /// </summary>
         [SerializeField] private GameObject loginGo;
 
         /// <summary>
-        /// Панель Регистрации
+        /// РџР°РЅРµР»СЊ Р РµРіРёСЃС‚СЂР°С†РёРё
         /// </summary>
         [SerializeField] private GameObject registerGo;
 
         /// <summary>
-        /// Надпись "Вход"
+        /// РќР°РґРїРёСЃСЊ "Р’С…РѕРґ"
         /// </summary>
         [SerializeField] private GameObject loginLabel;
 
         /// <summary>
-        /// Надпись "Регистрация"
+        /// РќР°РґРїРёСЃСЊ "Р РµРіРёСЃС‚СЂР°С†РёСЏ"
         /// </summary>
         [SerializeField] private GameObject registerLabel;
 
         /// <summary>
-        /// Надпись "Логин" на кнопке
+        /// РќР°РґРїРёСЃСЊ "Р›РѕРіРёРЅ" РЅР° РєРЅРѕРїРєРµ
         /// </summary>
         [SerializeField] private GameObject loginButtonText;
 
         /// <summary>
-        /// Надпись "Регистрация" на кнопке
+        /// РќР°РґРїРёСЃСЊ "Р РµРіРёСЃС‚СЂР°С†РёСЏ" РЅР° РєРЅРѕРїРєРµ
         /// </summary>
         [SerializeField] private GameObject registerButtonText;
 
@@ -43,7 +43,7 @@ namespace EazyQuiz.Unity.Controllers
         }
 
         /// <summary>
-        /// Переключение входа и регистрации
+        /// РџРµСЂРµРєР»СЋС‡РµРЅРёРµ РІС…РѕРґР° Рё СЂРµРіРёСЃС‚СЂР°С†РёРё
         /// </summary>
         public void Switch()
         {

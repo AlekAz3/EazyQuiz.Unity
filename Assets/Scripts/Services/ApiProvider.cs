@@ -20,8 +20,8 @@ namespace EazyQuiz.Unity.Services
         /// <summary>
         /// IP адрес сервера
         /// </summary>
-        private static readonly string BaseAddress = "http://10.61.140.42:5274";
-        //private static readonly string BaseAddress = "http://192.168.1.90:5274";
+        //private static readonly string BaseAddress = "http://10.61.140.42:5274";
+        private static readonly string BaseAddress = "http://192.168.1.90:5274";
         //private static readonly string BaseAddress = "https://eazyquiz.ru";
         
         /// <inheritdoc cref="HttpClient"/>
@@ -355,6 +355,38 @@ namespace EazyQuiz.Unity.Services
                 return JsonConvert.DeserializeObject<Token>(responseBody);
             }
             return null;
+        }
+
+        public async Task ChangeUsername(string nickname, string token)
+        {
+            string json = JsonConvert.SerializeObject(nickname);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAddress}/api/User/username"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            await _client.SendAsync(request);
+        }
+
+        public async Task ChangePassword(UserPassword passwordDto, string token)
+        {
+            string json = JsonConvert.SerializeObject(passwordDto);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAddress}/api/User/password"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            await _client.SendAsync(request);
         }
     }
 }
