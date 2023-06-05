@@ -376,7 +376,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -35.040047, y: -450.59003}
+  m_AnchoredPosition: {x: -35.04004, y: -450.59003}
   m_SizeDelta: {x: -170, y: 82.81}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &323958414
@@ -1168,6 +1168,8 @@ MonoBehaviour:
   timer: {fileID: 1066078984}
   chooseTheme: {fileID: 1796087332}
   loadingScreen: {fileID: 1924548520}
+  _timerTime: 10
+  _combo: 0
   timerInput: {fileID: 465022810}
   information: {fileID: 509838284}
 --- !u!1 &546717401
@@ -1894,7 +1896,7 @@ GameObject:
   - component: {fileID: 1066078983}
   - component: {fileID: 1066078984}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: timer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1986,6 +1988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slider: {fileID: 1066078983}
   gameOverScreen: {fileID: 8795320609930148633}
+  gameController: {fileID: 546504153}
 --- !u!1 &1172101317
 GameObject:
   m_ObjectHideFlags: 0

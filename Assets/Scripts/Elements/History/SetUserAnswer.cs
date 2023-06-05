@@ -6,34 +6,34 @@ using UnityEngine.UI;
 namespace EazyQuiz.Unity.Elements.History
 {
     /// <summary>
-    /// Запись ответа пользователя в карточку
+    /// Р—Р°РїРёСЃСЊ РѕС‚РІРµС‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ РєР°СЂС‚РѕС‡РєСѓ
     /// </summary>
     public class SetUserAnswer : MonoBehaviour
     {
         /// <summary>
-        /// Текст ответа
+        /// РўРµРєСЃС‚ РѕС‚РІРµС‚Р°
         /// </summary>
         [SerializeField] private TMP_Text answer;
 
         /// <summary>
-        /// Текст вопроса
+        /// РўРµРєСЃС‚ РІРѕРїСЂРѕСЃР°
         /// </summary>
         [SerializeField] private TMP_Text question;
 
         /// <summary>
-        /// Дата ответа
+        /// Р”Р°С‚Р° РѕС‚РІРµС‚Р°
         /// </summary>
         [SerializeField] private TMP_Text date;
 
         /// <summary>
-        /// Фон
+        /// Р¤РѕРЅ
         /// </summary>
         [SerializeField] private Image background;
 
         /// <summary>
-        /// Запись ответа в карточку
+        /// Р—Р°РїРёСЃСЊ РѕС‚РІРµС‚Р° РІ РєР°СЂС‚РѕС‡РєСѓ
         /// </summary>
-        /// <param name="history">Исторический ответ пользователя в <see cref="UserAnswerHistory"/></param>
+        /// <param name="history">РСЃС‚РѕСЂРёС‡РµСЃРєРёР№ РѕС‚РІРµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ <see cref="UserAnswerHistory"/></param>
         public void ItemView(UserAnswerHistory history)
         {
             answer.text = history.AnswerText;

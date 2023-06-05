@@ -52,29 +52,26 @@ namespace EazyQuiz.Unity.Services
         /// </summary>
         /// <param name="answer">Ответ</param>
         /// <param name="questionId">Ид вопроса</param>
-        internal async Task SendUserAnswer(AnswerDTO answer, Guid questionId)
+        /// <param name="combo">Комбо</param>
+        /// <param name="points">Количество очков</param>
+        internal async Task SendUserAnswer(AnswerDTO answer, Guid questionId, int combo, int points)
         {
             var userAnswer = new UserAnswer()
             {
                 QuestionId = questionId,
-                AnswerId = answer.AnswerId
+                AnswerId = answer.AnswerId,
+                AddPoint = points
             };
 
-            if (answer.IsCorrect)
+            if (!answer.IsCorrect)
             {
-                AddPoint();
+                userAnswer.Combo = combo;
             }
 
-            await _apiProvider.SendUserAnswer(userAnswer, UserInfo.Token.Jwt);
-        }
-
-        /// <summary>
-        /// Добавить балл
-        /// </summary>
-        private void AddPoint()
-        {
-            UserInfo.Points++;
+            UserInfo.Points += points;
             _saveUser.SaveUser(UserInfo);
+
+            await _apiProvider.SendUserAnswer(userAnswer, UserInfo.Token.Jwt);
         }
 
         public async Task ChangeNickname(string nickname)

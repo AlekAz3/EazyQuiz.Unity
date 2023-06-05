@@ -25,12 +25,12 @@ namespace EazyQuiz.Unity.Controllers
         /// <inheritdoc cref="UserService"/>
         [Inject] private readonly UserService _userService;
 
-        private void Update()
+        private void Awake()
         {
-            if (_userService.UserInfo != null)
-            {
-                helloLabel.text = $"Приветствуем тебя: {_userService.UserInfo.UserName}\nТвой счёт: {_userService.UserInfo.Points}";
-            }
+            helloLabel.text = $"Приветствуем тебя: {_userService.UserInfo.UserName}\n" +
+                                  $"Твой счёт: {_userService.UserInfo.Points}\n" +
+                                  $"Твой лучший результат: {_userService.UserInfo.MaxCombo}";
+            
         }
 
         /// <summary>

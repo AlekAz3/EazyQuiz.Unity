@@ -39,8 +39,8 @@ namespace EazyQuiz.Unity.Elements.Auth
         [Inject] private readonly SaveUserService _saveUser;
 
         private async void Start()
-        {
-           var user = _saveUser.LoadUser();
+        { 
+            var user = _saveUser.LoadUser();
 
             try
             {
@@ -48,6 +48,7 @@ namespace EazyQuiz.Unity.Elements.Auth
                     return;
                 
                 loadingScreen.Show();
+                
                 if (await _userService.SetUser(user))
                 {
                     _scene.ShowMainMenuScene();

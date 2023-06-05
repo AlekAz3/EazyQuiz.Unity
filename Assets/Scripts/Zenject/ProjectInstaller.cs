@@ -1,11 +1,10 @@
-using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Services;
 using Zenject;
 
 namespace EazyQuiz.Unity.Zenject
 {
     /// <summary>
-    /// Инсталлер для Zenject
+    /// РРЅСЃС‚Р°Р»Р»РµСЂ РґР»СЏ Zenject
     /// </summary>
     public class ProjectInstaller : MonoInstaller
     {
