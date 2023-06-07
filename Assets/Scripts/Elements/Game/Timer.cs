@@ -45,7 +45,6 @@ namespace EazyQuiz.Unity.Elements.Game
         /// <summary>
         /// Карутина ожидания таймера
         /// </summary>
-        /// <returns></returns>
         private IEnumerator TimerCoroutine()
         {
             while (_time > 0)

@@ -38,5 +38,10 @@ namespace EazyQuiz.Unity.Controllers
             feedbackText.text = string.Empty;
             Email.text = string.Empty;
         }
+
+        public void SayThanks()
+        {
+            Application.OpenURL("https://pay.mysbertips.ru/82048041");
+        }
     }
 }

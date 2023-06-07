@@ -79,7 +79,11 @@ namespace EazyQuiz.Unity.Elements.Settings
             
             loading.Show();
             await _userService.ChangePassword(password);
-            loading.Hide();
+            
+            information.ShowInformation("Ваш пароль успешно изменён");
+
+            newPassword.text = string.Empty;
+            repeatNewPassword.text = string.Empty;
         }
     }
 }

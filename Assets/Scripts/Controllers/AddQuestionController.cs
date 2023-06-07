@@ -32,13 +32,19 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         [SerializeField] private TMP_InputField answerText;
 
+        /// <summary>
+        /// Всплывающее окно информации
+        /// </summary>
         [SerializeField] private InformationScreen infoScreen;
 
         /// <summary>
         /// Сервис общения с сервером
         /// </summary>
         [Inject] private readonly ApiProvider _apiProvider;
-
+        
+        /// <summary>
+        /// Сервис работы с пользователем
+        /// </summary>
         [Inject] private readonly UserService _user;
 
         /// <inheritdoc cref="SwitchSceneService"/>
@@ -82,7 +88,10 @@ namespace EazyQuiz.Unity.Controllers
                 GenerateGameObjects(historyQuestion.Items);
             }
         }
-
+        
+        /// <summary>
+        /// Создать карточки 
+        /// </summary>
         private void GenerateGameObjects(IEnumerable<QuestionByUserResponse> questionHistory)
         {
             foreach (var item in questionHistory)
@@ -91,7 +100,10 @@ namespace EazyQuiz.Unity.Controllers
                 instants.GetComponent<SetUserQuestion>().ItemView(item);
             }
         }
-
+        
+        /// <summary>
+        /// Скроллбар
+        /// </summary>
         public async void ValueCheck(Vector2 vector)
         {
             if (vector.y > 0.005)
@@ -145,6 +157,9 @@ namespace EazyQuiz.Unity.Controllers
             await Refresh();
         }
 
+        /// <summary>
+        /// Обновление карточек
+        /// </summary>
         private async Task Refresh()
         {
             _page = 0;

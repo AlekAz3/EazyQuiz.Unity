@@ -90,11 +90,10 @@ namespace EazyQuiz.Unity.Elements.Auth
             {
                 await _userService.Authenticate(username, password);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 loadingScreen.Hide();
                 error.ShowError("Сервер не доступен\nПовторите попытку позже");
-                Debug.LogException(ex);
                 return;
             }
 
@@ -104,7 +103,7 @@ namespace EazyQuiz.Unity.Elements.Auth
                 error.ShowError("Ник или пароль введены неправильно");
                 return;
             }
-
+            _saveUser.SaveUser(_userService.UserInfo);
             _scene.ShowMainMenuScene();
         }
     }

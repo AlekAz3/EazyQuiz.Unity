@@ -32,7 +32,7 @@ namespace EazyQuiz.Unity.Services
         public async Task Authenticate(string login, string password)
         {
             UserInfo = await _apiProvider.Authenticate(login, password);
-            _saveUser.SaveUser(UserInfo);
+            
         }
 
         public async Task<bool> SetUser(UserResponse user)

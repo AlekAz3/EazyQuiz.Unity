@@ -90,7 +90,7 @@ namespace EazyQuiz.Unity.Elements.Auth
             if (!password.IsNoBannedSymbols())
             {
                 loadingScreen.Hide();
-                error.ShowError("В пароле спецсимволы запрещены\n\nВ качестве пароля можно использовать только буквы английского алфавита и цифры");
+                error.ShowError("В качестве пароля можно использовать только буквы английского алфавита и цифры");
                 return;
             }
 

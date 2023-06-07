@@ -63,8 +63,8 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         private QuestionWithAnswers _question;
         private List<ThemeResponse> _themes;
-        [SerializeField] private int _timerTime;
-        [SerializeField] private int _combo;
+        private int _timerTime;
+        private int _combo;
         
         [SerializeField] private TMP_InputField timerInput;
         [SerializeField] private InformationScreen information;
@@ -138,11 +138,11 @@ namespace EazyQuiz.Unity.Controllers
             if (answer.IsCorrect)
             {
                 _combo++;
-                gameOverScreen.Show($"Ответ: верный,\nВаш текущий результат {_combo}");
+                gameOverScreen.Show($"Ответ: верный,\nВаш текущий результат {_combo}\n\nЕсли покинете игру вы потеряете текущий результат");
             }
             else
             {
-                gameOverScreen.Show($"Ответ: не верный\n\nВерный ответ: {_question.Answers.Single(x => x.IsCorrect).AnswerText}\nВаш результат:{_combo}");
+                gameOverScreen.Show($"Ответ: не верный\n\nВерный ответ: {_question.Answers.Single(x => x.IsCorrect).AnswerText}\n\nВаш результат:{_combo}");
             }
 
             var points = CalculatePoints(answer.IsCorrect);
