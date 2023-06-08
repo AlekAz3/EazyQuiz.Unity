@@ -4,7 +4,7 @@ using Zenject;
 namespace EazyQuiz.Unity.Zenject
 {
     /// <summary>
-    /// Инсталлер для Zenject
+    /// РРЅСЃС‚Р°Р»Р»РµСЂ РґР»СЏ Zenject
     /// </summary>
     public class ProjectInstaller : MonoInstaller
     {
@@ -13,6 +13,7 @@ namespace EazyQuiz.Unity.Zenject
             Container.Bind<ApiProvider>().AsCached().NonLazy();
             Container.Bind<UserService>().AsCached().NonLazy();
             Container.Bind<SwitchSceneService>().AsCached();
+            Container.Bind<SaveUserService>().AsSingle();
             Container.Bind<QuestionsService>().AsTransient().NonLazy();
         }
     }

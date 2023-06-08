@@ -21,11 +21,11 @@ namespace EazyQuiz.Unity.Elements.Game
         /// <summary>
         /// Вывести окно с кастомным текстом
         /// </summary>
-        /// <param name="inpitText">Текст</param>
-        public void Show(string inpitText)
+        /// <param name="inputText">Текст</param>
+        public void Show(string inputText)
         {
             screen.SetActive(true);
-            text.text = inpitText;
+            text.text = inputText;
         }
 
         /// <summary>

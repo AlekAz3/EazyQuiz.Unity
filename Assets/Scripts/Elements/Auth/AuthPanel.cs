@@ -1,7 +1,7 @@
+using System;
 using EazyQuiz.Extensions;
 using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Services;
-using System;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -13,22 +13,22 @@ namespace EazyQuiz.Unity.Elements.Auth
         /// <summary>
         /// Ввод ника для аутентификации
         /// </summary>
-        [SerializeField] private TMP_InputField UsernameLoginInput;
+        [SerializeField] private TMP_InputField usernameLoginInput;
 
         /// <summary>
         /// Ввод пароля для аутентификации 
         /// </summary>
-        [SerializeField] private TMP_InputField PasswordLoginInput;
+        [SerializeField] private TMP_InputField passwordLoginInput;
 
         /// <summary>
         /// Панель Ошибки
         /// </summary>
-        [SerializeField] private InformationScreen _error;
+        [SerializeField] private InformationScreen error;
 
         /// <summary>
         /// Панель Загрузки
         /// </summary>
-        [SerializeField] private LoadingScreen _loadingScreen;
+        [SerializeField] private LoadingScreen loadingScreen;
 
         /// <inheritdoc cref="UserService"/>
         [Inject] private readonly UserService _userService;
@@ -36,45 +36,74 @@ namespace EazyQuiz.Unity.Elements.Auth
         /// <inheritdoc cref="SwitchSceneService"/>
         [Inject] private readonly SwitchSceneService _scene;
 
+        [Inject] private readonly SaveUserService _saveUser;
+
+        private async void Start()
+        { 
+            var user = _saveUser.LoadUser();
+
+            try
+            {
+                if (user == null || (Application.internetReachability == NetworkReachability.NotReachable)) 
+                    return;
+                
+                loadingScreen.Show();
+                
+                if (await _userService.SetUser(user))
+                {
+                    _scene.ShowMainMenuScene();
+                }
+                loadingScreen.Hide();
+            }
+            catch (Exception)
+            {
+                loadingScreen.Hide();
+                error.ShowError("Сервер не доступен\nПовторите попытку позже");
+            }
+        }
+
         /// <summary>
         /// Нажатие кнопки "Войти"
         /// </summary>
         public async void Login()
         {
-            string username = UsernameLoginInput.text.Trim();
-            string password = PasswordLoginInput.text.Trim();
-            _loadingScreen.Show();
+            var username = usernameLoginInput.text.Trim();
+            var password = passwordLoginInput.text.Trim();
+
+            loadingScreen.Show();
+
             if (username.IsNullOrEmpty() || password.IsNullOrEmpty())
             {
-                _loadingScreen.Hide();
-                _error.ShowError("Есть пустые поля");
+                loadingScreen.Hide();
+                error.ShowError("Есть пустые поля");
                 return;
             }
 
             if (!password.IsMoreEightSymbols())
             {
-                _loadingScreen.Hide();
-                _error.ShowError("Меньше 8ми символов пароль");
+                loadingScreen.Hide();
+                error.ShowError("Меньше 8ми символов пароль");
                 return;
             }
+
             try
             {
-                await _userService.Authtenticate(username, password);
+                await _userService.Authenticate(username, password);
             }
             catch (Exception)
             {
-                _loadingScreen.Hide();
-                _error.ShowError("Сервер не доступен\nПовторите попытку позже");
+                loadingScreen.Hide();
+                error.ShowError("Сервер не доступен\nПовторите попытку позже");
                 return;
             }
 
             if (_userService.UserInfo is null)
             {
-                _loadingScreen.Hide();
-                _error.ShowError("Ник или пароль введены неправильно");
+                loadingScreen.Hide();
+                error.ShowError("Ник или пароль введены неправильно");
                 return;
             }
-
+            _saveUser.SaveUser(_userService.UserInfo);
             _scene.ShowMainMenuScene();
         }
     }

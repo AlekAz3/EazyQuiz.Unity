@@ -499,10 +499,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4788cb72933f9ba4fa7f30eb60392537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Answer: {fileID: 5988325022979700634}
-  Question: {fileID: 5988325025023037501}
-  Date: {fileID: 6306119352914829564}
-  Background: {fileID: 5988325025001534666}
+  answer: {fileID: 5988325022979700634}
+  question: {fileID: 5988325025023037501}
+  date: {fileID: 6306119352914829564}
+  background: {fileID: 5988325025001534666}
 --- !u!1 &5988325025023037503
 GameObject:
   m_ObjectHideFlags: 0

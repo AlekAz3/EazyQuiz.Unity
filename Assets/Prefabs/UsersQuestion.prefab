@@ -635,9 +635,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84920575bf693054fa00df6da50b64d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Question: {fileID: 5988325025023037501}
-  Date: {fileID: 6306119352914829564}
-  Status: {fileID: 5988325022979700634}
+  question: {fileID: 5988325025023037501}
+  date: {fileID: 6306119352914829564}
+  status: {fileID: 5988325022979700634}
 --- !u!1 &5988325025023037503
 GameObject:
   m_ObjectHideFlags: 0

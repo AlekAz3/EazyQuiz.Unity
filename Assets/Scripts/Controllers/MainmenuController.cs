@@ -11,21 +11,13 @@ namespace EazyQuiz.Unity.Controllers
     /// </summary>
     public class MainmenuController : MonoBehaviour
     {
-        /// <inheritdoc cref="LoadingScreen"/>
-        [SerializeField] private LoadingScreen _loadingScreen;
-
         /// <summary>
         /// Ник игрока
         /// </summary>
-        [SerializeField] private TMP_Text UsernameLabel;
+        [SerializeField] private TMP_Text helloLabel;
 
 
-        [SerializeField] private InformationScreen _error;
-
-        /// <summary>
-        /// Количество баллов
-        /// </summary>
-        [SerializeField] private TMP_Text PointsLabel;
+        [SerializeField] private InformationScreen error;
 
         /// <inheritdoc cref="SwitchSceneService"/>
         [Inject] private readonly SwitchSceneService _scene;
@@ -35,8 +27,10 @@ namespace EazyQuiz.Unity.Controllers
 
         private void Awake()
         {
-            UsernameLabel.text =$"Приветствуем тебя {_userService.UserInfo.UserName}";
-            PointsLabel.text = $"Твой счёт: {_userService.UserInfo.Points}";
+            helloLabel.text = $"Приветствуем тебя: {_userService.UserInfo.UserName}\n" +
+                                  $"Твой счёт: {_userService.UserInfo.Points}\n" +
+                                  $"Твой лучший результат: {_userService.UserInfo.MaxCombo}";
+            
         }
 
         /// <summary>
@@ -46,7 +40,6 @@ namespace EazyQuiz.Unity.Controllers
         {
             _scene.ShowGameScene();
         }
-
 
         /// <summary>
         /// Посмотреть историю
@@ -74,7 +67,7 @@ namespace EazyQuiz.Unity.Controllers
 
         public void NotImplementButton()
         {
-            _error.ShowError("В разработке");
+            error.ShowError("В разработке");
         }
 
         public void ViewFeedbackScene()

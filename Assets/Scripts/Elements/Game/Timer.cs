@@ -1,58 +1,64 @@
 using System.Collections;
+using EazyQuiz.Unity.Controllers;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace EazyQuiz.Unity.Elements.Game
 {
     /// <summary>
-    /// Элемент Таймера
+    /// Р­Р»РµРјРµРЅС‚ РўР°Р№РјРµСЂР°
     /// </summary>
     public class Timer : MonoBehaviour
     {
         /// <summary>
-        /// Таймер
+        /// РўР°Р№РјРµСЂ
         /// </summary>
         [SerializeField] private Slider slider;
 
         /// <summary>
-        /// Окно завершения игры
+        /// РћРєРЅРѕ Р·Р°РІРµСЂС€РµРЅРёСЏ РёРіСЂС‹
         /// </summary>
-        [SerializeField] private GameOverScreen _gameOverScreen;
+        [SerializeField] private GameOverScreen gameOverScreen;
+        
+        /// <summary>
+        /// РљРѕРЅС‚СЂРѕР»Р»РµСЂ
+        /// </summary>
+        [SerializeField] private GameController gameController;
 
         /// <summary>
-        /// Время на ответ на вопрос
+        /// Р’СЂРµРјСЏ РЅР° РѕС‚РІРµС‚ РЅР° РІРѕРїСЂРѕСЃ
         /// </summary>
-        private float time;
+        private float _time;
 
         /// <summary>
-        /// Запустить таймер
+        /// Р—Р°РїСѓСЃС‚РёС‚СЊ С‚Р°Р№РјРµСЂ
         /// </summary>
-        /// <param name="cooldownTime">Время таймера</param>
+        /// <param name="cooldownTime">Р’СЂРµРјСЏ С‚Р°Р№РјРµСЂР°</param>
         public void StartTimer(float cooldownTime)
         {
             Debug.Log("Start Timer");
             slider.maxValue = cooldownTime;
-            time = cooldownTime;
+            _time = cooldownTime;
             StartCoroutine(TimerCoroutine());
         }
 
         /// <summary>
-        /// Карутина ожидания таймера
+        /// РљР°СЂСѓС‚РёРЅР° РѕР¶РёРґР°РЅРёСЏ С‚Р°Р№РјРµСЂР°
         /// </summary>
-        /// <returns></returns>
         private IEnumerator TimerCoroutine()
         {
-            while (time > 0)
+            while (_time > 0)
             {
-                time -= Time.deltaTime;
-                slider.value = time;
+                _time -= Time.deltaTime;
+                slider.value = _time;
                 yield return null;
             }
-            _gameOverScreen.Show("Время вышло");
+
+            gameController.TimeOver();
         }
 
         /// <summary>
-        /// Остановка таймера
+        /// РћСЃС‚Р°РЅРѕРІРєР° С‚Р°Р№РјРµСЂР°
         /// </summary>
         public void StopTimer()
         {

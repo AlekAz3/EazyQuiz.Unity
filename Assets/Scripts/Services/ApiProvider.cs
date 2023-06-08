@@ -1,14 +1,14 @@
-using UnityEngine;
-using EazyQuiz.Models.DTO;
 using System;
-using System.Threading.Tasks;
-using EazyQuiz.Cryptography;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
+using System.Threading.Tasks;
+using EazyQuiz.Cryptography;
+using EazyQuiz.Models.DTO;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net;
+using UnityEngine;
 
 namespace EazyQuiz.Unity.Services
 {
@@ -20,9 +20,7 @@ namespace EazyQuiz.Unity.Services
         /// <summary>
         /// IP адрес сервера
         /// </summary>
-        //private static readonly string BaseAdress = "http://10.61.140.42:5274";
-        //private static readonly string BaseAdress = "http://192.168.1.90:5274";
-        private static readonly string BaseAdress = "https://eazyquiz.ru";
+        private static readonly string BaseAddress = "https://eazyquiz.ru";
         
         /// <inheritdoc cref="HttpClient"/>
         private readonly HttpClient _client;
@@ -38,7 +36,7 @@ namespace EazyQuiz.Unity.Services
         /// <param name="username">Ник</param>
         /// <param name="password">Пароль</param>
         /// <returns>Данные о пользователе в <see cref="UserResponse"/></returns>
-        public async Task<UserResponse> Authtenticate(string username, string password)
+        public async Task<UserResponse> Authenticate(string username, string password)
         {
             string userSalt = await GetUserSalt(username);
 
@@ -55,7 +53,7 @@ namespace EazyQuiz.Unity.Services
                 PasswordHash = passwordHash
             };
 
-            var response = await _client.GetAsync($"{BaseAdress}/api/Auth?Username={user.Username}&PasswordHash={user.PasswordHash}");
+            var response = await _client.GetAsync($"{BaseAddress}/api/Auth?Username={user.Username}&PasswordHash={user.PasswordHash}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -77,7 +75,7 @@ namespace EazyQuiz.Unity.Services
         /// <returns>Строку соль</returns>
         private async Task<string> GetUserSalt(string username)
         {
-            var response = await _client.GetAsync($"{BaseAdress}/api/Auth/{username}");
+            var response = await _client.GetAsync($"{BaseAddress}/api/Auth/{username}");
             
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
@@ -94,7 +92,7 @@ namespace EazyQuiz.Unity.Services
         /// <param name="password">Пароль</param>
         /// <param name="username">Ник</param>
         /// <param name="country">Страна</param>
-        internal async Task Registrate(string password, string username, string country)
+        internal async Task Registration(string password, string username, string country)
         {
             var user = new UserRegister()
             {
@@ -109,7 +107,7 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"{BaseAdress}/api/Auth"),
+                RequestUri = new Uri($"{BaseAddress}/api/Auth"),
                 Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json),
             };
 
@@ -124,7 +122,7 @@ namespace EazyQuiz.Unity.Services
         /// <exception cref="ArgumentNullException">Нулл</exception>
         public async Task<bool> CheckUsername(string userName)
         {
-            var response = await _client.GetAsync($"{BaseAdress}/api/Auth/{userName}");
+            var response = await _client.GetAsync($"{BaseAddress}/api/Auth/{userName}");
 
             return response.StatusCode == HttpStatusCode.OK;
         }
@@ -139,7 +137,7 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/Questions/GetQuestion"),
+                RequestUri = new Uri($"{BaseAddress}/api/Questions/GetQuestion"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -162,11 +160,11 @@ namespace EazyQuiz.Unity.Services
             var url = string.Empty;
             if (themeId == Guid.Empty)
             {
-                url = $"{BaseAdress}/api/Questions";
+                url = $"{BaseAddress}/api/Questions";
             }
             else
             {
-                url = $"{BaseAdress}/api/Questions?ThemeId={themeId}";
+                url = $"{BaseAddress}/api/Questions?ThemeId={themeId}";
             }
 
             var request = new HttpRequestMessage
@@ -195,7 +193,7 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"{BaseAdress}/api/Questions"),
+                RequestUri = new Uri($"{BaseAddress}/api/Questions"),
                 Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
@@ -217,7 +215,7 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/History?PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
+                RequestUri = new Uri($"{BaseAddress}/api/History?PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -235,7 +233,7 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"{BaseAdress}/api/AddUserQuestion"),
+                RequestUri = new Uri($"{BaseAddress}/api/AddUserQuestion"),
                 Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
@@ -250,7 +248,7 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/AddUserQuestion?PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
+                RequestUri = new Uri($"{BaseAddress}/api/AddUserQuestion?PageNumber={command.PageNumber}&PageSize={command.PageSize}"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -266,7 +264,7 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/Themes"),
+                RequestUri = new Uri($"{BaseAddress}/api/Themes"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -287,7 +285,7 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/{url}"),
+                RequestUri = new Uri($"{BaseAddress}/api/{url}"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -308,7 +306,7 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"{BaseAdress}/api/{url}"),
+                RequestUri = new Uri($"{BaseAddress}/api/{url}"),
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
@@ -325,7 +323,62 @@ namespace EazyQuiz.Unity.Services
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"{BaseAdress}/api/Feedback"),
+                RequestUri = new Uri($"{BaseAddress}/api/Feedback"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            await _client.SendAsync(request);
+        }
+
+        internal async Task<Token> RefreshToken(string refreshToken)
+        {
+            string json = JsonConvert.SerializeObject(refreshToken);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAddress}/api/Auth/token"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+
+            var response = await _client.SendAsync(request);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<Token>(responseBody);
+            }
+            return null;
+        }
+
+        public async Task ChangeUsername(string nickname, string token)
+        {
+            string json = JsonConvert.SerializeObject(nickname);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAddress}/api/User/username"),
+                Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
+            };
+            request.Headers.TryAddWithoutValidation("Accept", "application/json");
+            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            await _client.SendAsync(request);
+        }
+
+        public async Task ChangePassword(UserPassword passwordDto, string token)
+        {
+            string json = JsonConvert.SerializeObject(passwordDto);
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"{BaseAddress}/api/User/password"),
                 Content = new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json)
             };
             request.Headers.TryAddWithoutValidation("Accept", "application/json");

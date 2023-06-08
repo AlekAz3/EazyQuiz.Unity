@@ -708,6 +708,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92ba7c608f6faa445abd730d76d22c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InformationLabel: {fileID: 2135509240511039748}
-  InformationText: {fileID: 2135509240385940207}
-  InformationHeader: {fileID: 2135509239537743192}
+  informationLabel: {fileID: 2135509240511039748}
+  informationText: {fileID: 2135509240385940207}
+  informationHeader: {fileID: 2135509239537743192}

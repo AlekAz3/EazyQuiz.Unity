@@ -1,5 +1,5 @@
-using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity.Controllers;
+using EazyQuiz.Models.DTO;
 using TMPro;
 using UnityEngine;
 
@@ -13,7 +13,7 @@ namespace EazyQuiz.Unity.Elements.Game
         /// <summary>
         /// Текст ответа в кнопке
         /// </summary>
-        [SerializeField] private TMP_Text ButtonText;
+        [SerializeField] private TMP_Text buttonText;
 
         /// <summary>
         /// GameController
@@ -32,7 +32,7 @@ namespace EazyQuiz.Unity.Elements.Game
         public void WriteAnswer(AnswerDTO answer)
         {
             _answer = answer;
-            ButtonText.text = answer.AnswerText;
+            buttonText.text = answer.AnswerText;
         }
 
         /// <summary>

@@ -1,10 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Elements.Leaderboard;
 using EazyQuiz.Unity.Services;
-using Newtonsoft.Json;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Zenject;
 
@@ -53,24 +51,24 @@ namespace EazyQuiz.Unity.Controllers
                     break;
             }
 
-            var userPosition = await _apiProvider.GetUserPosition(countryStr, _userService.UserInfo.Token);
-            var users = (await _apiProvider.GetLeaderboard(countryStr, _userService.UserInfo.Token)).ToList();
+            var userPosition = await _apiProvider.GetUserPosition(countryStr, _userService.UserInfo.Token.Jwt);
+            var users = (await _apiProvider.GetLeaderboard(countryStr, _userService.UserInfo.Token.Jwt)).ToList();
 
             if (userPosition<=5)
             {
                 usersElements.Last().Hide();
-                for (int i = 0; i < users.Count; i++)
+                for (var i = 0; i < users.Count; i++)
                 {
-                    usersElements[i].ApplyUserPublucElement(i + 1, users[i]);
+                    usersElements[i].ApplyUserPublicElement(i + 1, users[i]);
                 }
             }
             else
             {
-                for (int i = 0; i < users.Count; i++)
+                for (var i = 0; i < users.Count; i++)
                 {
-                    usersElements[i].ApplyUserPublucElement(i + 1, users[i]);
+                    usersElements[i].ApplyUserPublicElement(i + 1, users[i]);
                 }
-                usersElements.Last().ApplyUserPublucElement(userPosition, new Models.DTO.PublicUserInfo() { UserName = _userService.UserInfo.UserName, Points = _userService.UserInfo.Points });
+                usersElements.Last().ApplyUserPublicElement(userPosition, new EazyQuiz.Models.DTO.PublicUserInfo() { UserName = _userService.UserInfo.UserName, Points = _userService.UserInfo.Points });
             }
             loading.Hide();
         }

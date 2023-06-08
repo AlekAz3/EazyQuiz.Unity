@@ -1,11 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using EazyQuiz.Extensions;
 using EazyQuiz.Models.DTO;
 using EazyQuiz.Unity.Elements.Common;
 using EazyQuiz.Unity.Elements.Game;
 using EazyQuiz.Unity.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,28 +22,28 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Коллекция кнопок для ответа
         /// </summary>
-        [SerializeField] private List<Button> Buttons;
+        [SerializeField] private List<Button> buttons;
 
         /// <summary>
         /// Текст вопроса
         /// </summary>
-        [SerializeField] private TMP_Text QuestiolLabel;
+        [SerializeField] private TMP_Text questionLabel;
 
         /// <summary>
         /// Экран завершения ответа на вопрос
         /// </summary>
-        [SerializeField] private GameOverScreen _gameOverScreen;
+        [SerializeField] private GameOverScreen gameOverScreen;
 
         [SerializeField] private GameObject settingsGame;
 
         /// <summary>
         /// Таймер
         /// </summary>
-        [SerializeField] private Timer _timer;
+        [SerializeField] private Timer timer;
 
-        [SerializeField] private TMP_Dropdown _chooseTheme;
+        [SerializeField] private TMP_Dropdown chooseTheme;
 
-        [SerializeField] private LoadingScreen _loadingScreen;
+        [SerializeField] private LoadingScreen loadingScreen;
 
         /// <summary>
         /// Сервис вопросов
@@ -60,14 +61,25 @@ namespace EazyQuiz.Unity.Controllers
         /// <summary>
         /// Вопрос который на данный момент на экране
         /// </summary>
-        private QuestionWithAnswers question;
-        private List<ThemeResponse> themes;
+        private QuestionWithAnswers _question;
+        private List<ThemeResponse> _themes;
+        private int _timerTime;
+        private int _combo;
+        
+        [SerializeField] private TMP_InputField timerInput;
+        [SerializeField] private InformationScreen information;
+
+        public GameController()
+        {
+            _timerTime = 10;
+        }
 
         private async void Awake()
          {
-            themes = (await _questionsService.GetThemes()).ToList();
-            _chooseTheme.AddOptions(themes.Select(x => x.Name).ToList());
-            Debug.Log(themes);
+            timerInput.text = _timerTime.ToString();
+            _themes = (await _questionsService.GetThemes()).ToList();
+            chooseTheme.AddOptions(_themes.Select(x => x.Name).ToList());
+            Debug.Log(_themes);
         }
 
         /// <summary>
@@ -75,9 +87,9 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         private async Task NewQuestion()
         {
-            question = await _questionsService.NextQuestion();
+            _question = await _questionsService.NextQuestion();
             SetQuestion();
-            _timer.StartTimer(10);
+            timer.StartTimer(_timerTime);
         }
 
         /// <summary>
@@ -85,24 +97,36 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         public void SetQuestion()
         {
-            QuestiolLabel.text = question.Text;
-            var answers = question.Answers
+            questionLabel.text = _question.Text;
+            var answers = _question.Answers
                 .ToList()
                 .Shuffle();
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
-                Buttons[i].GetComponent<UserAnswerClick>().WriteAnswer(answers[i]);
+                buttons[i].GetComponent<UserAnswerClick>().WriteAnswer(answers[i]);
             }
-            
         }
 
         public async void StartGame()
         {
-            _questionsService.ThemeId = themes.Where(x => x.Name == _chooseTheme.captionText.text).Select(x => x.Id).FirstOrDefault();
-            _loadingScreen.Show();
+            var timerValue = Convert.ToInt32(timerInput.text);
+
+            if (timerValue is >= 50 or <= 0)
+            {
+                information.ShowError("Неверное значение таймера");
+                return;
+            }
+            
+            _timerTime = timerValue;
+
+            _questionsService.ThemeId = _themes.Where(x => x.Name == chooseTheme.captionText.text)
+                .Select(x => x.Id)
+                .FirstOrDefault();
+
+            loadingScreen.Show();
             await NewQuestion();
             settingsGame.SetActive(false);
-            _loadingScreen.Hide();
+            loadingScreen.Hide();
         }
 
         /// <summary>
@@ -110,17 +134,45 @@ namespace EazyQuiz.Unity.Controllers
         /// </summary>
         public async Task CheckUserAnswer(AnswerDTO answer)
         {
-            _timer.StopTimer();
+            timer.StopTimer();
             if (answer.IsCorrect)
             {
-                _gameOverScreen.Show("Ответ: верный");
+                _combo++;
+                gameOverScreen.Show($"Ответ: верный,\nВаш текущий результат {_combo}\n\nЕсли покинете игру вы потеряете текущий результат");
             }
             else
             {
-                _gameOverScreen.Show($"Ответ: не верный\n\nВерный ответ: {question.Answers.Where(x => x.IsCorrect).Single().AnswerText}");
+                gameOverScreen.Show($"Ответ: не верный\n\nВерный ответ: {_question.Answers.Single(x => x.IsCorrect).AnswerText}\n\nВаш результат:{_combo}");
             }
 
-            await _userService.SendUserAnswer(answer, question.QuestionId);
+            var points = CalculatePoints(answer.IsCorrect);
+            
+            await _userService.SendUserAnswer(answer, _question.QuestionId, _combo, points);
+            
+            if (!answer.IsCorrect)
+            {
+                _combo = 0;
+            }
+        }
+
+        private int CalculatePoints(bool answerIsCorrect)
+        {
+            if (!answerIsCorrect)
+            {
+                return 0;
+            }
+
+            var timerPoints = _timerTime switch
+            {
+                <= 5 => 3,
+                > 5 and <= 20 => 2,
+                > 20 and < 40 => 1,
+                _ => 0
+            };
+
+            var points = _combo + timerPoints;
+
+            return points;
         }
 
         /// <summary>
@@ -129,9 +181,20 @@ namespace EazyQuiz.Unity.Controllers
         public async void NextQuestion()
         {
             await NewQuestion();
-            _gameOverScreen.Hide();
+            gameOverScreen.Hide();
         }
 
+        /// <summary>
+        /// Если время ответа на вопрос вышло
+        /// </summary>
+        public void TimeOver()
+        {
+            gameOverScreen.Show($"Время вышло\n\nВерный ответ: {_question.Answers.Single(x => x.IsCorrect).AnswerText}\n" +
+                                $"Ваш результат:{_combo}\n" +
+                                $"Ваш прогресс сбросился");
+            
+            _combo = 0;
+        }
         /// <summary>
         /// Выход в главное меню
         /// </summary>

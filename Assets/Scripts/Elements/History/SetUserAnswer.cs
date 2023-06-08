@@ -6,47 +6,44 @@ using UnityEngine.UI;
 namespace EazyQuiz.Unity.Elements.History
 {
     /// <summary>
-    /// Запись ответа пользователя в карточку
+    /// Р—Р°РїРёСЃСЊ РѕС‚РІРµС‚Р° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ РєР°СЂС‚РѕС‡РєСѓ
     /// </summary>
     public class SetUserAnswer : MonoBehaviour
     {
         /// <summary>
-        /// Текст ответа
+        /// РўРµРєСЃС‚ РѕС‚РІРµС‚Р°
         /// </summary>
-        [SerializeField] private TMP_Text Answer;
+        [SerializeField] private TMP_Text answer;
 
         /// <summary>
-        /// Текст вопроса
+        /// РўРµРєСЃС‚ РІРѕРїСЂРѕСЃР°
         /// </summary>
-        [SerializeField] private TMP_Text Question;
+        [SerializeField] private TMP_Text question;
 
         /// <summary>
-        /// Дата ответа
+        /// Р”Р°С‚Р° РѕС‚РІРµС‚Р°
         /// </summary>
-        [SerializeField] private TMP_Text Date;
+        [SerializeField] private TMP_Text date;
 
         /// <summary>
-        /// Фон
+        /// Р¤РѕРЅ
         /// </summary>
-        [SerializeField] private Image Background;
+        [SerializeField] private Image background;
 
         /// <summary>
-        /// Запись ответа в карточку
+        /// Р—Р°РїРёСЃСЊ РѕС‚РІРµС‚Р° РІ РєР°СЂС‚РѕС‡РєСѓ
         /// </summary>
-        /// <param name="history">Исторический ответ пользователя в <see cref="UserAnswerHistory"/></param>
+        /// <param name="history">РСЃС‚РѕСЂРёС‡РµСЃРєРёР№ РѕС‚РІРµС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ <see cref="UserAnswerHistory"/></param>
         public void ItemView(UserAnswerHistory history)
         {
-            Answer.text = history.AnswerText;
-            Question.text = history.QuestionText;
-            Date.text = history.AnswerTime.ToString("dd.MM.yyyy HH:mm");
-            if (history.IsCorrect)
+            answer.text = history.AnswerText;
+            question.text = history.QuestionText;
+            date.text = history.AnswerTime.ToString("dd.MM.yyyy HH:mm");
+            background.color = history.IsCorrect switch
             {
-                Background.color = Color.green;
-            }
-            else
-            {
-                Background.color = Color.red;
-            }
+                false => Color.red,
+                true => Color.green
+            };
         }
     }
 }
