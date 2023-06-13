@@ -68,6 +68,9 @@ namespace EazyQuiz.Unity.Controllers
         
         [SerializeField] private TMP_InputField timerInput;
         [SerializeField] private InformationScreen information;
+        
+        [SerializeField] private InterstitialAd ad;
+
 
         public GameController()
         {
@@ -142,7 +145,9 @@ namespace EazyQuiz.Unity.Controllers
             }
             else
             {
+                ad.ShowAd();
                 gameOverScreen.Show($"Ответ: не верный\n\nВерный ответ: {_question.Answers.Single(x => x.IsCorrect).AnswerText}\n\nВаш результат:{_combo}");
+                ad.LoadAd();
             }
 
             var points = CalculatePoints(answer.IsCorrect);
