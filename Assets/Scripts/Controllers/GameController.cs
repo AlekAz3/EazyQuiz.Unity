@@ -15,29 +15,29 @@ using Zenject;
 namespace EazyQuiz.Unity.Controllers
 {
     /// <summary>
-    /// Контроллер ответов на вопросы
+    /// РљРѕРЅС‚СЂРѕР»Р»РµСЂ РѕС‚РІРµС‚РѕРІ РЅР° РІРѕРїСЂРѕСЃС‹
     /// </summary>
     public class GameController : MonoBehaviour
     {
         /// <summary>
-        /// Коллекция кнопок для ответа
+        /// РљРѕР»Р»РµРєС†РёСЏ РєРЅРѕРїРѕРє РґР»СЏ РѕС‚РІРµС‚Р°
         /// </summary>
         [SerializeField] private List<Button> buttons;
 
         /// <summary>
-        /// Текст вопроса
+        /// РўРµРєСЃС‚ РІРѕРїСЂРѕСЃР°
         /// </summary>
         [SerializeField] private TMP_Text questionLabel;
 
         /// <summary>
-        /// Экран завершения ответа на вопрос
+        /// Р­РєСЂР°РЅ Р·Р°РІРµСЂС€РµРЅРёСЏ РѕС‚РІРµС‚Р° РЅР° РІРѕРїСЂРѕСЃ
         /// </summary>
         [SerializeField] private GameOverScreen gameOverScreen;
 
         [SerializeField] private GameObject settingsGame;
 
         /// <summary>
-        /// Таймер
+        /// РўР°Р№РјРµСЂ
         /// </summary>
         [SerializeField] private Timer timer;
 
@@ -46,12 +46,12 @@ namespace EazyQuiz.Unity.Controllers
         [SerializeField] private LoadingScreen loadingScreen;
 
         /// <summary>
-        /// Сервис вопросов
+        /// РЎРµСЂРІРёСЃ РІРѕРїСЂРѕСЃРѕРІ
         /// </summary>
         [Inject] private QuestionsService _questionsService;
 
         /// <summary>
-        /// Сервис пользователя
+        /// РЎРµСЂРІРёСЃ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
         /// </summary>
         [Inject] private readonly UserService _userService;
 
@@ -59,7 +59,7 @@ namespace EazyQuiz.Unity.Controllers
         [Inject] private readonly SwitchSceneService _scene;
 
         /// <summary>
-        /// Вопрос который на данный момент на экране
+        /// Р’РѕРїСЂРѕСЃ РєРѕС‚РѕСЂС‹Р№ РЅР° РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РЅР° СЌРєСЂР°РЅРµ
         /// </summary>
         private QuestionWithAnswers _question;
         private List<ThemeResponse> _themes;
@@ -86,7 +86,7 @@ namespace EazyQuiz.Unity.Controllers
         }
 
         /// <summary>
-        /// Следующий вопрос
+        /// РЎР»РµРґСѓСЋС‰РёР№ РІРѕРїСЂРѕСЃ
         /// </summary>
         private async Task NewQuestion()
         {
@@ -96,7 +96,7 @@ namespace EazyQuiz.Unity.Controllers
         }
 
         /// <summary>
-        /// Запись текста вопросов и ответов в интерфейс
+        /// Р—Р°РїРёСЃСЊ С‚РµРєСЃС‚Р° РІРѕРїСЂРѕСЃРѕРІ Рё РѕС‚РІРµС‚РѕРІ РІ РёРЅС‚РµСЂС„РµР№СЃ
         /// </summary>
         public void SetQuestion()
         {
@@ -116,7 +116,7 @@ namespace EazyQuiz.Unity.Controllers
 
             if (timerValue is >= 50 or <= 0)
             {
-                information.ShowError("Неверное значение таймера");
+                information.ShowError("РќРµРІРµСЂРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚Р°Р№РјРµСЂР°");
                 return;
             }
             
@@ -133,7 +133,7 @@ namespace EazyQuiz.Unity.Controllers
         }
 
         /// <summary>
-        /// Проверка ответа игрока
+        /// РџСЂРѕРІРµСЂРєР° РѕС‚РІРµС‚Р° РёРіСЂРѕРєР°
         /// </summary>
         public async Task CheckUserAnswer(AnswerDTO answer)
         {
@@ -141,12 +141,12 @@ namespace EazyQuiz.Unity.Controllers
             if (answer.IsCorrect)
             {
                 _combo++;
-                gameOverScreen.Show($"Ответ: верный,\nВаш текущий результат {_combo}\n\nЕсли покинете игру вы потеряете текущий результат");
+                gameOverScreen.Show($"РћС‚РІРµС‚: РІРµСЂРЅС‹Р№,\nР’Р°С€ С‚РµРєСѓС‰РёР№ СЂРµР·СѓР»СЊС‚Р°С‚ {_combo}\n\nР•СЃР»Рё РїРѕРєРёРЅРµС‚Рµ РёРіСЂСѓ РІС‹ РїРѕС‚РµСЂСЏРµС‚Рµ С‚РµРєСѓС‰РёР№ СЂРµР·СѓР»СЊС‚Р°С‚");
             }
             else
             {
                 ad.ShowAd();
-                gameOverScreen.Show($"Ответ: не верный\n\nВерный ответ: {_question.Answers.Single(x => x.IsCorrect).AnswerText}\n\nВаш результат:{_combo}");
+                gameOverScreen.Show($"РћС‚РІРµС‚: РЅРµ РІРµСЂРЅС‹Р№\n\nР’РµСЂРЅС‹Р№ РѕС‚РІРµС‚: {_question.Answers.Single(x => x.IsCorrect).AnswerText}\n\nР’Р°С€ СЂРµР·СѓР»СЊС‚Р°С‚:{_combo}");
                 ad.LoadAd();
             }
 
@@ -181,7 +181,7 @@ namespace EazyQuiz.Unity.Controllers
         }
 
         /// <summary>
-        /// Следующий вопрос
+        /// РЎР»РµРґСѓСЋС‰РёР№ РІРѕРїСЂРѕСЃ
         /// </summary>
         public async void NextQuestion()
         {
@@ -190,18 +190,18 @@ namespace EazyQuiz.Unity.Controllers
         }
 
         /// <summary>
-        /// Если время ответа на вопрос вышло
+        /// Р•СЃР»Рё РІСЂРµРјСЏ РѕС‚РІРµС‚Р° РЅР° РІРѕРїСЂРѕСЃ РІС‹С€Р»Рѕ
         /// </summary>
         public void TimeOver()
         {
-            gameOverScreen.Show($"Время вышло\n\nВерный ответ: {_question.Answers.Single(x => x.IsCorrect).AnswerText}\n" +
-                                $"Ваш результат:{_combo}\n" +
-                                $"Ваш прогресс сбросился");
+            gameOverScreen.Show($"Р’СЂРµРјСЏ РІС‹С€Р»Рѕ\n\nР’РµСЂРЅС‹Р№ РѕС‚РІРµС‚: {_question.Answers.Single(x => x.IsCorrect).AnswerText}\n" +
+                                $"Р’Р°С€ СЂРµР·СѓР»СЊС‚Р°С‚:{_combo}\n" +
+                                $"Р’Р°С€ РїСЂРѕРіСЂРµСЃСЃ СЃР±СЂРѕСЃРёР»СЃСЏ");
             
             _combo = 0;
         }
         /// <summary>
-        /// Выход в главное меню
+        /// Р’С‹С…РѕРґ РІ РіР»Р°РІРЅРѕРµ РјРµРЅСЋ
         /// </summary>
         public void ExitButtonClick()
         {
